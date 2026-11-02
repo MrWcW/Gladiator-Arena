@@ -119,6 +119,26 @@
          until CONFIRM is typed. */
       .set-row.danger{border-color:rgba(178,58,40,.65)}
       #btn-reset-account:disabled{opacity:.45; cursor:not-allowed; transform:none; box-shadow:none}
+      /* Ultra Graphics Pack (1.1): one tidy panel inside Settings >
+         Graphics — download, progress, on/off and delete, nothing more. */
+      .pack-panel{margin-top:10px; border:1px solid var(--line); border-radius:14px; background:var(--panel2); padding:11px 12px; box-shadow:0 2px 8px rgba(74,50,16,.08)}
+      .pack-head{display:flex; align-items:center; gap:11px}
+      .pack-head .set-ico{font-size:21px; flex:none}
+      .pack-head .set-txt{flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:1px}
+      .pack-head .set-txt b{font-family:"Cinzel",serif; font-size:15.5px}
+      .pack-head .set-txt small{color:var(--ink2); font-size:12px}
+      .pack-badge{flex:none; font-family:"Cinzel",serif; font-weight:700; font-size:12px; color:#fdf3da; background:linear-gradient(180deg,#8a5a24,#6e4517); border:1px solid #c19244; border-radius:999px; padding:3px 10px}
+      .pack-desc{margin:7px 0 0; font-size:12.5px; line-height:1.4; color:var(--ink2)}
+      .pack-bar{margin-top:9px; height:10px; border-radius:999px; background:rgba(0,0,0,.14); border:1px solid var(--line); overflow:hidden}
+      .pack-bar-fill{height:100%; width:0%; border-radius:999px; background:linear-gradient(90deg,#c19244,#e8b62a); transition:width .15s ease}
+      .pack-actions{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+      .pack-actions .btn{flex:1 1 auto; min-width:0}
+      @media (max-height:640px){
+        .pack-panel{padding:8px 10px; margin-top:8px}
+        .pack-desc{display:none}
+        #settings-gfx .settings-list .set-row{min-height:44px; padding:7px 11px}
+        #settings-gfx .pack-actions{margin-top:8px}
+      }
       .ulog{display:flex; flex-direction:column; gap:7px; margin-top:4px}
       .ulog-row{display:flex; gap:10px; align-items:flex-start; padding:8px 11px; border:1px solid var(--line); border-radius:10px; background:var(--panel2)}
       .ulog-row .uv{flex:none; font-family:"Cinzel",serif; font-weight:700; font-size:13px; color:var(--bronze); background:rgba(0,0,0,.08); border:1px solid var(--line); border-radius:999px; padding:2px 9px; margin-top:1px}
@@ -2251,6 +2271,7 @@
                 <button class="set-row" id="set-row-cam" type="button"><span class="set-ico" aria-hidden="true">🎥</span><span class="set-txt"><b>Camera</b><small id="set-cam-cur">3rd Person — behind your gladiator</small></span><span class="set-chev" aria-hidden="true">▸</span></button>
                 <button class="set-row" id="set-row-fps" type="button"><span class="set-ico" aria-hidden="true">🎞</span><span class="set-txt"><b>Frame Rate</b><small id="set-fps-cur">60 FPS — smooth</small></span><span class="set-chev" aria-hidden="true">▸</span></button>
                 <button class="set-row" id="set-row-gfx" type="button"><span class="set-ico" aria-hidden="true">🎨</span><span class="set-txt"><b>Graphics</b><small id="set-gfx-cur">Medium — the classic look</small></span><span class="set-chev" aria-hidden="true">▸</span></button>
+                <button class="set-row" id="set-row-music" type="button"><span class="set-ico" aria-hidden="true">🎵</span><span class="set-txt"><b>Music</b><small id="set-music-cur">On — drums &amp; horns of the arena</small></span><span class="set-check" id="music-check" aria-hidden="true">✓</span></button>
                 <button class="set-row" id="set-row-log" type="button"><span class="set-ico" aria-hidden="true">📜</span><span class="set-txt"><b>Update Log</b><small>What changed in each version of the game</small></span><span class="set-chev" aria-hidden="true">▸</span></button>
                 <button class="set-row danger" id="set-row-reset" type="button"><span class="set-ico" aria-hidden="true">🗑️</span><span class="set-txt"><b>Reset Account</b><small>Wipe your money, stats, gladiator — everything</small></span><span class="set-chev" aria-hidden="true">▸</span></button>
               </div>
@@ -2283,6 +2304,17 @@
                 <button class="set-row" id="gfx-opt-med" type="button"><span class="set-ico" aria-hidden="true">🔆</span><span class="set-txt"><b>Medium</b><small>The classic look — the graphics the game has always shipped with.</small></span><span class="set-check" id="gfx-check-med" aria-hidden="true">✓</span></button>
                 <button class="set-row" id="gfx-opt-high" type="button"><span class="set-ico" aria-hidden="true">✨</span><span class="set-txt"><b>High</b><small>Sharper drawing, crisper textures and deeper, finer shadows.</small></span><span class="set-check" id="gfx-check-high" aria-hidden="true"></span></button>
                 <button class="set-row" id="gfx-opt-ultra" type="button"><span class="set-ico" aria-hidden="true">💎</span><span class="set-txt"><b>Ultra High</b><small>Everything maxed — full resolution, the sharpest textures and finest shadows.</small></span><span class="set-check" id="gfx-check-ultra" aria-hidden="true"></span></button>
+              </div>
+              <div class="pack-panel" id="pack-panel">
+                <div class="pack-head"><span class="set-ico" aria-hidden="true">🏛️</span><span class="set-txt"><b>Ultra Graphics Pack</b><small id="pack-status">Not built yet · ~56 MB texture memory while on</small></span><span class="pack-badge" id="pack-badge">~56 MB</span></div>
+                <p class="pack-desc">Built on your device when you tap Download — no file is downloaded or stored. While on, its high-res arena, fighter &amp; weapon textures use about 56 MB of texture memory, with richer light and shadows and denser dust and crowd. Turning it off or deleting it frees that memory. The game plays the same without it.</p>
+                <div class="pack-bar hidden" id="pack-bar-wrap"><div class="pack-bar-fill" id="pack-bar-fill"></div></div>
+                <div class="pack-actions">
+                  <button class="btn small" id="pack-btn-download" type="button">⬇ Download Pack</button>
+                  <button class="btn small hidden" id="pack-btn-toggle" type="button">✓ Pack On — tap for Off</button>
+                  <button class="btn ghost small hidden" id="pack-btn-delete" type="button">Delete</button>
+                  <button class="btn ghost small hidden" id="pack-btn-cancel" type="button">Cancel</button>
+                </div>
               </div>
             </div>
             <div id="settings-log" class="hidden">
@@ -2469,7 +2501,7 @@
     <div id="modal-root"><div class="modal" id="modal-box"></div></div>
     <div class="toast" id="toast"></div>
 
-    <div class="ver-badge" id="ver-badge">v1.0</div>
+    <div class="ver-badge" id="ver-badge">v1.1</div>
     <div id="boot-note" role="status">⏳ Raising the arena…<br/>If this note stays, this copy can’t run the game here — open the file in a real browser tab (Chrome, Safari, Firefox or Edge), not a preview pane.</div>
 
     <script>
@@ -3971,14 +4003,101 @@
           const ahead=(desX*dx+desZ*dz)/(dl*d);
           if(ahead>=0.2){
             const ex=-dx/d, ez=-dz/d;
-            const endSign=f.x>=ls0.cx? 1 : -1;
             const s=(1-d/R)*ahead*dl*2.6;
-            ax+=(endSign+ex*0.4)*s;
-            az+=ez*0.4*s;
+            if(Math.abs(f.x-ls0.cx)<=LOG.halfLen){
+              /* Inside the span (the classic case): slide along the
+                 timber toward the nearer end, with a push off its face. */
+              const endSign=f.x>=ls0.cx? 1 : -1;
+              ax+=(endSign+ex*0.4)*s;
+              az+=ez*0.4*s;
+            } else {
+              /* Beyond an end (1.1 fix): the timber is no longer in
+                 front of him — he is AROUND it — so an axial slide only
+                 traps him: it used to bend a foe out west of the west
+                 tip ever further west (and an aim-at-the-tip variant
+                 pinned him ON the tip), and he ground there for the
+                 rest of the fight. Instead he is bent TANGENTIALLY
+                 around the tip point, on the side that carries him
+                 toward the player's side of the band, with a gentle
+                 push off the tip for clearance — he rounds the end and
+                 walks on, and the bend fades as he clears it. */
+              const tx2=-dz/d, tz2=dx/d; /* tangential unit round the tip */
+              const wantZ=(P.z>=ls0.cz)? 1 : -1;
+              const side=(tz2*wantZ>=0)? 1 : -1;
+              ax+=tx2*side*s*0.9 + ex*s*0.25;
+              az+=tz2*side*s*0.9 + ez*s*0.25;
+            }
           }
         }
       }
       return (ax||az)? {x:ax, z:az} : null;
+    }
+    /* Never stuck (1.1): the steering above bends a foe around stone,
+       pits and the log — but a head-on approach can still settle into
+       a grind: pressed on a column's face, jittering in place, or
+       caught in a steering stand-off between a pit and a ruin, making
+       no ground on the player for as long as the fight lasts. So
+       stepFoe keeps a progress watch on every foe. While he is meant
+       to be closing in, if his distance to the player has not improved
+       by a clear step inside ~1.15 seconds (or a chosen stride barely
+       moves him for ~1 second), pickDetour hands him a waypoint around
+       the rim of whatever blocks him — ruin, pillar, barricade, pit or
+       the log's nearer end — and he walks THAT until he is round it,
+       then resumes the chase. A detour that itself makes no progress
+       is re-picked on the other side. Speed, damage and difficulty are
+       untouched: he walks at his own pace, just never at a wall. It
+       lives in stepFoe, so every foe in every mode — career, Survival,
+       Champion's Trial, tournament, Today's Bout, evening bouts —
+       gets it alike. */
+    function pickDetour(f, flip){
+      const dxp=P.x-f.x, dzp=P.z-f.z, Lp=Math.hypot(dxp,dzp)||1, ux=dxp/Lp, uz=dzp/Lp;
+      let anchor=null, anchorR=0, best=1e9;
+      const consider=(x,z,r)=>{ const d=Math.hypot(x-f.x, z-f.z); const ahead=(x-f.x)*ux+(z-f.z)*uz; if(d<380 && ahead>-40 && d<best){ best=d; anchor={x:x, z:z}; anchorR=r; } };
+      for(const ob of OBSTACLES) consider(ob.x, ob.z, ob.r);
+      for(const hz of HAZARDS) consider(hz.x, hz.z, hz.r);
+      let side=flip && f._detSide? -f._detSide : 0;
+      let wx, wz;
+      if(anchor){
+        const ax=f.x-anchor.x, az=f.z-anchor.z, al=Math.hypot(ax,az)||1;
+        const cand=s=>{ const ca=Math.cos(1.25*s), sa=Math.sin(1.25*s); const rx=(ax/al)*ca-(az/al)*sa, rz=(ax/al)*sa+(az/al)*ca; return {x:anchor.x+rx*(anchorR+BODY_R+46), z:anchor.z+rz*(anchorR+BODY_R+46)}; };
+        if(!side){ const c1=cand(1), c2=cand(-1); side=Math.hypot(c1.x-P.x, c1.z-P.z)<=Math.hypot(c2.x-P.x, c2.z-P.z)? 1 : -1; }
+        const c=cand(side); wx=c.x; wz=c.z;
+      } else {
+        const ls=logState();
+        if(Math.abs(f.z-ls.cz)<190 && Math.abs(f.x-ls.cx)<LOG.halfLen+150){
+          wx=f.x<ls.cx? ls.cx-LOG.halfLen-56 : ls.cx+LOG.halfLen+56;
+          wz=ls.cz+(P.z>=ls.cz? 1 : -1)*(LOG.r+BODY_R+34);
+          side=f._detSide||1;
+        } else {
+          /* Nothing anchors the stall — open sand, most likely a
+             fleeing player matching his pace. Not a stuck foe: the
+             caller just resets the watch and the chase goes on. */
+          return false;
+        }
+      }
+      f._detSide=side;
+      f._detX=clamp(wx, -655, 655); f._detZ=clamp(wz, -35, 1005);
+      f._detT=2.4;
+      f._wpRef=Math.hypot(f._detX-f.x, f._detZ-f.z); f._wpT=0;
+      f._prT=0; f._mvT=0; f._mvRefX=f.x; f._mvRefZ=f.z;
+      f._os={}; /* committed steering sides are re-picked fresh round the detour */
+      return true;
+    }
+    function unstuckWatch(f, dt, ell, wantChase, desMag){
+      if(f._detT>0){
+        const dwp=Math.hypot(f._detX-f.x, f._detZ-f.z);
+        if(f._wpRef===undefined || dwp<f._wpRef-10){ f._wpRef=dwp; f._wpT=0; }
+        else { f._wpT=(f._wpT||0)+dt; if(f._wpT>1.5 && !pickDetour(f, true)){ f._detT=0; f._wpT=0; } }
+        return;
+      }
+      if(wantChase){
+        if(f._prRef===undefined || ell<f._prRef-10){ f._prRef=ell; f._prT=0; }
+        else { f._prT=(f._prT||0)+dt; if(f._prT>1.15 && !pickDetour(f, false)){ f._prRef=ell; f._prT=0; } }
+      } else if(desMag>40){
+        if(f._mvRefX===undefined){ f._mvRefX=f.x; f._mvRefZ=f.z; f._mvT=0; }
+        if(Math.hypot(f.x-f._mvRefX, f.z-f._mvRefZ)>12){ f._mvRefX=f.x; f._mvRefZ=f.z; f._mvT=0; }
+        else { f._mvT=(f._mvT||0)+dt; if(f._mvT>1.0 && !pickDetour(f, false)){ f._mvRefX=f.x; f._mvRefZ=f.z; f._mvT=0; } }
+      } else { f._prT=0; f._mvT=0; }
     }
     /* Hazard ticks, run once per step after all movement resolves, so
        wherever a fighter ENDS UP — walked, lunged or knocked —
@@ -4604,6 +4723,17 @@
         const px=P.x + (-dz/L)*f.slot*0.55, pz=P.z + (dx/L)*f.slot*0.55;
         const ax=px-f.x, az=pz-f.z, al=Math.hypot(ax,az)||1; mvx=ax/al; mvz=az/al;
       } else if((f.ai==='poker'&&ell<reachD*0.5)||(f.ai==='retiarius'&&ell<f.reach*0.7)){ mvx=-dx/L; mvz=-dz/L; }
+      /* Detour (1.1): while a waypoint from pickDetour is live, it —
+         not the player's slot — is where he walks, until he reaches
+         it, it times out, or the player is back in fighting reach
+         (then he simply fights). The usual steering still bends the
+         walk, and resolveObstacles still underwrites it. */
+      if(f._detT>0){
+        f._detT-=dt;
+        const dwp=Math.hypot(f._detX-f.x, f._detZ-f.z);
+        if(dwp<30 || f._detT<=0 || ell<=reachD+10 || P.dead){ f._detT=0; f._prRef=ell; f._prT=0; }
+        else { mvx=(f._detX-f.x)/(dwp||1); mvz=(f._detZ-f.z)/(dwp||1); }
+      }
       let desX=0, desZ=0;
       if((mvx||mvz) && !f.block){ const sp=f.spd*(f.slowT>0?0.5:1)*(f.aggroT>0?1.3:1); desX=mvx*sp; desZ=mvz*sp; }
       /* Obstacle steering (0.7): bend the desired stride around any
@@ -4621,6 +4751,11 @@
       const fspd=Math.hypot(f.vx,f.vz);
       f.moving=fspd>24;
       if(f.moving) f.walk+=dt*fspd*0.055;
+      /* Progress watch (1.1): a foe who should be closing in but is
+         making no ground — grinding a ruin face, held in a steering
+         stand-off — is handed a way around by unstuckWatch. Blocking
+         and standing in reach to fight are intentional, not stuck. */
+      unstuckWatch(f, dt, ell, ell>reachD+6 && !f.block && f.backT<=0, Math.hypot(desX, desZ));
       /* attack — only once inside his own weapon's honest reach, and never
          while he is giving ground (0.5.2): a retreating foe recovers first */
       const allowed=F.conc>=3?2:1;
@@ -5302,7 +5437,7 @@
         pgeo.setAttribute('position', new THREE.BufferAttribute(ppos,3));
         const points=new THREE.Points(pgeo, new THREE.PointsMaterial({color:0xe8cf9a, size:7, transparent:true, opacity:0.55, depthWrite:false}));
         points.frustumCulled=false; scene.add(points);
-        GL={renderer:renderer, scene:scene, camera:camera, points:points, ppos:ppos, netMeshes:[], sun:sun, hemi:hemi, torches:torches};
+        GL={renderer:renderer, scene:scene, camera:camera, points:points, ppos:ppos, pCap:240, netMeshes:[], sun:sun, hemi:hemi, torches:torches};
         guardContext(cv); /* a dropped graphics context recovers instead of freezing the fight (0.7.11) */
         applyGfxTo(GL, 'fight'); /* the picked graphics tier (0.7.6) — Medium is the classic draw above */
         return true;
@@ -5311,7 +5446,7 @@
     /* 1.0: evening light — same arena, dusk sky, dim sun, torches lit. */
     function applyEvening(on){
       if(!GL) return;
-      GL.scene.background = on? new THREE.Color(0x141c33) : makeSkyTexture();
+      GL.scene.background = on? new THREE.Color(0x141c33) : ((typeof packActive==='function' && packActive() && PACK.tex)? PACK.tex.sky : makeSkyTexture());
       if(GL.scene.fog) GL.scene.fog.color.set(on? 0x1c1626 : 0xe6c491);
       if(GL.hemi){ GL.hemi.intensity=on? 0.38 : 1.02; GL.hemi.color.set(on? 0x8fa3cc : 0xffe9c4); }
       if(GL.sun) GL.sun.color.set(on? 0xffb36b : 0xfff1d6);
@@ -6089,9 +6224,10 @@
         nm.position.set(n.x+(n.tx-n.x)*pr, 46+Math.sin(pr*Math.PI)*78, n.z+(n.tz-n.z)*pr);
         nm.rotation.set(Math.PI/2.4, 0, F.time*7+i);
       });
+      try{ packSyncScene(GL); }catch(e){} /* Ultra Pack detail follows new models into the arena (1.1) */
       let pc=0;
       for(const pt of PARTS){
-        if(pc>=240) break;
+        if(pc>=(GL.pCap||240)) break;
         GL.ppos[pc*3]=pt.x; GL.ppos[pc*3+1]=pt.y!=null? pt.y : (pt.type==='spark'?96:(pt.type==='ember'?30:9)); GL.ppos[pc*3+2]=pt.z; pc++;
       }
       /* Hazards alive (0.7.2): the log swings on the same pendulum the
@@ -6103,6 +6239,20 @@
         if(hzAnim.logGroup) hzAnim.logGroup.rotation.x=logState().th;
         for(let i=0;i<hzAnim.flames.length;i++){ const fl=hzAnim.flames[i]; fl.scale.y=1+Math.sin(F.time*11+i*1.7)*0.22; fl.scale.x=fl.scale.z=1+Math.sin(F.time*9+i*2.3)*0.10; }
         for(let i=0;i<hzAnim.glows.length;i++){ hzAnim.glows[i].material.opacity=0.42+0.16*Math.sin(F.time*7+i*2.1); }
+      }
+      /* Ultra Pack (1.1): a living haze of extra dust motes drifting
+         over the sand while the pack is on — pure atmosphere, drawn
+         only into the pack's bigger particle buffer. */
+      if(typeof packActive==='function' && packActive() && (GL.pCap||240)>240){
+        const tt=F.time;
+        for(let i=0;i<220 && pc<(GL.pCap||240);i++){
+          const h1=Math.sin(i*127.1)*43758.5453, h2=Math.sin(i*311.7)*12543.123, h3=Math.sin(i*74.7)*9876.531;
+          const fx=h1-Math.floor(h1), fy=h2-Math.floor(h2), fz=h3-Math.floor(h3);
+          GL.ppos[pc*3]=(fx-0.5)*1500+Math.sin(tt*0.24+i)*26;
+          GL.ppos[pc*3+1]=14+fy*230+Math.sin(tt*0.6+i*1.7)*9;
+          GL.ppos[pc*3+2]=385+(fz-0.5)*1500+Math.cos(tt*0.19+i*0.6)*26;
+          pc++;
+        }
       }
       GL.points.geometry.setDrawRange(0,pc);
       GL.points.geometry.attributes.position.needsUpdate=true;
@@ -7105,6 +7255,7 @@
        its own entry to UPDATE_LOG below — never ship a version bump
        without its log entry. */
     const UPDATE_LOG=[
+      {v:'1.1', t:'Ultra Graphics Pack download in Settings, epic arena music with a Settings toggle, and foes that route around ruins and never stay stuck.'},
       {v:'1.0', t:'Full release: League XI past Olympus, net-dancer and shield-wall foes, daily bout, daily reward calendar, prestige, torch-lit evening bouts, livelier crowd.'},
       {v:'0.9.5', t:'Welcome message above PLAY removed. PLAY now sits clean and centred with tidy spacing, and the home screen still fits whole.'},
       {v:'0.9.4', t:'Bout details removed. Fighter pick redesigned — description, abilities and stat bars show in full on one clean card. No scrolling, nothing cut off.'},
@@ -7281,6 +7432,390 @@
     $('#fps-opt-60').addEventListener('click', ()=>{ setFpsMode(60); toast('Frame rate: 60 FPS.'); });
     $('#fps-opt-120').addEventListener('click', ()=>{ setFpsMode(120); toast('Frame rate: 120 FPS — as fast as your screen can draw.'); });
     updateFpsUI();
+    /* ---------- Ultra Graphics Pack (1.1) ----------
+       An OPTIONAL, on-demand download that lives inside Settings >
+       Graphics, beside the Low/Medium/High/Ultra picks — no new menu.
+       The base game ships light and plays exactly as before without
+       it. Downloading builds the pack's real asset set on the device,
+       in slices, with honest progress: high-resolution arena textures
+       (sand, brick, crowd, sky at 4x the shipped size) plus a fine
+       detail grain that is bump-mapped over stone, steel, leather and
+       skin. While the pack is ON it also lifts the render tier (see
+       packTierOverride in applyGfxTo), grows the fight's particle
+       buffer for denser dust, and hangs extra motes in the air.
+       Turning it off, or deleting it, swaps every scene straight back
+       to the shipped textures — the fallback is the game's own
+       make*Texture() set, so nothing is left half-fitted — and then
+       disposes the pack textures and drops their canvases, freeing
+       the texture memory. Only the installed/on flags persist (their
+       own local-storage key, like camera/FPS/graphics); no pack file
+       is downloaded or stored, and the textures themselves are
+       rebuilt from the pack steps whenever they are needed again.
+       While the pack is ON, the full high-res set is held for the
+       whole session in PACK.tex / PACK.canvases, so the ~56 MB
+       texture-memory footprint below is real, not a file size.
+       The 0.8.9 performance
+       watchdog is untouched: it still eases the fight's draw down on
+       a struggling device, pack or no pack. */
+    const PACK_KEY='gladiator-arena-pack-v1';
+    /* The size is the pack's real texture-memory footprint while
+       on, not a file or storage size: the sum of its texture
+       canvases (sand 2048², brick 2048×1024, crowd 2048×1024, sky
+       2048×1024, detail 2048²) at 4 bytes a pixel (RGBA, base
+       level). While on, that full set is held in graphics memory;
+       off / delete disposes it and frees the memory. */
+    const PACK_SIZE_MB=Math.round((2048*2048 + 2048*1024 + 2048*1024 + 2048*1024 + 2048*2048)*4/1048576);
+    const PACK_TIER={pr:4, shadow:true, fightMap:4096, stageMap:4096, aniso:16};
+    let PACK={installed:false, on:false, downloading:false, step:0, steps:null, tex:null, canvases:null};
+    try{ const pv=JSON.parse(localStorage.getItem(PACK_KEY)||'null'); if(pv){ PACK.installed=!!pv.installed; PACK.on=PACK.installed && pv.on!==false; } }catch(e){}
+    function packActive(){ return !!(PACK.installed && PACK.on && !PACK.downloading); }
+    function packTierOverride(){ return packActive()? PACK_TIER : null; }
+    function packSave(){ try{ localStorage.setItem(PACK_KEY, JSON.stringify({installed:PACK.installed, on:PACK.on})); }catch(e){} }
+    function packCanvas(w,h){ const c=document.createElement('canvas'); c.width=w; c.height=h; return c; }
+    /* The pack's asset build, sliced into steps so the download bar
+       moves as each slice is really drawn. Every canvas here is 4x
+       the shipped texture it replaces, with the detail passes run
+       denser to match. */
+    function buildPackSteps(){
+      const S={}, steps=[];
+      /* — sand, 2048² (shipped: 512²) — */
+      const sand=packCanvas(2048,2048); S.sand=sand; const sg=sand.getContext('2d');
+      steps.push(()=>{ sg.fillStyle='#dcb26e'; sg.fillRect(0,0,2048,2048);
+        for(let i=0;i<240;i++){ sg.fillStyle='rgba('+(140+irnd(0,60))+','+(105+irnd(0,40))+',60,'+rnd(0.04,0.1).toFixed(2)+')'; sg.beginPath(); sg.ellipse(rnd(0,2048),rnd(0,2048),rnd(80,360),rnd(48,200),rnd(0,3),0,6.29); sg.fill(); }
+        sg.lineWidth=3;
+        for(let i=0;i<120;i++){ const y0=rnd(0,2048), amp=rnd(6,20), per=rnd(120,300); sg.strokeStyle=Math.random()<0.5?'rgba(120,88,40,0.10)':'rgba(250,230,180,0.12)'; sg.beginPath(); for(let x=0;x<=2048;x+=32){ const y=y0+Math.sin(x/per*6.28)*amp; if(x===0)sg.moveTo(x,y); else sg.lineTo(x,y); } sg.stroke(); } });
+      for(let gp=0; gp<7; gp++) steps.push(()=>{ for(let i=0;i<16000;i++){ const r=Math.random(); sg.fillStyle=r<0.42?'rgba(90,64,30,0.20)':(r<0.9?'rgba(246,224,170,0.20)':'rgba(255,248,220,0.5)'); sg.fillRect(rnd(0,2048),rnd(0,2048),rnd(1,3),rnd(1,2.6)); } });
+      steps.push(()=>{ for(let i=0;i<520;i++){ sg.fillStyle='rgba(110,88,58,'+rnd(0.15,0.35).toFixed(2)+')'; sg.beginPath(); sg.ellipse(rnd(0,2048),rnd(0,2048),rnd(2,7),rnd(1.6,5),rnd(0,3),0,6.29); sg.fill(); } });
+      /* — podium brick, 2048×1024 (shipped: 512×256) — */
+      const brick=packCanvas(2048,1024); S.brick=brick; const bg2=brick.getContext('2d');
+      const bTones=['#a97e56','#b28a5e','#9d744c','#bb9166','#a37a50','#c09a6c'];
+      const bh=120, bw=328, bm=20, rows=[];
+      for(let row=0; row*bh<1024+bh; row++) rows.push(row);
+      steps.push(()=>{ bg2.fillStyle='#c3ab84'; bg2.fillRect(0,0,2048,1024); });
+      for(let rb=0; rb<4; rb++){
+        const band=rows.slice(rb*2, rb*2+2);
+        steps.push(()=>{ for(const row of band){
+          const off=(row%2)? -bw/2 : 0, y=row*(bh+bm);
+          for(let bx=-1; bx*bw<2048+bw; bx++){
+            const x=off+bx*(bw+bm);
+            bg2.fillStyle=bTones[irnd(0,bTones.length-1)]; bg2.fillRect(x, y, bw, bh);
+            bg2.fillStyle='rgba(255,235,200,0.13)'; bg2.fillRect(x, y, bw, 16);
+            bg2.fillStyle='rgba(60,35,15,0.16)'; bg2.fillRect(x, y+bh-20, bw, 20);
+            for(let s=0;s<90;s++){ bg2.fillStyle=Math.random()<0.5?'rgba(70,45,20,0.13)':'rgba(255,240,210,0.11)'; bg2.fillRect(x+rnd(8,bw-12), y+rnd(8,bh-12), rnd(2,7), rnd(2,6)); }
+          } } });
+      }
+      /* — crowd, 2048×1024 (shipped: 512×128, ~16x the figures) — */
+      const crowd=packCanvas(2048,1024); S.crowd=crowd; const cg=crowd.getContext('2d');
+      const cCols=['#a8563c','#c8b28a','#7a4a52','#5d6e8a','#b98a4a','#8a7a9a','#946b4f','#c2c2b0','#6e5844','#a03a30','#d94f3d','#3f8ac0','#e8b62a','#4da35a'];
+      steps.push(()=>{ cg.fillStyle='#4d3a26'; cg.fillRect(0,0,2048,1024); });
+      for(let cb=0; cb<8; cb++){
+        const y0=cb*128;
+        steps.push(()=>{ for(let i=0;i<3400;i++){ cg.fillStyle=pick(cCols); cg.globalAlpha=rnd(0.5,1); cg.fillRect(rnd(0,2048), y0+rnd(0,128), rnd(3,6), rnd(5,10)); } cg.globalAlpha=1; });
+      }
+      /* — sky, 2048×1024 (shipped: 1024×512) — */
+      const sky=packCanvas(2048,1024); S.sky=sky; const kg=sky.getContext('2d');
+      steps.push(()=>{ const gr=kg.createLinearGradient(0,0,0,1024);
+        gr.addColorStop(0,'#4f8fd2'); gr.addColorStop(0.45,'#8ab8e4'); gr.addColorStop(0.72,'#cfe0d8'); gr.addColorStop(0.88,'#ffe3ae'); gr.addColorStop(1,'#f7c684');
+        kg.fillStyle=gr; kg.fillRect(0,0,2048,1024);
+        const sx=1480, sy=236, halo=kg.createRadialGradient(sx,sy,16,sx,sy,380);
+        halo.addColorStop(0,'rgba(255,246,205,0.95)'); halo.addColorStop(0.25,'rgba(255,232,160,0.55)'); halo.addColorStop(1,'rgba(255,232,160,0)');
+        kg.fillStyle=halo; kg.fillRect(sx-400,sy-400,800,800);
+        kg.fillStyle='#fff7da'; kg.beginPath(); kg.arc(sx,sy,68,0,6.29); kg.fill(); });
+      steps.push(()=>{ kg.fillStyle='rgba(255,252,240,0.85)';
+        for(let i=0;i<12;i++){ const cx0=rnd(80,1960), cy0=rnd(80,380), w0=rnd(180,440);
+          for(let j=0;j<6;j++){ kg.beginPath(); kg.ellipse(cx0+rnd(-w0/2,w0/2), cy0+rnd(-18,18), rnd(w0*0.22,w0*0.42), rnd(14,28), 0, 0, 6.29); kg.fill(); } } });
+      /* — detail grain, 2048²: bump-mapped over every untextured
+         surface (stone, steel, bronze, leather, skin) while on — */
+      const det=packCanvas(2048,2048); S.detail=det; const dg=det.getContext('2d');
+      steps.push(()=>{ dg.fillStyle='#8a8a8a'; dg.fillRect(0,0,2048,2048); });
+      for(let dp=0; dp<2; dp++) steps.push(()=>{ for(let i=0;i<24000;i++){ const v=irnd(96,168); dg.fillStyle='rgb('+v+','+v+','+v+')'; dg.fillRect(rnd(0,2048),rnd(0,2048),rnd(1,3),rnd(1,3)); }
+        dg.strokeStyle='rgba(70,70,70,0.35)'; dg.lineWidth=1;
+        for(let i=0;i<260;i++){ const x=rnd(0,2048), y=rnd(0,2048); dg.beginPath(); dg.moveTo(x,y); dg.lineTo(x+rnd(-46,46), y+rnd(-8,8)); dg.stroke(); } });
+      return {canvases:S, steps:steps};
+    }
+    function packMakeTextures(){
+      const S=PACK.canvases; if(!S || !window.THREE) return null;
+      const mk=(c,rx,ry)=>{ const tx=new THREE.CanvasTexture(c); if(rx){ tx.wrapS=tx.wrapT=THREE.RepeatWrapping; tx.repeat.set(rx,ry); } tx.needsUpdate=true; return tx; };
+      const detail=mk(S.detail,6,6);
+      return {sand:mk(S.sand,9,9), brick:mk(S.brick,26,2), crowd:mk(S.crowd,16,1), sky:mk(S.sky,0,0), detail:detail};
+    }
+    /* Dispose the held GPU textures and drop their source canvases,
+       freeing the pack's ~56 MB of texture memory. Callers swap the
+       scenes back to the shipped textures (applyGfx) BEFORE calling
+       this, so nothing on screen still references what is freed. */
+    function packReleaseTextures(){
+      if(PACK.tex){ try{ Object.keys(PACK.tex).forEach(k=>{ if(PACK.tex[k] && PACK.tex[k].dispose) PACK.tex[k].dispose(); }); }catch(e){} PACK.tex=null; }
+      PACK.canvases=null;
+    }
+    function packEnsureTex(){
+      if(PACK.tex || !window.THREE) return;
+      if(!PACK.canvases){ const b=buildPackSteps(); b.steps.forEach(fn=>{ try{ fn(); }catch(e){} }); PACK.canvases=b.canvases; }
+      try{ PACK.tex=packMakeTextures(); }catch(e){ PACK.tex=null; }
+    }
+    function packIsPackTex(tx){ return !!(PACK.tex && tx && (tx===PACK.tex.sand||tx===PACK.tex.brick||tx===PACK.tex.crowd||tx===PACK.tex.sky||tx===PACK.tex.detail)); }
+    function packSetDust(G){
+      if(!G || !G.points || !window.THREE) return;
+      const cap=packActive()? 900 : 240;
+      if(G.pCap===cap) return;
+      try{
+        const geo=new THREE.BufferGeometry(); const pos=new Float32Array(cap*3);
+        geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+        G.points.geometry.dispose(); G.points.geometry=geo; G.ppos=pos; G.pCap=cap;
+        if(G.points.material) G.points.material.size=packActive()? 5 : 7;
+      }catch(e){}
+    }
+    /* Fit (or unfit) one scene to the pack state. Idempotent and
+       cheap when nothing changed: a full swap runs only when the
+       on/off state flips; a lighter pass re-runs when the scene's
+       children change, so fighters built after the toggle still get
+       the detail grain. Any failure leaves the shipped look in
+       place — the pack can never break a scene it touches. */
+    function packSyncScene(G){
+      if(!G || !G.scene || !window.THREE) return;
+      const want=packActive();
+      if(want){ packEnsureTex(); if(!PACK.tex) return; }
+      if(G._packApplied===undefined) G._packApplied=false;
+      const kids=G.scene.children.length;
+      const full=G._packApplied!==want;
+      if(!full && G._packKids===kids) return;
+      G._packKids=kids;
+      let set=null;
+      if(full){
+        G._packApplied=want;
+        set= want? PACK.tex : {sand:makeSandTexture(), brick:makeBrickTexture(), crowd:makeCrowdTexture(), sky:makeSkyTexture()};
+      }
+      const detail=want? PACK.tex.detail : null;
+      G.scene.traverse(o=>{
+        if(!o.material) return;
+        (Array.isArray(o.material)? o.material : [o.material]).forEach(m=>{
+          if(!m.isMeshStandardMaterial) return;
+          if(full && set && m.map && m.map.isCanvasTexture){
+            const rp=m.map.repeat; let nt=null;
+            if(rp && rp.x===9 && rp.y===9) nt=set.sand;
+            else if(rp && rp.x===26 && rp.y===2) nt=set.brick;
+            else if(rp && rp.x===16 && rp.y===1) nt=set.crowd;
+            if(nt && m.map!==nt){ const old=m.map; m.map=nt; if(!packIsPackTex(old)) old.dispose(); m.needsUpdate=true; }
+          }
+          if(m.bumpMap!==detail){ m.bumpMap=detail; m.bumpScale=0.6; m.needsUpdate=true; }
+        });
+      });
+      if(full && set){
+        if(G.scene.userData && G.scene.userData.crowd) G.scene.userData.crowd.tex=set.crowd;
+        const bg=G.scene.background;
+        if(bg && bg.isTexture && bg.image && bg.image.height!==(want?1024:512)){ G.scene.background=set.sky; if(!packIsPackTex(bg)) bg.dispose(); }
+        packSetDust(G);
+      }
+    }
+    /* — download / install / toggle / delete — */
+    let packTimer=null;
+    function updatePackUI(){
+      const st=$('#pack-status'), bd=$('#pack-badge'), barW=$('#pack-bar-wrap'), bar=$('#pack-bar-fill');
+      const bDl=$('#pack-btn-download'), bTg=$('#pack-btn-toggle'), bDel=$('#pack-btn-delete'), bCx=$('#pack-btn-cancel');
+      if(!st) return;
+      const show=(el,v)=>{ if(el) el.classList.toggle('hidden', !v); };
+      if(PACK.downloading){
+        const total=PACK.steps? PACK.steps.length : 1;
+        const pct=Math.min(100, Math.floor(PACK.step/Math.max(1,total)*100));
+        st.textContent='Building on your device… '+pct+'% · ~'+Math.round(PACK_SIZE_MB*pct/100)+' / ~'+PACK_SIZE_MB+' MB texture memory';
+        if(bd) bd.textContent=pct+'%';
+        show(barW,true); if(bar) bar.style.width=pct+'%';
+        show(bDl,false); show(bTg,false); show(bDel,false); show(bCx,true);
+      } else if(PACK.installed){
+        st.textContent=PACK.on? 'Built · On — using about '+PACK_SIZE_MB+' MB of texture memory' : 'Built · Off — texture memory freed';
+        if(bd) bd.textContent='~'+PACK_SIZE_MB+' MB';
+        show(barW,false);
+        show(bDl,false); show(bTg,true); show(bDel,true); show(bCx,false);
+        if(bTg) bTg.textContent=PACK.on? '✓ Pack On — tap for Off' : 'Pack Off — tap for On';
+      } else {
+        st.textContent='Not built yet · ~'+PACK_SIZE_MB+' MB texture memory while on';
+        if(bd) bd.textContent='~'+PACK_SIZE_MB+' MB';
+        show(barW,false);
+        show(bDl,true); show(bTg,false); show(bDel,false); show(bCx,false);
+      }
+      try{ updateGfxUI(); }catch(e){}
+    }
+    function packStartDownload(){
+      if(PACK.downloading || PACK.installed) return;
+      const built=buildPackSteps();
+      PACK.canvases=built.canvases; PACK.steps=built.steps; PACK.step=0; PACK.downloading=true;
+      updatePackUI();
+      packTimer=setInterval(()=>{
+        if(PACK.step<PACK.steps.length){ try{ PACK.steps[PACK.step](); }catch(e){} PACK.step++; }
+        if(PACK.step>=PACK.steps.length){
+          clearInterval(packTimer); packTimer=null;
+          PACK.downloading=false; PACK.installed=true; PACK.on=true; PACK.steps=null;
+          try{ PACK.tex=packMakeTextures(); }catch(e){ PACK.tex=null; }
+          packSave(); updatePackUI();
+          try{ applyGfx(); }catch(e){}
+          toast('Ultra Graphics Pack ready — built on your device, full detail on.');
+        }
+        updatePackUI();
+      }, 110);
+    }
+    function packCancelDownload(){
+      if(!PACK.downloading) return;
+      if(packTimer) clearInterval(packTimer); packTimer=null;
+      PACK.downloading=false; PACK.steps=null; PACK.canvases=null;
+      updatePackUI();
+      toast('Download cancelled — nothing installed.');
+    }
+    function packToggle(){
+      if(!PACK.installed || PACK.downloading) return;
+      PACK.on=!PACK.on;
+      packSave();
+      if(PACK.on){
+        /* Hold the full high-res set in texture memory while on. */
+        try{ packEnsureTex(); }catch(e){}
+        try{ applyGfx(); }catch(e){}
+      } else {
+        try{ applyGfx(); }catch(e){} /* scenes swap back to the shipped textures first */
+        packReleaseTextures();
+      }
+      updatePackUI();
+      toast(PACK.on? 'Ultra Pack: On — full detail, using about '+PACK_SIZE_MB+' MB of texture memory.' : 'Ultra Pack: Off — texture memory freed, normal graphics.');
+    }
+    function packDelete(){
+      if(!PACK.installed || PACK.downloading) return;
+      PACK.installed=false; PACK.on=false;
+      packSave(); updatePackUI();
+      try{ applyGfx(); }catch(e){} /* scenes swap back to the shipped textures first */
+      packReleaseTextures();
+      updatePackUI();
+      toast('Ultra Pack deleted — about '+PACK_SIZE_MB+' MB of texture memory freed.');
+    }
+    $('#pack-btn-download').addEventListener('click', packStartDownload);
+    $('#pack-btn-cancel').addEventListener('click', packCancelDownload);
+    $('#pack-btn-toggle').addEventListener('click', packToggle);
+    $('#pack-btn-delete').addEventListener('click', packDelete);
+    updatePackUI();
+    /* ---------- arena music (1.1) ----------
+       Epic Roman drums & horns, composed and played live by the
+       game's own audio engine — no file to fetch, so it loops
+       seamlessly forever and costs no storage. A lookahead scheduler
+       lays down a four-bar war march in D minor (Dm – B♭ – F – C):
+       deep war drums and frame drums under long horn chords, a horn
+       lead, and a low drone, all through one modest master gain
+       (0.16) so it sits behind the fight, never over it. Browsers
+       refuse audio before a first tap, so the music arms on the
+       player's first interaction and only then; the single Settings
+       toggle (Music, on the Settings list) starts/stops it and is
+       saved in its own key like the other settings. */
+    const MUS_KEY='gladiator-arena-music-v1';
+    let musicOn=true;
+    try{ musicOn=localStorage.getItem(MUS_KEY)!=='off'; }catch(e){}
+    let MUS=null, musArmed=false;
+    const MUS_CHORDS=[38,34,41,36]; /* D2, B♭1, F2, C2 */
+    const MUS_LEAD=[{0:74,8:69},{0:70,8:65},{0:72,8:69},{0:67,8:64}];
+    const MUS_WAR=[0,6,8,14];
+    function musFreq(m){ return 440*Math.pow(2,(m-69)/12); }
+    function musDrum(t, deep){
+      if(!MUS || !AC) return;
+      const o=AC.createOscillator(), g=AC.createGain();
+      o.type='sine';
+      o.frequency.setValueAtTime(deep?150:210, t);
+      o.frequency.exponentialRampToValueAtTime(deep?44:80, t+0.22);
+      g.gain.setValueAtTime(deep?0.85:0.38, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t+(deep?0.5:0.28));
+      o.connect(g); g.connect(MUS.gain); o.start(t); o.stop(t+0.55);
+      const src=AC.createBufferSource(); src.buffer=MUS.noiseBuf;
+      const f=AC.createBiquadFilter(); f.type='lowpass'; f.frequency.value=deep?500:900;
+      const ng=AC.createGain(); ng.gain.value=deep?0.22:0.13;
+      src.connect(f); f.connect(ng); ng.connect(MUS.gain); src.start(t);
+    }
+    function musHorn(t, m, dur, vol){
+      if(!MUS || !AC) return;
+      const g=AC.createGain(), f=AC.createBiquadFilter();
+      f.type='lowpass';
+      f.frequency.setValueAtTime(500, t);
+      f.frequency.linearRampToValueAtTime(1150, t+Math.min(0.4, dur*0.4));
+      f.frequency.linearRampToValueAtTime(700, t+dur);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(vol, t+0.09);
+      g.gain.setValueAtTime(vol, t+Math.max(0.12, dur-0.18));
+      g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+      f.connect(g); g.connect(MUS.gain);
+      [1, 1.004].forEach(det=>{
+        const o=AC.createOscillator(); o.type='sawtooth'; o.frequency.value=musFreq(m)*det;
+        o.connect(f); o.start(t); o.stop(t+dur+0.05);
+      });
+    }
+    function musDrone(t, m, dur){
+      if(!MUS || !AC) return;
+      const o=AC.createOscillator(), o2=AC.createOscillator(), g=AC.createGain();
+      o.type='sine'; o.frequency.value=musFreq(m);
+      o2.type='triangle'; o2.frequency.value=musFreq(m+7);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.055, t+0.3);
+      g.gain.setValueAtTime(0.055, t+Math.max(0.3, dur-0.3));
+      g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+      o.connect(g); o2.connect(g); g.connect(MUS.gain);
+      o.start(t); o2.start(t); o.stop(t+dur+0.05); o2.stop(t+dur+0.05);
+    }
+    function musStep(step, t){
+      const bar=Math.floor(step/16)%4, s=step%16, root=MUS_CHORDS[bar];
+      const barDur=(60/96)*4;
+      if(s===0){
+        musDrone(t, root, barDur);
+        [12,19,24].forEach(iv=> musHorn(t, root+iv, barDur*0.94, iv===24? 0.045 : 0.06));
+      }
+      const lead=MUS_LEAD[bar][s];
+      if(lead) musHorn(t, lead, barDur*0.42, 0.08);
+      if(MUS_WAR.indexOf(s)>=0) musDrum(t, s===0||s===8);
+      if(s===4 || s===12) musDrum(t, false);
+      if(bar===3 && s===12) musDrum(t, true);
+    }
+    function startMusic(){
+      if(!musicOn || MUS) return;
+      const c=ac(); if(!c) return;
+      const g=c.createGain();
+      g.gain.value=0; g.connect(c.destination);
+      g.gain.linearRampToValueAtTime(0.16, c.currentTime+1.2);
+      const len=Math.floor(c.sampleRate*0.1), buf=c.createBuffer(1, len, c.sampleRate), d=buf.getChannelData(0);
+      for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*(1-i/len);
+      MUS={gain:g, step:0, next:c.currentTime+0.06, noiseBuf:buf, timer:null};
+      MUS.timer=setInterval(()=>{
+        if(!MUS || !AC) return;
+        while(MUS.next < AC.currentTime+0.45){
+          musStep(MUS.step, MUS.next);
+          MUS.next+=(60/96)/4;
+          MUS.step++;
+        }
+      }, 200);
+    }
+    function stopMusic(){
+      if(!MUS) return;
+      const m=MUS; MUS=null;
+      clearInterval(m.timer);
+      try{
+        if(AC){
+          m.gain.gain.cancelScheduledValues(AC.currentTime);
+          m.gain.gain.setValueAtTime(m.gain.gain.value, AC.currentTime);
+          m.gain.gain.linearRampToValueAtTime(0.0001, AC.currentTime+0.3);
+          setTimeout(()=>{ try{ m.gain.disconnect(); }catch(e){} }, 400);
+        }
+      }catch(e){}
+    }
+    function updateMusicUI(){
+      const cur=$('#set-music-cur'); if(cur) cur.textContent=musicOn? 'On — drums & horns of the arena' : 'Off';
+      const chk=$('#music-check'); if(chk) chk.textContent=musicOn? '✓' : '';
+    }
+    $('#set-row-music').addEventListener('click', ()=>{
+      musicOn=!musicOn;
+      try{ localStorage.setItem(MUS_KEY, musicOn? 'on' : 'off'); }catch(e){}
+      updateMusicUI();
+      if(musicOn){ musArmed=true; startMusic(); toast('Music: On — the drums of the arena.'); }
+      else { stopMusic(); toast('Music: Off.'); }
+    });
+    updateMusicUI();
+    /* First tap or key arms the music (browser autoplay rules) —
+       startMusic() itself is idempotent, so this stays a cheap
+       no-op once the march is playing. */
+    function musKick(){ musArmed=true; if(musicOn) startMusic(); }
+    ['pointerdown','touchstart','keydown'].forEach(ev=> document.addEventListener(ev, musKick, {passive:true}));
+    document.addEventListener('visibilitychange', ()=>{
+      if(document.visibilityState==='hidden') stopMusic();
+      else if(musArmed && musicOn) startMusic();
+    });
     /* ---------- graphics quality setting (0.7.6) ----------
        Low / Medium / High / Ultra High — and like the frame rate,
        the pick is real, not a label. Each tier drives three genuine
@@ -7309,7 +7844,11 @@
     function gfxTier(){ return GFX_TIERS[gfxMode]||GFX_TIERS.med; }
     function applyGfxTo(G, kind){
       if(!G || !G.renderer || !G.scene) return;
-      const t=gfxTier(), dpr=window.devicePixelRatio||1;
+      /* Ultra Pack (1.1): while the pack is installed and on, its tier
+         sits on top of the picked one — fullest resolution, the largest
+         shadow maps and the sharpest filtering the device offers. Off
+         or not downloaded, the picked tier rules exactly as before. */
+      const t=(typeof packTierOverride==='function' && packTierOverride()) || gfxTier(), dpr=window.devicePixelRatio||1;
       G.renderer.setPixelRatio(Math.min(dpr, t.pr));
       if(kind==='fight'){ if(typeof fitFight==='function') fitFight(); }
       else { G.w=0; G.h=0; } /* the stage loop re-sizes (and so applies the ratio) next frame */
@@ -7331,11 +7870,12 @@
       const tuneTex=tex=>{ if(tex && tex.anisotropy!==an){ tex.anisotropy=an; tex.needsUpdate=true; } };
       G.scene.traverse(o=>{ if(o.material){ (Array.isArray(o.material)? o.material : [o.material]).forEach(m=>{ if(m.map) tuneTex(m.map); }); } });
       if(G.scene.background && G.scene.background.isTexture) tuneTex(G.scene.background);
+      try{ packSyncScene(G); }catch(e){} /* Ultra Pack textures & detail (1.1) */
     }
-    function applyGfx(){ applyGfxTo(GL, 'fight'); applyGfxTo(STAGE, 'stage'); }
+    function applyGfx(){ applyGfxTo(GL, 'fight'); applyGfxTo(STAGE, 'stage'); if(typeof CPREV!=='undefined' && CPREV) applyGfxTo(CPREV, 'stage'); }
     const GFX_SUB={low:'Low — lightest draw', med:'Medium — the classic look', high:'High — sharper & richer', ultra:'Ultra High — maxed out'};
     function updateGfxUI(){
-      const cur=$('#set-gfx-cur'); if(cur) cur.textContent=GFX_SUB[gfxMode]||GFX_SUB.med;
+      const cur=$('#set-gfx-cur'); if(cur) cur.textContent=(GFX_SUB[gfxMode]||GFX_SUB.med)+((typeof PACK!=='undefined' && PACK.installed)? (PACK.on?' · Ultra Pack on':' · Ultra Pack off') : '');
       ['low','med','high','ultra'].forEach(k=>{ const c=$('#gfx-check-'+k); if(c) c.textContent=(gfxMode===k)? '✓' : ''; });
     }
     function setGfxMode(m){
