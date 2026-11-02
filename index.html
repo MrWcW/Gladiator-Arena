@@ -2026,7 +2026,25 @@
         #scr-create .stats-box .statline span{width:40px}
       }
 
-</style>
+
+      /* ---------- 1.0: daily rewards, daily bout, prestige ---------- */
+      .chip .dot{display:none; width:8px; height:8px; border-radius:50%; background:#e9b93c; margin-left:5px; vertical-align:2px}
+      .chip .dot.on{display:inline-block}
+      .daily-strip{display:flex; align-items:center; gap:8px; width:100%; text-align:left; margin:5px 0 2px; padding:8px 11px; border-radius:12px; border:1.5px solid var(--line); background:var(--panel2); color:var(--ink); font-family:"Spectral",serif; font-size:13.5px; cursor:pointer}
+      .daily-strip b{font-family:Cinzel,serif; font-size:13px; white-space:nowrap}
+      .daily-strip .ds-name{flex:1 1 auto; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+      .daily-strip .ds-purse{white-space:nowrap; font-weight:700; color:var(--bronze)}
+      .daily-strip .ds-done{white-space:nowrap; color:var(--good); font-weight:700}
+      .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin:10px 0}
+      .cal-day{border:1.5px solid var(--line); border-radius:12px; padding:8px 2px 7px; text-align:center; background:var(--panel2); min-width:0}
+      .cal-day .cd-d{display:block; font-family:Cinzel,serif; font-size:11px; font-weight:700; letter-spacing:.03em}
+      .cal-day .cd-r{display:block; font-size:12.5px; font-weight:700; margin-top:3px; white-space:nowrap}
+      .cal-day .cd-s{display:block; font-size:12px; margin-top:2px; min-height:15px}
+      .cal-day.today{border-color:var(--gold); box-shadow:0 0 0 2px rgba(184,134,11,.25)}
+      .cal-day.done{opacity:.72}
+      .cal-day.locked{opacity:.55}
+      @media (max-width:420px){ .cal-day .cd-r{font-size:11px} .cal-day .cd-d{font-size:10px} }
+  </style>
   </head>
   <body>
 
@@ -2156,6 +2174,7 @@
         </div>
         <div style="display:flex; gap:8px; flex-wrap:wrap">
           <div class="chip">🏋 <b id="st-tp">3</b> pts</div>
+          <button class="chip" id="btn-daily" type="button" title="Daily rewards">📅 Daily<span class="dot" id="daily-dot"></span></button>
           <button class="chip" id="btn-settings" type="button" title="Settings">⚙ Settings</button>
         </div>
       </div>
@@ -2169,6 +2188,7 @@
           <div class="tagrow">
             <span id="h-rank" class="tag light">Tiro</span>
             <span class="tag light">⚜ <span id="h-tier">Beggar</span></span>
+            <span class="tag light hidden" id="h-prestige">✦ Prestige 1</span>
             <span id="h-body" class="tag light">Heavyweight</span>
             <span class="tag light">Level <b id="h-level">1</b></span>
             <span class="tag light">Bouts won: <b id="h-wins">0</b></span>
@@ -2211,12 +2231,13 @@
               <div class="st"><b id="h-armor" style="font-size:14px; line-height:24px">Leather</b><span>🛡 Armour Worn</span></div>
               <div class="st"><b id="h-tp">3</b><span>🏋 Training Pts</span></div>
             </div>
-            <h3 class="cz" style="font-size:14px; margin:10px 0 2px">🛣 The road to Legend — ten leagues, forty bouts</h3>
+            <h3 class="cz" style="font-size:14px; margin:10px 0 2px">🛣 The road to Legend — eleven leagues, forty-four bouts</h3>
             <div class="league-rail" id="league-rail"></div>
             <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px">
               <button class="btn ghost small" id="btn-howto" type="button">How Fighting Works</button>
               <button class="btn ghost small" id="btn-sound" type="button">Sound: On</button>
               <button class="btn ghost small" id="btn-reset" type="button">New Gladiator</button>
+              <button class="btn ghost small hidden" id="btn-prestige" type="button">✦ Prestige — Start the Ladder Again</button>
             </div>
           </div>
         </section>
@@ -2301,6 +2322,7 @@
               <div class="bout-lab">Difficulty</div>
               <div class="diff-row" id="diff-row"></div>
               <div class="small" id="bout-waves" style="margin:2px 0 4px"></div>
+              <button class="daily-strip" id="btn-daily-bout" type="button"><b>☀ Today’s Bout</b><span class="ds-name" id="daily-bout-name">—</span><span class="ds-purse" id="daily-bout-purse"></span><span class="ds-done" id="daily-bout-done"></span></button>
               <div class="mode-row">
                 <div class="modebtn on" id="btn-mode-prog"><b>🏆 Progression</b><span id="mode-prog-sub">Career bouts — climb the ranks</span></div>
               </div>
@@ -2374,6 +2396,16 @@
             <p class="muted small" style="margin-top:8px">Mercury does not hold goods, not even for champions. New stock arrives at dawn.</p>
           </div>
         </section>
+        <!-- DAILY REWARDS SHEET (1.0, opened by the 📅 Daily chip) -->
+        <section id="tab-daily" class="sheet hidden">
+          <div class="sheet-head"><h3 class="cz">📅 Daily Rewards</h3><button class="sheet-x" type="button" data-close-sheet aria-label="Close">✕</button></div>
+          <div class="sheet-body">
+            <p class="muted small" style="margin:0">Come back each day to claim. <b id="daily-streak">Streak: 0 days</b> · Miss a day and the streak restarts.</p>
+            <div class="cal-grid" id="cal-grid"></div>
+            <button class="btn red" id="btn-claim-daily" type="button" style="width:100%">Claim Today’s Reward</button>
+            <p class="muted small" id="daily-note" style="margin:8px 0 0">One claim a day. Day 7 pays the big purse.</p>
+          </div>
+        </section>
       </div>
     </div>
 
@@ -2437,7 +2469,7 @@
     <div id="modal-root"><div class="modal" id="modal-box"></div></div>
     <div class="toast" id="toast"></div>
 
-    <div class="ver-badge" id="ver-badge">v0.9.5</div>
+    <div class="ver-badge" id="ver-badge">v1.0</div>
     <div id="boot-note" role="status">⏳ Raising the arena…<br/>If this note stays, this copy can’t run the game here — open the file in a real browser tab (Chrome, Safari, Firefox or Edge), not a preview pane.</div>
 
     <script>
@@ -2483,6 +2515,7 @@
     const sCoin=()=>{ tone(940,0.07,'square',0.06); setTimeout(()=>tone(1420,0.13,'square',0.06),65); };
     const sDrum=()=>{ tone(64,0.35,'sine',0.4,40); setTimeout(()=>tone(64,0.3,'sine',0.32,40),260); };
     const sCheer=()=>{ noiseS(1.1,0.10,900); setTimeout(()=>noiseS(0.9,0.07,1100),180); };
+    const sGroan=()=>{ tone(150,0.5,'sawtooth',0.05,70); noiseS(0.7,0.06,320); }; /* 1.0: the crowd groans — a heavy hit taken, a fall, a lost bout */
     const sHorn=()=>{ tone(196,0.5,'sawtooth',0.07,196); tone(147,0.5,'sawtooth',0.05,147); };
     /* Skill cues (0.5.4): a bright ring when a timed block becomes a parry,
        and a low warning growl when a foe winds up a telegraphed heavy. */
@@ -2835,6 +2868,8 @@
       hoplomachus:{label:'Hoplomachus',      body:'balanced', wtype:'spear',   shield:'parma',  helm:'thraex',   hp:94,  dmg:10, spd:132, aspd:0.85, blockR:0.50, blockCh:0.30, ai:'poker',    desc:'Greek spearman. Fights at long reach — crowd him to take the spear away.'},
       dimachaerus:{label:'Dimachaerus',      body:'lean',     wtype:'dual',    shield:null,     helm:'none',     hp:88,  dmg:8,  spd:162, aspd:1.35, blockR:0.25, blockCh:0.15, ai:'flurry',   desc:'Two swords, no shield. Attacks in flurries of three — block the flurry, then answer.'},
       brute:      {label:'Crupellarius Brute',body:'heavy',   wtype:'axe',     shield:null,     helm:'secutor',  hp:172, dmg:14, spd:88,  aspd:0.65, blockR:0.35, blockCh:0.20, ai:'brute',    desc:'Gallic heavy in full plate. Slow steps, a huge axe, and a charge that closes ground fast.'},
+      velox:      {label:'Velox Net-Dancer', body:'lean',     wtype:'trident', shield:'net',    helm:'none',     hp:70,  dmg:8,  spd:186, aspd:1.15, blockR:0.15, blockCh:0.08, ai:'retiarius',desc:'Net and trident at a dancer’s pace — the fastest feet in Rome. His net pins you; corner him fast.'},
+      testudo:    {label:'Testudo Wall',     body:'heavy',    wtype:'gladius', shield:'scutum', helm:'murmillo', hp:185, dmg:11, spd:74,  aspd:0.60, blockR:0.85, blockCh:0.62, ai:'brute',    desc:'A walking shield wall. Very slow, blocks almost everything — break his guard or circle behind him.'},
       champion:   {label:'Champion',         body:'balanced', wtype:'spatha',  shield:'parma',  helm:'champion', hp:235, dmg:16, spd:136, aspd:1.00, blockR:0.60, blockCh:0.45, ai:'champion', desc:'Champion of the Colosseum. Below half health he turns furious — faster and harder. Finish him quickly.'}
     };
     const LEAGUES=[
@@ -2842,7 +2877,8 @@
       {name:'League III — The Munera', from:8},{name:'League IV — Favored of the Editor', from:12},
       {name:'League V — The Colosseum', from:16},{name:'League VI — Games of the Gods', from:20},
       {name:'League VII — The Emperor’s Trials', from:24},{name:'League VIII — The Divine Games', from:28},
-      {name:'League IX — Clash of the Immortals', from:32},{name:'League X — Throne of Olympus', from:36}
+      {name:'League IX — Clash of the Immortals', from:32},{name:'League X — Throne of Olympus', from:36},
+      {name:'League XI — Beyond Olympus', from:40}
     ];
     function leagueOf(i){ let L=LEAGUES[0]; for(const l of LEAGUES) if(i>=l.from)L=l; return L; }
     const BOUTS=[
@@ -2890,11 +2926,17 @@
       {name:'The Emperor’s Doom', desc:'The Emperor sends the three who have never failed him: his wall, his hound and his spear. All at once.', foes:[{c:'murmillo', n:'Brutus the Gate', s:1.8},{c:'secutor', n:'Varro the Hound', s:1.8},{c:'hoplomachus', n:'Leon of Sparta', s:1.8}], conc:3},
       {name:'Two Suns', desc:'Aurelius and Cassius at the height of their powers. The hardest two-man bout in Rome.', foes:[{c:'champion', n:'Aurelius Maximus', s:1.5},{c:'champion', n:'Cassius, the Fallen Star', s:1.5}], conc:2},
       {name:'The Last Immortal', desc:'Imperator, the Undying, who has never fallen — with Felix Twin-Blade at his shoulder.', foes:[{c:'champion', n:'Imperator, the Undying', s:1.6},{c:'dimachaerus', n:'Felix Twin-Blade', s:1.75}], conc:2},
-      {name:'Throne of Olympus', desc:'Aurelius, Cassius and Imperator: the three greatest swords who ever lived. Win this, and the ladder ends at a throne.', foes:[{c:'champion', n:'Aurelius Maximus', s:1.5},{c:'champion', n:'Cassius, the Fallen Star', s:1.45},{c:'champion', n:'Imperator, the Undying', s:1.35}], conc:2}
+      {name:'Throne of Olympus', desc:'Aurelius, Cassius and Imperator: the three greatest swords who ever lived. Win this, and the ladder ends at a throne.', foes:[{c:'champion', n:'Aurelius Maximus', s:1.5},{c:'champion', n:'Cassius, the Fallen Star', s:1.45},{c:'champion', n:'Imperator, the Undying', s:1.35}], conc:2},
+      /* ---- 1.0: League XI — Beyond Olympus, bouts 41–44. Two new foe
+         styles debut here: the velox net-dancer and the testudo wall. ---- */
+      {name:'The Net Dancers', desc:'Two velox net-dancers, nets everywhere. Keep moving.', foes:[{c:'velox', n:'Sabinus the Swift', s:1.5},{c:'velox', n:'Laetus the Eel', s:1.5}], conc:2},
+      {name:'The Walking Wall', desc:'A testudo wall, with a net-dancer darting behind it.', foes:[{c:'testudo', n:'Maurus the Wall', s:1.35},{c:'velox', n:'Sabinus the Swift', s:1.55}], conc:2},
+      {name:'Walls and Spears', desc:'Testudo, spearman and champion, all at once.', foes:[{c:'testudo', n:'Maurus the Wall', s:1.45},{c:'hoplomachus', n:'Leon of Sparta', s:1.7},{c:'champion', n:'Cassius, the Fallen Star', s:1.2}], conc:3},
+      {name:'Beyond Olympus', desc:'Imperator, a testudo wall and a velox dancer. The last bout in Rome.', foes:[{c:'champion', n:'Imperator, the Undying', s:1.6},{c:'testudo', n:'Maurus the Wall', s:1.5},{c:'velox', n:'Laetus the Eel', s:1.7}], conc:3}
     ];
     function boutPurse(i){ return Math.round(55 + i*26 + (BOUTS[i].foes.length-1)*35); }
     function boutXP(i){ return 30 + i*11; }
-    const RANKS=[[0,'Tiro'],[2,'Gregarius'],[4,'Notatus'],[6,'Veteran'],[9,'Primus Palus'],[12,"Editor's Favorite"],[15,'Champion of the Provinces'],[18,'Primus of Rome'],[20,'Legend of the Colosseum'],[22,'Emperor’s Champion'],[25,'Living Legend'],[28,'God of the Arena'],[31,'Titan of the Sand'],[34,'Myth of Rome'],[37,'Equal of the Gods'],[40,'Immortal of the Arena']];
+    const RANKS=[[0,'Tiro'],[2,'Gregarius'],[4,'Notatus'],[6,'Veteran'],[9,'Primus Palus'],[12,"Editor's Favorite"],[15,'Champion of the Provinces'],[18,'Primus of Rome'],[20,'Legend of the Colosseum'],[22,'Emperor’s Champion'],[25,'Living Legend'],[28,'God of the Arena'],[31,'Titan of the Sand'],[34,'Myth of Rome'],[37,'Equal of the Gods'],[40,'Immortal of the Arena'],[44,'God Beyond Olympus']];
     const ROMAN_NAMES=['Marcus','Gaius','Lucius','Titus','Decimus','Quintus','Aulus','Sextus','Flavius','Cassius','Varro','Severus','Maximus','Corvus','Felix','Rufus','Cato','Nero Claudius','Atilius','Spiculus'];
     const DRILLS=[
       {key:'str', name:'Strength — The Palus', desc:'Strike the wooden stake with a double-weight practice sword until your arms burn.', stat:'Strength'},
@@ -2909,7 +2951,7 @@
       G={name:name, body:body, level:1, xp:0, den:120, str:5, agi:5, vit:5, tec:5, tp:3,
          wins:0, nextBout:0, legendWins:0, survBest:0, trialWins:0, renown:0, progWins:0, tier:0, inv:[], eqUid:0, uidSeq:1,
          drillProg:{str:0,agi:0,vit:0,tec:0}, pendingLevels:0, fights:0,
-         diff:'normal', armors:['leather'], eqArmor:'leather', store:null};
+         diff:'normal', armors:['leather'], eqArmor:'leather', store:null, prestige:0, dailyLogin:{streak:0, last:''}, dailyDone:''};
       const uid=addWeapon('rudis'); G.eqUid=uid;
     }
     /* ============================== saving (0.5.1) ==============================
@@ -2964,6 +3006,10 @@
       g.armors=Array.isArray(raw.armors)? raw.armors.filter((a,ix,arr)=>AMAP[a] && arr.indexOf(a)===ix) : ['leather'];
       if(!g.armors.length) g.armors=['leather'];
       g.eqArmor=(AMAP[raw.eqArmor] && g.armors.includes(raw.eqArmor))? raw.eqArmor : g.armors[0];
+      g.prestige=num(raw.prestige,0,0);
+      const dl=(raw.dailyLogin && typeof raw.dailyLogin==='object')? raw.dailyLogin : {};
+      g.dailyLogin={streak:num(dl.streak,0,0), last:(typeof dl.last==='string' && /^\d{4}-\d{2}-\d{2}$/.test(dl.last))? dl.last : ''};
+      g.dailyDone=(typeof raw.dailyDone==='string' && /^\d{4}-\d{2}-\d{2}$/.test(raw.dailyDone))? raw.dailyDone : '';
       g.store=null;
       if(raw.store && typeof raw.store==='object' && typeof raw.store.date==='string' && Array.isArray(raw.store.items)){
         const itemsOk=raw.store.items.every(it=>it && isFinite(+it.price) && ((it.kind==='weapon'&&WMAP[it.wid])||(it.kind==='armor'&&AMAP[it.aid])||(it.kind==='chest'&&CHESTS.some(c=>c.id===it.cid))));
@@ -3008,6 +3054,26 @@
     function ladderTitle(){ return LADDER[clamp((G&&G.tier)||0,0,LADDER.length-1)]; }
     function leagueStanding(){ let s=STANDINGS[0][1]; for(const t of STANDINGS){ if(((G&&G.renown)||0)>=t[0]) s=t[1]; } return s; }
     function tournamentReady(){ return !!G && (G.progWins||0)>=TOURN_WINS; }
+    /* ---------- 1.0: prestige, daily bout, daily rewards ---------- */
+    function dayStr(off){ const d=new Date(); if(off) d.setDate(d.getDate()+off); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+    function prestigeMul(){ return 1+((G&&G.prestige)||0)*0.05; } /* +5% purse and damage per prestige */
+    function careerDone(){ return !!G && G.nextBout>=BOUTS.length; }
+    const DAILY_REWARDS=[50,75,100,150,200,300,500];
+    function dailyState(){
+      const dl=(G&&G.dailyLogin)||{streak:0,last:''}, today=dayStr(0);
+      if(dl.last===today){ const claimed=(dl.streak%7===0 && dl.streak>0)? 7 : dl.streak%7; return {claimable:false, claimed:claimed, todayIdx:-1, streak:dl.streak}; }
+      if(dl.last===dayStr(-1)){ return {claimable:true, claimed:dl.streak%7, todayIdx:dl.streak%7, streak:dl.streak}; }
+      return {claimable:true, claimed:0, todayIdx:0, streak:0};
+    }
+    const DAILY_BOUTS=[
+      {name:'The Dawn Champion', foes:[{c:'champion', n:'Cassius, the Fallen Star', s:1.05}], conc:1},
+      {name:'Nets at Noon', foes:[{c:'velox', n:'Sabinus the Swift', s:1.25},{c:'velox', n:'Laetus the Eel', s:1.25}], conc:2},
+      {name:'The Wall at Dusk', foes:[{c:'testudo', n:'Maurus the Wall', s:1.15},{c:'thraex', n:'Rez of Thrace', s:1.35}], conc:2},
+      {name:'Twin Blades', foes:[{c:'dimachaerus', n:'Felix Twin-Blade', s:1.35},{c:'dimachaerus', n:'Castor Twin-Blade', s:1.35}], conc:2},
+      {name:'Oak and Net', foes:[{c:'brute', n:'Brennus the Oak', s:1.2},{c:'retiarius', n:'Nereus the Fisherman', s:1.4}], conc:2}
+    ];
+    function dailyBoutDef(){ const s=dayStr(0); let h=0; for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0; return DAILY_BOUTS[h%DAILY_BOUTS.length]; }
+    function dailyPurse(){ return Math.round(420*prestigeMul()*(DIFFS[(G&&G.diff)||'normal'].purseMul)); }
     function ownedCount(wid){ return G.inv.filter(i=>i.wid===wid).length; }
 
     /* ============================== screens / modal ============================== */
@@ -3073,7 +3139,10 @@
       $('#chest-purse').textContent=fmtWallet(G.den);
       const ad0=armorDef(); $('#h-armor').textContent=ad0?ad0.short:'None'; $('#h-armor').style.color=ad0?ad0.css2:'';
       $('#st-weap').textContent=eqDef().name; $('#st-armor').textContent=ad0?ad0.short:'None'; $('#st-tp').textContent=G.tp;
-      renderBout(); renderDrills(); renderInv(); renderArmor(); renderChests(); renderStore();
+      const hp=$('#h-prestige'); if(hp){ hp.textContent='✦ Prestige '+(G.prestige||0); hp.classList.toggle('hidden', !(G.prestige>0)); }
+      const pb=$('#btn-prestige'); if(pb) pb.classList.toggle('hidden', !careerDone());
+      const dd=$('#daily-dot'); if(dd) dd.classList.toggle('on', dailyState().claimable);
+      renderBout(); renderDrills(); renderInv(); renderArmor(); renderChests(); renderStore(); renderDaily();
       saveGame();
       refreshStageModel();
     }
@@ -3085,10 +3154,10 @@
       const bd=curBoutDef(), b=BOUTS[bd.idx];
       $('#bout-league').textContent = bd.exhibition ? 'Champion’s Exhibition — the legend, again, harder' : leagueOf(bd.idx).name;
       $('#bout-title').textContent = bd.exhibition ? 'Exhibition: '+b.name+' (×'+(G.legendWins+1)+')' : ('Bout '+(bd.idx+1)+' of '+BOUTS.length+' — '+b.name);
-      const FOECOL={novice:'#8d8578', thraex:'#5d8a3c', murmillo:'#b3372f', retiarius:'#2e8a7a', secutor:'#5a6e82', hoplomachus:'#3f74a8', dimachaerus:'#7d4a9e', brute:'#a05a2c', champion:'#c08a12'};
+      const FOECOL={novice:'#8d8578', thraex:'#5d8a3c', murmillo:'#b3372f', retiarius:'#2e8a7a', secutor:'#5a6e82', hoplomachus:'#3f74a8', dimachaerus:'#7d4a9e', brute:'#a05a2c', champion:'#c08a12', velox:'#1f7a8c', testudo:'#6e5a3e'};
       $('#foe-list').innerHTML=b.foes.map(f=>{ const c=CLASSES[f.c], col=FOECOL[f.c]||'#8d8578'; return '<div class="foe-chip" style="border-top:4px solid '+col+'" title="Tap for the full breakdown"><b>'+f.n+'</b><br/><span style="color:'+col+'; font-weight:700; font-family:Cinzel,serif; font-size:13px">'+c.label.toUpperCase()+'</span><br/><span class="small">❤️ '+c.hp+' · ⚔️ '+c.dmg+' · <span style="color:var(--bronze); font-weight:700">▾ more</span></span><span class="foe-more muted"><br/>'+c.desc+'</span></div>'; }).join('');
       const diff=DIFFS[G.diff||'normal'];
-      const purse=boutPurse(bd.idx)*diff.purseMul*(bd.exhibition?(1+G.legendWins*0.35):1);
+      const purse=boutPurse(bd.idx)*diff.purseMul*(bd.exhibition?(1+G.legendWins*0.35):1)*prestigeMul();
       $('#bout-purse').textContent=fmtDen(Math.round(purse));
       $('#play-sub').textContent=(bd.exhibition?'Exhibition — ':'Bout '+(bd.idx+1)+' · ')+b.name+' · '+diff.label+' · purse '+fmtDen(Math.round(purse));
       $('#diff-row').innerHTML=Object.keys(DIFFS).map(k=>{ const d=DIFFS[k]; return '<button type="button" class="diffbtn'+(k===(G.diff||'normal')?' on':'')+'" data-diff="'+k+'" style="--dc:'+d.color+'"><b style="color:'+d.color+'">'+(d.ico||'')+' '+d.label+'</b><span>🌊'+d.waves+' · 💪×'+d.foeMul.toFixed(2)+' · 🪙×'+d.purseMul.toFixed(1)+'</span></button>'; }).join('');
@@ -3107,6 +3176,7 @@
         '<span class="ichip">♾️ Endless after the win</span>';
       const sv=$('#chal-surv-sub'); if(sv) sv.textContent='Endless waves · 🏆 Best: Wave '+(G.survBest||0);
       const tv=$('#chal-trial-sub'); if(tv) tv.textContent='One wave · '+trialFoeCount()+' killers · 🏆 Won ×'+(G.trialWins||0);
+      const dbn=$('#daily-bout-name'); if(dbn){ const db=dailyBoutDef(); dbn.textContent=db.name+' — '+db.foes.map(f=>f.n).join(' & '); $('#daily-bout-purse').textContent='🪙 '+fmtN(dailyPurse()); $('#daily-bout-done').textContent=(G.dailyDone===dayStr(0))? '✓ Won today' : ''; }
       renderModes();
       $('#bout-xp').textContent=boutXP(bd.idx);
       $('#league-rail').innerHTML=LEAGUES.map((l,li)=>{
@@ -3128,7 +3198,7 @@
       const fb=$('#btn-fight');
       if(fb) fb.textContent= tournamentReady()? '🏆 Enter the Tournament' : '⚔ Enter the Arena';
     }
-    const TABNAMES=['glad','fight','train','arsenal','chest','store','settings'];
+    const TABNAMES=['glad','fight','train','arsenal','chest','store','settings','daily'];
     function switchTab(name){
       $('#sheets').classList.remove('hidden');
       document.body.classList.add('sheet-open'); /* 0.7.7: the version badge steps aside so it never covers a sheet's close ✕ */
@@ -3154,6 +3224,41 @@
     window.addEventListener('resize', ()=>{ clearTimeout(rszT); rszT=setTimeout(()=>{ if(!G || $('#sheets').classList.contains('hidden')) return; renderArsenal(); renderStore(); renderChests(); if(!$('#settings-log').classList.contains('hidden')) renderUpdateLog(); }, 180); });
     document.querySelectorAll('[data-close-sheet]').forEach(b=>b.addEventListener('click', closeSheets));
     $('#btn-play').addEventListener('click', ()=>{ sCoin(); switchTab('fight'); });
+    /* 1.0: the 📅 Daily chip opens the rewards calendar; the Today's
+       Bout strip starts the daily bout; Prestige shows only once the
+       whole ladder is beaten (see renderHub). */
+    $('#btn-daily').addEventListener('click', ()=>{ sCoin(); renderDaily(); switchTab('daily'); });
+    $('#btn-daily-bout').addEventListener('click', ()=>{ closeSheets(); startFight('daily'); });
+    $('#btn-claim-daily').addEventListener('click', claimDaily);
+    $('#btn-prestige').addEventListener('click', ()=>{
+      openModal('<div class="fit-win"><h2 class="cz" style="color:var(--bronze)">✦ Prestige '+( (G.prestige||0)+1 )+'</h2>'+
+        '<p class="muted">You have beaten every bout in Rome. Prestige starts the ladder again from Bout 1 — you keep your level, stats, weapons and armour — and every prestige adds a lasting <b>+5% damage and +5% purse</b>. Foes scale with the ladder as before.</p>'+
+        '<div class="decision-btns"><button class="btn red" id="m-prestige-go">✦ Prestige — Start Again</button><button class="btn ghost" id="m-prestige-no">Not Yet</button></div></div>', true);
+      $('#m-prestige-go').addEventListener('click', ()=>{ G.prestige=(G.prestige||0)+1; G.nextBout=0; G.legendWins=0; closeModal(); closeSheets(); sFanfare('epic'); renderHub(); toast('✦ Prestige '+G.prestige+' — the ladder begins again, richer and harder-hitting.'); });
+      $('#m-prestige-no').addEventListener('click', closeModal);
+    });
+    function renderDaily(){
+      const grid=$('#cal-grid'); if(!grid||!G) return;
+      const st=dailyState();
+      $('#daily-streak').textContent='Streak: '+st.streak+' day'+(st.streak===1?'':'s');
+      grid.innerHTML=DAILY_REWARDS.map((r,i)=>{
+        const cls=i<st.claimed? 'done' : (i===st.todayIdx? 'today' : 'locked');
+        const mark=i<st.claimed? '✓' : (i===st.todayIdx? '🪙' : '🔒');
+        return '<div class="cal-day '+cls+'"><span class="cd-d">Day '+(i+1)+'</span><span class="cd-r">🪙 '+fmtN(r)+'</span><span class="cd-s">'+mark+'</span></div>';
+      }).join('');
+      const btn=$('#btn-claim-daily');
+      if(st.claimable){ btn.disabled=false; btn.textContent='Claim Day '+(st.todayIdx+1)+' · 🪙 '+fmtN(DAILY_REWARDS[st.todayIdx]); $('#daily-note').textContent='One claim a day. Day 7 pays the big purse.'; }
+      else { btn.disabled=true; btn.textContent='✓ Claimed — come back tomorrow'; $('#daily-note').textContent='Today’s reward is in your purse. Tomorrow unlocks Day '+((st.claimed%7)+1)+'.'; }
+    }
+    function claimDaily(){
+      if(!G) return; const st=dailyState(); if(!st.claimable) return;
+      const reward=DAILY_REWARDS[st.todayIdx];
+      G.dailyLogin={streak:st.streak+1, last:dayStr(0)};
+      G.den+=reward;
+      if(st.todayIdx===6) sFanfare('legendary'); else sCoin();
+      renderHub();
+      toast('📅 Day '+(st.todayIdx+1)+' claimed — +'+fmtDen(reward)+'. Streak: '+G.dailyLogin.streak+' day'+(G.dailyLogin.streak===1?'':'s')+'.');
+    }
     $('#foe-list').addEventListener('click', e=>{ const chip=e.target.closest('.foe-chip'); if(chip) chip.classList.toggle('open'); });
 
     /* ---------- training ---------- */
@@ -3511,7 +3616,7 @@
     const SKINS=[{s:'#8a5a33',l:'#ab7a4a',h:'#1d1208'},{s:'#a0663a',l:'#c08b58',h:'#2e1d10'},{s:'#6e4525',l:'#8f6136',h:'#120b06'},{s:'#b57a48',l:'#d09c66',h:'#3a2412'},{s:'#7c4f2c',l:'#9c6c40',h:'#241708'}];
     let F={on:false, paused:false, over:false, yielded:false, boutIdx:0, exhibition:false, conc:1, total:0, spawned:0, wave:1, crowd:0, combo:0, comboT:0, best:0, time:0, spawnT:0, hitstop:0, shake:0, bannerT:0, endT:-1, glow:0,
       pot:0, banked:0, doubleNext:false, decision:false, wavesCleared:0, waveTotal:1, waveSize:0, waveActive:false, result:null, plan:null, dropT:0,
-      endless:false, boutWon:false, victoryBanked:0, mode:'career', survival:false, trial:false, logT:0};
+      endless:false, boutWon:false, victoryBanked:0, mode:'career', survival:false, trial:false, tourn:false, daily:false, evening:false, crowdPulse:0, groanT:0, logT:0};
     let P=null, FOES=[], QUEUE=[], PARTS=[], TEXTS=[], NETS=[];
     let cam={x:0, z:-120, yaw:0, ax:0, az:215};
     const KEY={left:false, right:false, up:false, down:false, block:false};
@@ -3630,7 +3735,7 @@
          other foe (career, Survival, Trial) keeps tierFoeMul as-is. */
       const tmul=F.tourn? 1 : tierFoeMul();
       const f=mkF({isP:false, name:cfg.n, cls:cfg.c, body:c.body, wtype:c.wtype, shield:c.shield, helm:c.helm, back:false,
-        armor:(cfg.c==='murmillo'||cfg.c==='secutor'||cfg.c==='brute')?'iron':(cfg.c==='champion'?'gold':(cfg.c==='hoplomachus'?'bronze':null)),
+        armor:(cfg.c==='murmillo'||cfg.c==='secutor'||cfg.c==='brute'||cfg.c==='testudo')?'iron':(cfg.c==='champion'?'gold':(cfg.c==='hoplomachus'?'bronze':null)),
         hp:Math.round(c.hp*cfg.s*(cfg.hpMul||1)*(1+F.boutIdx*0.05)*es*tmul), dmg:c.dmg*(1+F.boutIdx*0.035)*cfg.s*(cfg.dmgMul||1)*es*tmul, reach:WREACH[c.wtype], aspd:c.aspd*(1+G.level*0.004)*(cfg.aspdMul||1),
         blockR:c.blockR, blockCh:c.blockCh, kbres:BODIES[c.body].kbres, crit:0.05, spd:c.spd*1.15*(cfg.spdMul||1), ai:c.ai,
         x:sp.x, z:sp.z, slot:(idx-(((F.waveSize||F.total)-1)/2))*80});
@@ -4194,7 +4299,7 @@
          than a slow, laboured one. Foes ride the same momentum on their
          class damage: a dimachaerus's flurry genuinely bites harder per
          hit than a brute's slow chop — the brute still wins on raw mass. */
-      let base=att.isP ? att.wdef.dmg*BODIES[G.body].dmg*(1+G.str*0.025)*(1+G.tec*0.01)*(1+(G.level-1)*0.02) : att.dmg;
+      let base=att.isP ? att.wdef.dmg*BODIES[G.body].dmg*(1+G.str*0.025)*(1+G.tec*0.01)*(1+(G.level-1)*0.02)*prestigeMul() : att.dmg;
       let dmg=base*(a.heavy?1.75:1)*(a.weak?0.6:1)*rnd(0.9,1.1);
       /* Dual-hand balance (0.6.3): the player's OFF-HAND blows land at
          70% — a pair's flurry stays fast, but each left-hand cut is a
@@ -4274,8 +4379,9 @@
         F.combo++; F.comboT=2; F.best=Math.max(F.best,F.combo); F.crowd=clamp(F.crowd+(a.heavy?7:4)+(crit?4:0),0,100);
         F.glow=Math.min(0.55, F.glow+(a.heavy?0.34:0.16)+(crit?0.15:0));
         if(F.combo%5===0){ addText(att,'COMBO ×'+F.combo+'!','#ffd94d',true); sCheer(); }
+        if(crit||a.heavy) F.crowdPulse=Math.min(1,(F.crowdPulse||0)+0.5); /* 1.0: big hits make the tiers jump */
       }
-      else F.combo=0;
+      else { F.combo=0; if(!blocked && (a.heavy||crit) && F.time>(F.groanT||0)){ F.groanT=F.time+2.5; F.crowd=clamp(F.crowd-6,0,100); sGroan(); } } /* 1.0: the crowd groans when you take a heavy blow */
       addText(def, Math.round(dmg)+(crit?'!':''), crit?'#ffd94d':(flank===2?'#ff9a3c':(flank===1?'#ffc46a':(blocked?'#b9c7d6':'#ffffff'))), crit||a.heavy||flank===2);
       addDust(def.x, def.z, 3);
       if(def.hp<=0 && !def.dead) killFighter(def);
@@ -4609,6 +4715,26 @@
        little stronger than the one before, drawing on sterner classes the
        deeper you go — and wave pay keeps climbing by the usual +40% a wave,
        so a fighter can keep going, free, for as long as he survives. */
+    function buildDailyPlan(){
+      const b=dailyBoutDef(), diff=DIFFS[G.diff||'normal'], totalWaves=diff.waves, plan=[];
+      const finalSize=Math.max(b.conc, b.foes.length);
+      const sizes=[];
+      for(let w=0; w<totalWaves; w++) sizes.push(totalWaves>1 ? clamp(Math.round(1+(finalSize-1)*(w/(totalWaves-1))),1,finalSize) : finalSize);
+      for(let i=1;i<sizes.length;i++) sizes[i]=clamp(sizes[i],sizes[i-1],sizes[i-1]+1);
+      if(sizes.length) sizes[sizes.length-1]=finalSize;
+      for(let i=sizes.length-2;i>=0;i--) if(sizes[i]<sizes[i+1]-1) sizes[i]=sizes[i+1]-1;
+      for(let w=0; w<totalWaves; w++){
+        const isFinal=w===totalWaves-1, size=sizes[w], r=waveRamp(w), cfgs=[];
+        for(let i=0;i<size;i++){
+          let src, named=false;
+          if(isFinal && i<b.foes.length){ src=b.foes[i]; named=true; }
+          else src=b.foes[(w*size+i)%b.foes.length];
+          cfgs.push({c:src.c, n:named? src.n : (WAVE_NAMES[(w*3+i*2)%WAVE_NAMES.length]+' the '+CLASSES[src.c].label), s:src.s*diff.foeMul, hpMul:r.hp, dmgMul:r.dmg, spdMul:r.spd, aspdMul:r.aspd});
+        }
+        plan.push(cfgs);
+      }
+      return plan;
+    }
     function buildEndlessWave(n){
       const b=BOUTS[F.boutIdx], diff=DIFFS[G.diff||'normal'];
       const extra=n-F.waveTotal;
@@ -4622,7 +4748,9 @@
       const pool=b.foes.map(f=>f.c);
       if(extra>=3) pool.push('secutor','thraex');
       if(extra>=5) pool.push('dimachaerus','hoplomachus');
+      if(extra>=5) pool.push('velox');
       if(extra>=7) pool.push('brute');
+      if(extra>=8) pool.push('testudo');
       if(extra>=9) pool.push('champion');
       const cfgs=[];
       for(let i=0;i<size;i++){
@@ -4635,6 +4763,7 @@
     function startWave(n){
       F.wave=n; QUEUE=(F.plan[n-1]||buildEndlessWave(n)).slice(); F.waveSize=QUEUE.length; F.spawned=0; F.waveActive=true; F.spawnT=0.9; F.dropT=0;
       if(n>1){ setBanner('WAVE '+n, 1.1); sHorn(); }
+      if(F.waveTotal>1 && n===F.waveTotal){ F.crowd=clamp(F.crowd+15,0,100); setTimeout(()=>sCheer(),350); } /* 1.0: the final wave roars */
       const cnt=Math.min(F.conc, QUEUE.length);
       for(let i=0;i<cnt;i++) spawnNext(true);
       hud();
@@ -4667,7 +4796,7 @@
       let bankedNow=0;
       if(F.wave%setSize()===0){ bankedNow=F.pot; F.banked+=F.pot; F.pot=0; }
       if(F.waveTotal>0 && F.wave>=F.waveTotal && !F.boutWon){
-        const purse0=boutPurse(F.boutIdx)*DIFFS[G.diff||'normal'].purseMul*(F.exhibition?(1+G.legendWins*0.35):1)*((F.trial||F.tourn)?2.2:1);
+        const purse0=F.daily? dailyPurse() : boutPurse(F.boutIdx)*DIFFS[G.diff||'normal'].purseMul*(F.exhibition?(1+G.legendWins*0.35):1)*((F.trial||F.tourn)?2.2:1)*prestigeMul();
         const bonus=Math.round(purse0*F.crowd/100*0.5);
         F.victoryBanked=Math.round(purse0)+bonus;
         F.banked+=F.victoryBanked;
@@ -4677,6 +4806,7 @@
            the ladder (never past Lord), the road in resets, and the
            win pays a champion's share of renown. */
           G.tier=Math.min(LADDER.length-1,(G.tier||0)+1); G.progWins=0; G.renown=(G.renown||0)+50; F.tournWon=true; }
+        else if(F.daily){ G.renown=(G.renown||0)+15; G.dailyDone=dayStr(0); }
         else if(!F.exhibition){ G.wins++; if(F.boutIdx===G.nextBout) G.nextBout++; G.renown=(G.renown||0)+10; }
         else { G.legendWins++; G.renown=(G.renown||0)+6; }
         sCheer();
@@ -4731,7 +4861,7 @@
       if(F.bannerT>0 && F.bannerT<9000){ F.bannerT-=dt; if(F.bannerT<=0) $('#banner-text').textContent=''; }
       F.shake=Math.max(0, F.shake-dt*26);
       F.glow=Math.max(0, F.glow-dt*2.4);
-      F.crowd=clamp(F.crowd-dt*1.5, 0, 100);
+      F.crowd=clamp(F.crowd-dt*1.5, 0, 100); F.crowdPulse=Math.max(0,(F.crowdPulse||0)-dt*0.8);
       if(F.comboT>0){ F.comboT-=dt; if(F.comboT<=0) F.combo=0; }
       const alive=aliveFoes().length;
       if(QUEUE.length && alive<F.conc){ F.spawnT-=dt; if(F.spawnT<=0){ spawnNext(false); F.spawnT=1.15; } }
@@ -5154,7 +5284,7 @@
         scene.background=makeSkyTexture();
         scene.fog=new THREE.Fog(0xe6c491, 1400, 3400);
         const camera=new THREE.PerspectiveCamera(46, CW/CHH, 1, 5600);
-        scene.add(new THREE.HemisphereLight(0xffe9c4, 0x8a6a44, 1.02));
+        const hemi=new THREE.HemisphereLight(0xffe9c4, 0x8a6a44, 1.02); scene.add(hemi);
         const sun=new THREE.DirectionalLight(0xfff1d6, 1.12);
         sun.position.set(280,640,60); sun.castShadow=true;
         sun.shadow.mapSize.set(2048,2048);
@@ -5163,16 +5293,29 @@
         sun.target.position.set(0,0,385);
         scene.add(sun); scene.add(sun.target);
         buildArena(scene);
+        /* 1.0: torchlights for evening bouts — four warm points around
+           the ring, lit only when applyEvening() turns the day off. */
+        const torches=[];
+        [[-520,300,120],[520,300,120],[-520,300,660],[520,300,660]].forEach(function(p){ const pl=new THREE.PointLight(0xff8c3a, 0, 900, 1.6); pl.position.set(p[0],p[1],p[2]); scene.add(pl); torches.push(pl); });
         const pgeo=new THREE.BufferGeometry();
         const ppos=new Float32Array(240*3);
         pgeo.setAttribute('position', new THREE.BufferAttribute(ppos,3));
         const points=new THREE.Points(pgeo, new THREE.PointsMaterial({color:0xe8cf9a, size:7, transparent:true, opacity:0.55, depthWrite:false}));
         points.frustumCulled=false; scene.add(points);
-        GL={renderer:renderer, scene:scene, camera:camera, points:points, ppos:ppos, netMeshes:[], sun:sun};
+        GL={renderer:renderer, scene:scene, camera:camera, points:points, ppos:ppos, netMeshes:[], sun:sun, hemi:hemi, torches:torches};
         guardContext(cv); /* a dropped graphics context recovers instead of freezing the fight (0.7.11) */
         applyGfxTo(GL, 'fight'); /* the picked graphics tier (0.7.6) — Medium is the classic draw above */
         return true;
       }catch(e){ return false; }
+    }
+    /* 1.0: evening light — same arena, dusk sky, dim sun, torches lit. */
+    function applyEvening(on){
+      if(!GL) return;
+      GL.scene.background = on? new THREE.Color(0x141c33) : makeSkyTexture();
+      if(GL.scene.fog) GL.scene.fog.color.set(on? 0x1c1626 : 0xe6c491);
+      if(GL.hemi){ GL.hemi.intensity=on? 0.38 : 1.02; GL.hemi.color.set(on? 0x8fa3cc : 0xffe9c4); }
+      if(GL.sun) GL.sun.color.set(on? 0xffb36b : 0xfff1d6);
+      if(GL.torches) GL.torches.forEach(function(pl){ pl.intensity=on? 1.15 : 0; });
     }
 
     /* Fit the WebGL canvas to the full-screen stage: the renderer and camera
@@ -5953,8 +6096,8 @@
       }
       /* Hazards alive (0.7.2): the log swings on the same pendulum the
          hit test reads, the fire pits breathe and their flames lick. */
-      animArena(GL.scene, F.time, F.crowd/100); /* living crowd & pennants (0.9) — hotter as fervor climbs */
-      if(GL.sun) GL.sun.intensity=1.12+Math.sin(F.time*1.3)*0.045; /* the sunlight breathes a touch (0.9) */
+      animArena(GL.scene, F.time, clamp(F.crowd/100+(F.crowdPulse||0)*0.5+((F.waveTotal>1&&F.wave>=F.waveTotal)?0.22:0),0,1.3)); /* living crowd (0.9, hotter 1.0: big-hit pulses, loudest in the final wave) */
+      if(GL.sun) GL.sun.intensity=(F.evening?0.42:1.12)+Math.sin(F.time*1.3)*0.045; /* the light breathes a touch (0.9; dusk level when evening, 1.0) */
       const hzAnim=GL.scene.userData.haz;
       if(hzAnim){
         if(hzAnim.logGroup) hzAnim.logGroup.rotation.x=logState().th;
@@ -6439,6 +6582,8 @@
         F.trial? '👑 The Champion’s Trial' :
         F.survival? '🏟 Survival — how deep can you go?' :
         '⚔ '+(F.exhibition? 'Exhibition — ' : 'Bout '+(F.boutIdx+1)+' — ')+BOUTS[F.boutIdx].name;
+      if(F.daily) $('#cine-cap').textContent='☀ Today’s Bout — '+dailyBoutDef().name;
+      if(F.evening) $('#cine-cap').textContent+=' · 🌙 Torch-lit';
       $('#cine').classList.remove('hidden');
       $('#cine').removeAttribute('aria-hidden'); /* 0.8.9: the Skip pill must be a real, reachable control while the sweep plays */
       $('#scr-fight').classList.add('cine-on');
@@ -6466,7 +6611,7 @@
     $('#btn-cine-skip').addEventListener('click', ()=>{ if(cine.on) endCine(); });
 
     function startFight(mode){
-      if(mode!=='survival' && mode!=='trial' && mode!=='tournament') mode='career';
+      if(mode!=='survival' && mode!=='trial' && mode!=='tournament' && mode!=='daily') mode='career';
       if(!initGL()){ openModal('<h2 class="cz">The Arena Gate Is Stuck</h2><p class="muted">This device could not start 3D graphics (WebGL) for the arena. The rest of the ludus still works — try a browser with WebGL enabled, or close other heavy tabs and try the bout again.</p><button class="btn red" onclick="document.getElementById(\'modal-root\').classList.remove(\'open\')">Back to the Ludus</button>'); return; }
       if(P&&P.model){ GL.scene.remove(P.model); disposeGroup(P.model); P.model=null; }
       for(const f of FOES){ if(f.model){ GL.scene.remove(f.model); disposeGroup(f.model); f.model=null; } }
@@ -6474,7 +6619,7 @@
       /* The Tournament (0.8) is flagged separately from the Trial
          so its gauntlet win climbs the ladder instead of counting
          trial wins. */
-      F.mode=mode; F.survival=(mode==='survival'); F.trial=(mode==='trial'); F.tourn=(mode==='tournament'); F.tournWon=false;
+      F.mode=mode; F.survival=(mode==='survival'); F.trial=(mode==='trial'); F.tourn=(mode==='tournament'); F.daily=(mode==='daily'); F.tournWon=false;
       F.boutIdx=bd.idx; F.exhibition=bd.exhibition; F.conc=BOUTS[bd.idx].conc;
       F.crowd=0; F.combo=0; F.best=0; F.time=0; F.over=false; F.yielded=false; F.paused=false; F.endT=-1; F.hitstop=0; F.shake=0; F.spawned=0; F.wave=1; F.spawnT=1.15; F.logT=0;
       F.pot=0; F.banked=0; F.doubleNext=false; F.decision=false; F.wavesCleared=0; F.result=null; F.dropT=0;
@@ -6510,13 +6655,21 @@
         F.waveTotal=1; F.total=F.plan[0].length;
       } else if(F.survival){
         F.plan=[]; F.waveTotal=0; F.total=0; F.endless=true; F.conc=2;
+      } else if(F.daily){
+        F.boutIdx=BOUTS.length-1; F.exhibition=false;
+        F.plan=buildDailyPlan(); F.waveTotal=F.plan.length; F.total=F.plan.reduce((a,w)=>a+w.length,0); F.conc=dailyBoutDef().conc;
       } else {
         F.plan=buildWavePlan(bd); F.waveTotal=F.plan.length; F.total=F.plan.reduce((a,w)=>a+w.length,0);
       }
       P=buildPlayer();
+      /* 1.0: torch-lit evening bouts — every third career bout, the
+         tournament, and alternate daily bouts fight by torchlight. */
+      F.evening = F.tourn ? true : (F.daily ? (new Date().getDate()%2===0) : (F.boutIdx%3===2));
+      applyEvening(F.evening);
       cam.yaw=Math.atan2(P.faceX, P.faceZ); cam.x=P.x; cam.z=P.z; cam.ax=P.x; cam.az=P.z;
       startWave(1);
-      $('#f-boutname').textContent= F.tourn? '🏆 Tournament · 3 champion bouts · win all three to rise above '+ladderTitle() :
+      $('#f-boutname').textContent= F.daily? '☀ Today’s Bout · '+dailyBoutDef().name+' · '+DIFFS[G.diff||'normal'].label+(F.evening?' · 🌙 Torch-lit':'') :
+        F.tourn? '🏆 Tournament · 3 champion bouts · win all three to rise above '+ladderTitle() :
         F.trial? '👑 Champion’s Trial · one wave · '+F.total+' killers · '+DIFFS[G.diff||'normal'].label :
         F.survival? '🏟 Survival · endless waves · '+DIFFS[G.diff||'normal'].label :
         (bd.exhibition?'Exhibition — ':'Bout '+(bd.idx+1)+' of '+BOUTS.length+' — ')+BOUTS[bd.idx].name+' · '+DIFFS[G.diff||'normal'].label+' · '+F.waveTotal+' waves';
@@ -6548,7 +6701,7 @@
          and cashing out is always free. */
       if(F.tourn && !F.boutWon) G.progWins=Math.max(0,(G.progWins||0)-2);
       else if(!F.boutWon && (result==='lose'||result==='yield')) G.progWins=Math.max(0,(G.progWins||0)-2);
-      const purse0=boutPurse(F.boutIdx)*DIFFS[G.diff||'normal'].purseMul*(F.exhibition?(1+G.legendWins*0.35):1)*((F.trial||F.tourn)?2.2:1);
+      const purse0=F.daily? dailyPurse() : boutPurse(F.boutIdx)*DIFFS[G.diff||'normal'].purseMul*(F.exhibition?(1+G.legendWins*0.35):1)*((F.trial||F.tourn)?2.2:1)*prestigeMul();
       const winnings=F.banked+F.pot;
       let purse, xp, lines=[];
       if(result==='yield'){ const share=F.boutWon?0:Math.round(purse0*0.1); purse=share+winnings; xp=F.boutWon? boutXP(F.boutIdx) : Math.round(boutXP(F.boutIdx)*0.2);
@@ -6561,18 +6714,19 @@
         lines=[['Banked — kept'+(F.boutWon?' (checkpoints + victory purse)':' at checkpoints'), fmtDen(F.banked)],['Unbanked winnings — lost in the sand', '−'+fmtDen(F.pot)],['Consolation — the crowd demands your return', fmtDen(cons)],['XP gained', xp]];
       }
       if(F.survival) xp=15+F.wavesCleared*12; /* Survival pays XP by depth reached (0.7.2) */
+      if(F.daily) xp=boutXP(BOUTS.length-1); /* 1.0: the daily bout pays top-bout XP */
       G.den+=purse; G.xp+=xp; G.tp=3; G.fights++;
       let leveledNote='';
       /* A bout won in the arena is recorded the moment its final planned wave
          falls (see onWaveCleared) so Endless play can follow it; the legacy
          'win' result keeps its own recording here, guarded against doubles. */
-      if(win && !F.boutWon && !F.exhibition && !F.trial && !F.tourn){ G.wins++; if(F.boutIdx===G.nextBout) G.nextBout++; G.renown=(G.renown||0)+10; }
+      if(win && !F.boutWon && !F.exhibition && !F.trial && !F.tourn && !F.daily){ G.wins++; if(F.boutIdx===G.nextBout) G.nextBout++; G.renown=(G.renown||0)+10; }
       if(win && !F.boutWon && F.exhibition){ G.legendWins++; G.renown=(G.renown||0)+6; }
       while(G.xp>=xpNext()){ G.xp-=xpNext(); G.level++; G.pendingLevels++; }
       if(G.pendingLevels>0) leveledNote='<p style="color:var(--bronze); font-weight:700">You reached level '+G.level+'! Choose your growth after this.</p>';
       showScreen('scr-hub'); renderHub();
-      if(win){ sCheer(); sCoin(); setTimeout(sCoin,190); }
-      const wasFinal=win && !F.exhibition && !F.trial && !F.tourn && F.boutIdx===BOUTS.length-1;
+      if(win){ sCheer(); sCoin(); setTimeout(sCoin,190); } else if(result==='lose'||result==='yield') sGroan(); /* 1.0: a lost bout draws the groan */
+      const wasFinal=win && !F.exhibition && !F.trial && !F.tourn && !F.daily && F.boutIdx===BOUTS.length-1;
       const cashed=result==='cashout', yielded=result==='yield';
       const survTitle=F.tourn? (F.boutWon? '🏆 TOURNAMENT WON!' : '🏆 THE TOURNAMENT IS LOST') :
         F.survival? (win||cashed? '🏟 SURVIVAL — '+F.wavesCleared+' WAVES' : '🏟 DOWN ON WAVE '+(F.wavesCleared+1)) : null;
@@ -6594,6 +6748,7 @@
         (F.tourn && !F.boutWon? '<p style="color:var(--bronze); font-weight:700">The tournament is lost — you keep your tier ('+ladderTitle()+'), and only 2 wins come off your tally (now '+(G.progWins||0)+'). Build back to '+TOURN_WINS+' net wins to qualify again.</p>' : '')+
         (F.survival? '<p style="color:var(--bronze); font-weight:700">🏆 Your Survival best: Wave '+G.survBest+'</p>' : '')+
         (F.trial && F.boutWon? '<p style="color:var(--bronze); font-weight:700">👑 Trial wins: '+G.trialWins+' — the Undying has fallen to you.</p>' : '')+
+        (F.daily && F.boutWon? '<p style="color:var(--bronze); font-weight:700">☀ Today’s Bout won — a new one arrives at dawn.</p>' : '')+
         '<div class="result-btns">'+
         '<button class="btn red" id="m-ludus">Return to the Ludus</button>'+
         (win?'<button class="btn" id="m-chests">Spend It — Weapon Chests</button>':'<button class="btn" id="m-train">Train Harder</button>')+
@@ -6950,6 +7105,7 @@
        its own entry to UPDATE_LOG below — never ship a version bump
        without its log entry. */
     const UPDATE_LOG=[
+      {v:'1.0', t:'Full release: League XI past Olympus, net-dancer and shield-wall foes, daily bout, daily reward calendar, prestige, torch-lit evening bouts, livelier crowd.'},
       {v:'0.9.5', t:'Welcome message above PLAY removed. PLAY now sits clean and centred with tidy spacing, and the home screen still fits whole.'},
       {v:'0.9.4', t:'Bout details removed. Fighter pick redesigned — description, abilities and stat bars show in full on one clean card. No scrolling, nothing cut off.'},
       {v:'0.9.3', t:'Next Bout rebuilt as one tidy page — foes, difficulty and modes in neat rows, details folded shut. Fits whole: no scrolling, nothing cut off.'},
@@ -7303,7 +7459,7 @@
       '<p><b>Real materials:</b> armour shows in the colours of what it is really made of — undyed linen, brown leather, bronze, dark lacquered iron, blue enamelled steel, and gold only on the golden cuirass — on you and on armoured foes alike, matching the gear each fighter wears. Blades are steel silver-grey with leather grips and bronze guards.</p>'+
       '<p><b>Armour:</b> what you wear is what you see. Your equipped armour paints your gladiator in the arena in its own colours — leather brown, bronze orange, crimson, azure, gold — and stops a share of every blow you take. Equip it in the Arsenal.</p>'+
       '<p><b>Mercury’s Market:</b> the god of trade keeps a stall in the hub. His weapons, armour and chests rotate <b>daily</b> — check back at dawn for new stock, and grab bargains before they’re gone.</p>'+
-      '<p><b>Between bouts:</b> train in the yard (3 points per bout fought), level up from XP, and keep climbing — 40 bouts, 10 leagues, and at the higher leagues, several enemies on the sand at once.</p>'+
+      '<p><b>Between bouts:</b> train in the yard (3 points per bout fought), level up from XP, and keep climbing — 44 bouts, 11 leagues, and at the higher leagues, several enemies on the sand at once.</p>'+
       '<p><b>🔥 Arena hazards:</b> the sand holds two <b>spike beds</b> (look for the red ring and the iron spikes) and two <b>fire pits</b> (scorched, glowing, ringed with stones). Standing in either hurts <b>anyone</b> — you or a foe — a few points at a time, and your armour blunts your share. Foes steer around them while they can, but knockback, lunges and shoves can put a man in the fire: that is the tactic. A <b>great spiked log</b> also swings across the middle of the arena — hung high on its frame, swinging fast, studded with iron spikes, and banded in iron and red ochre so it is hard to miss. It only bites while truly swinging: a solid hit that deals real damage, a hard shove along its arc and a brief stagger, once per pass — but it is solid at any speed, so running straight into it knocks you back off the timber, and foes steer wide of its sweep most of the time, though they can still be caught. Keep clear of its arc.</p>'+
       '<p><b>🎯 Challenges</b> (on the Next Bout page): <b>🏟 Survival</b> — endless waves from the first horn on your current bout’s foes; every wave pays, a checkpoint at every completed set banks your pot, and your deepest wave is remembered as your best. <b>👑 Champion’s Trial</b> — a single wave at final-bout strength: 2 killers on Easy, 3 on Medium, 4 on Hard and 5 on Legend, all at once, for a purse worth 2.2× the final bout’s. Winning it never changes your career progress — it is pure glory and gold.</p>'+
       '<p><b>👁 First person</b> (Settings → Camera): the view sits at your gladiator’s head with a wide, peripheral field of view, and turning is deliberately gentle — the view glides round instead of snapping, and attacks turn you most of the way toward your foe rather than whipping you round.</p></div>'+
