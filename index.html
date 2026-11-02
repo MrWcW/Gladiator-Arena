@@ -133,12 +133,57 @@
       .pack-bar-fill{height:100%; width:0%; border-radius:999px; background:linear-gradient(90deg,#c19244,#e8b62a); transition:width .15s ease}
       .pack-actions{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
       .pack-actions .btn{flex:1 1 auto; min-width:0}
+      /* Pack download loading screen (1.1.1): tapping Download Pack
+         brings the build up on screen — a full-screen card with the
+         live percentage, a progress bar, the MB count and its own
+         Cancel — instead of only a slim bar inside the sheet.
+         updatePackUI drives both bars from the same numbers, and the
+         card clears itself the moment the build finishes or is
+         cancelled. */
+      #pack-load{position:fixed; inset:0; z-index:90; display:flex; align-items:center; justify-content:center; background:rgba(12,7,2,.8); padding:18px}
+      .pack-load-card{width:min(420px,100%); text-align:center; background:linear-gradient(180deg,var(--panel2),var(--panel)); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow); padding:22px 20px 18px; animation:packloadin .2s ease}
+      @keyframes packloadin{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
+      @media (prefers-reduced-motion: reduce){ .pack-load-card{animation:none} }
+      .pack-load-ico{font-size:34px; line-height:1}
+      .pack-load-card h3{font-size:19px; margin-top:6px}
+      .pack-load-sub{margin:6px 0 0; font-size:13.5px; color:var(--ink2); line-height:1.45}
+      .pack-load-pct{font-family:"Cinzel",serif; font-weight:900; font-size:34px; color:var(--bronze); margin-top:12px; line-height:1.1}
+      .pack-load-bar{margin-top:6px; height:14px; text-align:left}
+      .pack-load-mb{margin:8px 0 0; font-size:13px; color:var(--ink2)}
+      #pack-load-cancel{margin-top:14px}
+      /* 1.1.1 fit fix: the Graphics sheet (intro + four quality rows +
+         the pack panel) ran taller than the sheet on most phones, and
+         since sheets never scroll, the pack panel — Download button
+         and all — sat half cut off at the bottom. Two squeeze tiers,
+         the same pattern as the other sheets: at 860px tall and under,
+         the intro clamps to two lines, the rows sit tighter and the
+         pack description clamps to three; at 720px and under the pack
+         description steps aside entirely. Nothing else is hidden, and
+         the whole panel — head, status, bar and buttons — shows. */
+      @media (max-height:860px){
+        #settings-gfx>p{display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden}
+        #settings-gfx .settings-list{gap:6px}
+        #settings-gfx .settings-list .set-row{padding:8px 11px}
+        #settings-gfx .pack-panel{padding:9px 11px; margin-top:8px}
+        #settings-gfx .pack-desc{display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden}
+        #settings-gfx .pack-actions{margin-top:8px}
+      }
+      @media (max-height:720px){
+        #settings-gfx .pack-desc{display:none}
+        #settings-gfx .settings-list .set-row{min-height:44px; padding:7px 11px}
+      }
       @media (max-height:640px){
         .pack-panel{padding:8px 10px; margin-top:8px}
         .pack-desc{display:none}
         #settings-gfx .settings-list .set-row{min-height:44px; padding:7px 11px}
         #settings-gfx .pack-actions{margin-top:8px}
       }
+      /* Map picker (1.2): one tidy row in Next Bout — six short-named arenas, nothing more. */
+      .map-row{display:flex; gap:6px; flex-wrap:nowrap; margin:4px 0 2px}
+      .mapbtn{flex:1 1 0; min-width:0; padding:6px 3px; border-radius:9px; border:2px solid var(--line); background:var(--panel2); color:var(--ink); font-family:Cinzel,serif; font-weight:700; font-size:12px; line-height:1.2; text-align:center; cursor:pointer}
+      .mapbtn small{display:block; font-size:9.5px; font-weight:400; color:var(--ink2); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+      .mapbtn.on{border-color:var(--bronze); background:color-mix(in srgb, var(--bronze) 16%, var(--panel2)); box-shadow:0 0 0 2px color-mix(in srgb, var(--bronze) 25%, transparent)}
+      @media (max-height:760px){ .mapbtn{padding:4px 3px; font-size:11px} .mapbtn small{display:none} }
       .ulog{display:flex; flex-direction:column; gap:7px; margin-top:4px}
       .ulog-row{display:flex; gap:10px; align-items:flex-start; padding:8px 11px; border:1px solid var(--line); border-radius:10px; background:var(--panel2)}
       .ulog-row .uv{flex:none; font-family:"Cinzel",serif; font-weight:700; font-size:13px; color:var(--bronze); background:rgba(0,0,0,.08); border:1px solid var(--line); border-radius:999px; padding:2px 9px; margin-top:1px}
@@ -2306,8 +2351,8 @@
                 <button class="set-row" id="gfx-opt-ultra" type="button"><span class="set-ico" aria-hidden="true">💎</span><span class="set-txt"><b>Ultra High</b><small>Everything maxed — full resolution, the sharpest textures and finest shadows.</small></span><span class="set-check" id="gfx-check-ultra" aria-hidden="true"></span></button>
               </div>
               <div class="pack-panel" id="pack-panel">
-                <div class="pack-head"><span class="set-ico" aria-hidden="true">🏛️</span><span class="set-txt"><b>Ultra Graphics Pack</b><small id="pack-status">Not built yet · ~56 MB texture memory while on</small></span><span class="pack-badge" id="pack-badge">~56 MB</span></div>
-                <p class="pack-desc">Built on your device when you tap Download — no file is downloaded or stored. While on, its high-res arena, fighter &amp; weapon textures use about 56 MB of texture memory, with richer light and shadows and denser dust and crowd. Turning it off or deleting it frees that memory. The game plays the same without it.</p>
+                <div class="pack-head"><span class="set-ico" aria-hidden="true">🏛️</span><span class="set-txt"><b>Ultra Graphics Pack</b><small id="pack-status">Not built yet · ~76 MB texture memory while on</small></span><span class="pack-badge" id="pack-badge">~76 MB</span></div>
+                <p class="pack-desc">Built on your device when you tap Download — no file is downloaded or stored. While on, its high-res textures for all six arenas, fighters &amp; weapons use about 76 MB of texture memory, with richer light and shadows and denser dust and crowd. Turning it off or deleting it frees that memory. The game plays the same without it.</p>
                 <div class="pack-bar hidden" id="pack-bar-wrap"><div class="pack-bar-fill" id="pack-bar-fill"></div></div>
                 <div class="pack-actions">
                   <button class="btn small" id="pack-btn-download" type="button">⬇ Download Pack</button>
@@ -2351,6 +2396,8 @@
               </div>
               <div class="bout-lab">Your foes</div>
               <div class="foe-list" id="foe-list"></div>
+              <div class="bout-lab">Arena</div>
+              <div class="map-row" id="map-row"></div>
               <div class="bout-lab">Difficulty</div>
               <div class="diff-row" id="diff-row"></div>
               <div class="small" id="bout-waves" style="margin:2px 0 4px"></div>
@@ -2501,7 +2548,21 @@
     <div id="modal-root"><div class="modal" id="modal-box"></div></div>
     <div class="toast" id="toast"></div>
 
-    <div class="ver-badge" id="ver-badge">v1.1</div>
+    <!-- Ultra Pack download loading screen (1.1.1): shown on screen
+         while the pack builds, driven by updatePackUI. -->
+    <div id="pack-load" class="hidden" role="dialog" aria-modal="true" aria-label="Ultra Graphics Pack download progress">
+      <div class="pack-load-card">
+        <div class="pack-load-ico" aria-hidden="true">🏛️</div>
+        <h3 class="cz">Ultra Graphics Pack</h3>
+        <p class="pack-load-sub">Building on your device — high-res arena, fighter &amp; weapon textures, richer light and denser dust.</p>
+        <div class="pack-load-pct" id="pack-load-pct">0%</div>
+        <div class="pack-bar pack-load-bar"><div class="pack-bar-fill" id="pack-load-fill"></div></div>
+        <p class="pack-load-mb" id="pack-load-mb">~0 / ~76 MB of texture memory</p>
+        <button class="btn ghost" id="pack-load-cancel" type="button">Cancel</button>
+      </div>
+    </div>
+
+    <div class="ver-badge" id="ver-badge">v1.2.1</div>
     <div id="boot-note" role="status">⏳ Raising the arena…<br/>If this note stays, this copy can’t run the game here — open the file in a real browser tab (Chrome, Safari, Firefox or Edge), not a preview pane.</div>
 
     <script>
@@ -2983,7 +3044,7 @@
       G={name:name, body:body, level:1, xp:0, den:120, str:5, agi:5, vit:5, tec:5, tp:3,
          wins:0, nextBout:0, legendWins:0, survBest:0, trialWins:0, renown:0, progWins:0, tier:0, inv:[], eqUid:0, uidSeq:1,
          drillProg:{str:0,agi:0,vit:0,tec:0}, pendingLevels:0, fights:0,
-         diff:'normal', armors:['leather'], eqArmor:'leather', store:null, prestige:0, dailyLogin:{streak:0, last:''}, dailyDone:''};
+         map:'colosseum', diff:'normal', armors:['leather'], eqArmor:'leather', store:null, prestige:0, dailyLogin:{streak:0, last:''}, dailyDone:''};
       const uid=addWeapon('rudis'); G.eqUid=uid;
     }
     /* ============================== saving (0.5.1) ==============================
@@ -3035,6 +3096,7 @@
       g.pendingLevels=num(raw.pendingLevels,0,0);
       g.fights=num(raw.fights,0,0);
       g.diff=DIFFS[raw.diff]? raw.diff : 'normal';
+      g.map=MAP_BY_ID[raw.map]? raw.map : 'colosseum';
       g.armors=Array.isArray(raw.armors)? raw.armors.filter((a,ix,arr)=>AMAP[a] && arr.indexOf(a)===ix) : ['leather'];
       if(!g.armors.length) g.armors=['leather'];
       g.eqArmor=(AMAP[raw.eqArmor] && g.armors.includes(raw.eqArmor))? raw.eqArmor : g.armors[0];
@@ -3194,6 +3256,9 @@
       $('#play-sub').textContent=(bd.exhibition?'Exhibition — ':'Bout '+(bd.idx+1)+' · ')+b.name+' · '+diff.label+' · purse '+fmtDen(Math.round(purse));
       $('#diff-row').innerHTML=Object.keys(DIFFS).map(k=>{ const d=DIFFS[k]; return '<button type="button" class="diffbtn'+(k===(G.diff||'normal')?' on':'')+'" data-diff="'+k+'" style="--dc:'+d.color+'"><b style="color:'+d.color+'">'+(d.ico||'')+' '+d.label+'</b><span>🌊'+d.waves+' · 💪×'+d.foeMul.toFixed(2)+' · 🪙×'+d.purseMul.toFixed(1)+'</span></button>'; }).join('');
       document.querySelectorAll('[data-diff]').forEach(b=>b.addEventListener('click', ()=>{ G.diff=b.dataset.diff; sCoin(); renderBout(); saveGame(); }));
+      const mr=$('#map-row');
+      if(mr){ mr.innerHTML=MAPS.map(m=>'<button type="button" class="mapbtn'+(m.id===(G.map||'colosseum')?' on':'')+'" data-map="'+m.id+'">'+m.short+'<small>'+m.sub+'</small></button>').join('');
+        mr.querySelectorAll('[data-map]').forEach(b=>b.addEventListener('click', ()=>{ G.map=b.dataset.map; sCoin(); renderBout(); saveGame(); })); }
       const wr=[1,2,3].map(w=>fmtN(waveRewardCalc(bd.idx,w))).join(' → ');
       /* Icon chips instead of the old paragraph (0.7.2): the wave rules at
          a glance — count, climbing pay, the set bank, the risk double,
@@ -3750,7 +3815,7 @@
         if(dP<300||dF<150) clear=false;
         if(clear) for(const ob of OBSTACLES){ if(Math.hypot(c[0]-ob.x, c[1]-ob.z)<ob.r+46){ clear=false; break; } }
         if(clear) for(const hz of HAZARDS){ if(Math.hypot(c[0]-hz.x, c[1]-hz.z)<hz.r+34){ clear=false; break; } }
-        if(clear && Math.hypot(c[0]-LOG.x, c[1]-LOG.z)<LOG.halfLen+70) clear=false;
+        if(clear && LOG.active && Math.hypot(c[0]-LOG.x, c[1]-LOG.z)<LOG.halfLen+70) clear=false;
         if(clear) return {x:c[0], z:c[1]};
         const key=dP+Math.min(dF,300)*0.5;
         if(key>bestKey){ bestKey=key; best={x:c[0], z:c[1]}; }
@@ -3795,14 +3860,126 @@
        rubble mid-west and up north-east, barricades deep south-west
        and on the east edge — still clear of the start, the gates, the
        centre, the pits and each other, with fighting lanes between. */
-    const OBSTACLES=[
-      {kind:'column',   x:-380, z:140, r:30},
-      {kind:'column',   x: 450, z:640, r:28},
-      {kind:'rubble',   x:-140, z:540, r:42},
-      {kind:'rubble',   x: 240, z:130, r:36},
-      {kind:'barricade',x:-480, z:700, r:50, w:98, d:18, rot: 0.50},
-      {kind:'barricade',x: 560, z:260, r:47, w:90, d:18, rot:-0.55}
+    /* ---------- arenas / maps (1.2) ----------
+       Six era-true fighting grounds. The Colosseum stays the default;
+       the other five dress the same ring in their own ground, stone,
+       sky-light and surroundings, and each carries its OWN obstacle
+       and hazard layout — themed to the place (fallen statues and
+       marble steps in the ruined temple, palms and a dry well at the
+       oasis, trees and log piles in the forest fort, crates and dock
+       posts at the harbor, burnt timbers and lava rock at Pompeii).
+       Every layout was spread with the same rules as the original:
+       clear of the fighter's start (0,215), the foe gates, the centre
+       and each other, with open lanes between — and every obstacle is
+       a plain circle (or, for barricades, the same box frame as ever)
+       in the ONE collision/steering system below, so resolveObstacles,
+       obstacleSteer, hazardSteer, pickDetour and the 1.1 unstuck watch
+       work identically on every map, in every mode. The swinging log
+       only hangs where it fits the place (Colosseum, harbor crane);
+       elsewhere LOG.active is false and every log path stands down.
+       The chosen map is G.map, picked in Next Bout, saved with the
+       career, and used by career, Survival, Trial, tournament and
+       Today's Bout alike — no mode is map-locked. */
+    const MAP_LOG={x:60, z:700, halfLen:216, drop:48, axleY:192, amp:0.55, speed:2.40, r:42};
+    const MAPS=[
+      {id:'colosseum', short:'Rome', sub:'Colosseum', name:'Colosseum',
+       outer:0x77603a, stone:0x9a8563, stoneD:0x7d6a4c, wallTint:0xffffff, crowdTint:0xffffff, ground:null, fog:0xe6c491, surround:'rome', cityDark:false, log:true,
+       obstacles:[
+        {kind:'column',   x:-380, z:140, r:30},
+        {kind:'column',   x: 450, z:640, r:28},
+        {kind:'rubble',   x:-140, z:540, r:42},
+        {kind:'rubble',   x: 240, z:130, r:36},
+        {kind:'barricade',x:-480, z:700, r:50, w:98, d:18, rot: 0.50},
+        {kind:'barricade',x: 560, z:260, r:47, w:90, d:18, rot:-0.55}],
+       hazards:[
+        {kind:'spikes', x:-300, z:880, r:54},
+        {kind:'spikes', x: 350, z:830, r:54},
+        {kind:'fire',   x:-560, z:470, r:48},
+        {kind:'fire',   x: 150, z:950, r:48}]},
+      {id:'temple', short:'Temple', sub:'Ruins', name:'Ruined Temple',
+       outer:0x8a7a5c, stone:0xb8ab90, stoneD:0x9a8a6e, wallTint:0xe9dfc8, crowdTint:0xf5efe2, ground:{base:'#b3a07c', tones:['168,150,116','138,120,88','192,176,142'], pebble:'#877650', repeat:10}, fog:0xe8d9b8, surround:'rome', cityDark:false, log:false,
+       obstacles:[
+        {kind:'column', x:-420, z:300, r:30},
+        {kind:'column', x: 400, z:640, r:28},
+        {kind:'statue', x: 260, z:170, r:36},
+        {kind:'steps',  x:-240, z:720, r:44},
+        {kind:'rubble', x:-540, z:520, r:40},
+        {kind:'steps',  x: 520, z:300, r:40}],
+       hazards:[
+        {kind:'fire',   x:-340, z:880, r:48},
+        {kind:'spikes', x: 330, z:860, r:54},
+        {kind:'fire',   x: 540, z:780, r:48},
+        {kind:'spikes', x:-560, z:180, r:54}]},
+      {id:'oasis', short:'Oasis', sub:'Desert', name:'Desert Oasis',
+       outer:0xc9a15e, stone:0xc2a06e, stoneD:0xa5854f, wallTint:0xdcb87e, crowdTint:0xffe9bd, ground:{base:'#e0be78', tones:['214,178,105','196,152,84','232,205,140'], pebble:'#b08d55', repeat:11}, fog:0xf2d9a0, surround:'dunes', cityDark:false, log:false,
+       obstacles:[
+        {kind:'palm',  x:-400, z:260, r:20},
+        {kind:'palm',  x: 420, z:560, r:20},
+        {kind:'palm',  x:-120, z:840, r:20},
+        {kind:'well',  x: 240, z:300, r:34},
+        {kind:'block', x:-520, z:620, r:38},
+        {kind:'block', x: 520, z:860, r:36}],
+       hazards:[
+        {kind:'spikes', x:-320, z:500, r:54},
+        {kind:'spikes', x: 350, z:760, r:54},
+        {kind:'fire',   x: 160, z:950, r:48},
+        {kind:'fire',   x:-580, z:140, r:48}]},
+      {id:'forest', short:'Forest', sub:'Fort', name:'Forest Fort',
+       outer:0x5d6b3f, stone:0x8a7a5e, stoneD:0x6e5c40, wallTint:0x9a7648, crowdTint:0xd8e0c0, ground:{base:'#7d6a48', tones:['104,88,58','134,116,80','92,74,50'], pebble:'#6e5c40', repeat:12}, fog:0xd8dfc0, surround:'forest', cityDark:false, log:false,
+       obstacles:[
+        {kind:'tree',     x:-420, z:300, r:24},
+        {kind:'tree',     x: 380, z:180, r:24},
+        {kind:'tree',     x: 520, z:700, r:24},
+        {kind:'tree',     x:-160, z:880, r:24},
+        {kind:'logpile',  x: 240, z:540, r:38},
+        {kind:'barricade',x:-520, z:560, r:50, w:98, d:18, rot: 0.50},
+        {kind:'barricade',x:  60, z:760, r:47, w:90, d:18, rot:-0.40}],
+       hazards:[
+        {kind:'fire',   x:-340, z:760, r:48},
+        {kind:'spikes', x: 420, z:420, r:54},
+        {kind:'fire',   x: 560, z:120, r:48},
+        {kind:'spikes', x:-580, z:300, r:54}]},
+      {id:'harbor', short:'Harbor', sub:'Docks', name:'Coastal Harbor',
+       outer:0x3f6a72, stone:0x9a8a72, stoneD:0x77684f, wallTint:0xb09a78, crowdTint:0xdfe8e2, ground:{base:'#a8895c', tones:['140,112,72','168,138,92','120,94,60'], pebble:'#7d6a4e', repeat:13}, fog:0xdfe4d2, surround:'harbor', cityDark:false, log:true,
+       obstacles:[
+        {kind:'crate',    x:-440, z:260, r:36},
+        {kind:'crate',    x: 460, z:300, r:36},
+        {kind:'dockpost', x:-560, z:640, r:22},
+        {kind:'dockpost', x: 560, z:560, r:22},
+        {kind:'barrel',   x: 240, z:140, r:30},
+        {kind:'barricade',x:-220, z:480, r:47, w:90, d:18, rot: 0.90},
+        {kind:'crate',    x: -80, z:940, r:36}],
+       hazards:[
+        {kind:'spikes', x:-360, z:860, r:54},
+        {kind:'fire',   x: 340, z:880, r:48},
+        {kind:'spikes', x: 560, z:120, r:54},
+        {kind:'fire',   x:-600, z:120, r:48}]},
+      {id:'pompeii', short:'Pompeii', sub:'Ash', name:'Pompeii Ashes',
+       outer:0x5a504a, stone:0x8a7d72, stoneD:0x665a50, wallTint:0xa08a80, crowdTint:0xd8ccc4, ground:{base:'#8d8278', tones:['110,100,92','148,138,126','88,78,70'], pebble:'#5f564e', repeat:14}, fog:0xcabfae, surround:'rome', cityDark:true, log:false,
+       obstacles:[
+        {kind:'wallfrag', x:-420, z:280, r:40},
+        {kind:'wallfrag', x: 440, z:620, r:40},
+        {kind:'burnt',    x:-240, z:560, r:30},
+        {kind:'lava',     x: 260, z:240, r:38},
+        {kind:'rubble',   x:-540, z:780, r:42},
+        {kind:'column',   x:  80, z:820, r:28},
+        {kind:'burnt',    x: 560, z:240, r:30}],
+       hazards:[
+        {kind:'fire',   x: 480, z:880, r:48},
+        {kind:'fire',   x:-160, z:960, r:48},
+        {kind:'spikes', x:-600, z:480, r:54},
+        {kind:'spikes', x: 200, z:560, r:54}]}
     ];
+    const MAP_BY_ID={}; MAPS.forEach(m=>{ MAP_BY_ID[m.id]=m; });
+    function curMap(){ return MAP_BY_ID[(G&&G.map)||'colosseum']||MAPS[0]; }
+    /* The live layout the whole fight reads — swapped by applyMapLayout
+       whenever a fight starts on a picked map. Starts as the Colosseum. */
+    let OBSTACLES=MAPS[0].obstacles;
+    function applyMapLayout(id){
+      const m=MAP_BY_ID[id]||MAPS[0];
+      OBSTACLES=m.obstacles; HAZARDS=m.hazards;
+      LOG=Object.assign({}, MAP_LOG, {active:!!m.log});
+    }
     const BODY_R=18; /* a fighter's half-width against the stone */
     function resolveObstacles(f){
       for(const ob of OBSTACLES){
@@ -3893,12 +4070,7 @@
        the ring's edges and deep ends — spike beds south-west and
        south-east, fire pits on the west edge and deep south — none
        overlapping an obstacle, the log's sweep or each other. */
-    const HAZARDS=[
-      {kind:'spikes', x:-300, z:880, r:54},
-      {kind:'spikes', x: 350, z:830, r:54},
-      {kind:'fire',   x:-560, z:470, r:48},
-      {kind:'fire',   x: 150, z:950, r:48}
-    ];
+    let HAZARDS=MAPS[0].hazards; /* per-map since 1.2 — see MAPS */
     function hazardAt(x, z){
       for(const hz of HAZARDS){ const dx=x-hz.x, dz=z-hz.z; if(dx*dx+dz*dz<hz.r*hz.r) return hz; }
       return null;
@@ -3934,7 +4106,7 @@
        swing ≈ 2.6 seconds instead of ≈ 5.2). Spikes (84), damage
        (16, floor 4), reach, solidity and the segment steering are
        unchanged; logState carries the new numbers to all of them. */
-    const LOG={x:60, z:700, halfLen:216, drop:48, axleY:192, amp:0.55, speed:2.40, r:42};
+    let LOG=Object.assign({}, MAP_LOG, {active:true}); /* per-map since 1.2: active only where a log hangs */
     function logState(){
       const th=Math.sin(F.logT*LOG.speed)*LOG.amp;
       const w=Math.cos(F.logT*LOG.speed)*LOG.amp*LOG.speed;
@@ -3951,6 +4123,7 @@
        half-width is LOG.r + BODY_R — the same reach the hit test
        uses, spikes included. */
     function resolveLog(f){
+      if(!LOG.active) return;
       const ls=logState();
       if(Math.abs(f.x-ls.cx)>LOG.halfLen+BODY_R+6) return;
       const dz=f.z-ls.cz, rr=LOG.r+BODY_R;
@@ -3995,7 +4168,7 @@
          a foe caught mid-lunge, knocked back or plain crowded can
          still be clipped, and resolveLog is the hard contact
          guarantee underneath. */
-      {
+      if(LOG.active){
         const ls0=logState();
         const segX=clamp(f.x, ls0.cx-LOG.halfLen, ls0.cx+LOG.halfLen);
         const dx=segX-f.x, dz=ls0.cz-f.z, d=Math.hypot(dx,dz), R=300;
@@ -4055,16 +4228,35 @@
       const consider=(x,z,r)=>{ const d=Math.hypot(x-f.x, z-f.z); const ahead=(x-f.x)*ux+(z-f.z)*uz; if(d<380 && ahead>-40 && d<best){ best=d; anchor={x:x, z:z}; anchorR=r; } };
       for(const ob of OBSTACLES) consider(ob.x, ob.z, ob.r);
       for(const hz of HAZARDS) consider(hz.x, hz.z, hz.r);
+      /* Log crossing (1.2): if the swinging log's band lies square
+         across his path to the player, a nearer pit or ruin must not
+         anchor the detour — its rim waypoint can sit beyond the log,
+         where the log steering vetoes the crossing, and he grinds
+         between the two for the rest of the fight. The log anchors
+         instead: round its nearer end, on the player's side. */
+      let logAnchor=false;
+      if(LOG.active){
+        const lsA=logState();
+        if((f.z-lsA.cz)*(P.z-lsA.cz)<0){
+          const tt=(lsA.cz-f.z)/((P.z-f.z)||1), crossX=f.x+(P.x-f.x)*tt;
+          if(crossX>lsA.cx-LOG.halfLen-110 && crossX<lsA.cx+LOG.halfLen+110) logAnchor=true;
+        }
+      }
       let side=flip && f._detSide? -f._detSide : 0;
       let wx, wz;
-      if(anchor){
+      if(logAnchor){
+        const ls2=logState();
+        wx=(Math.abs(f.x-(ls2.cx-LOG.halfLen))<=Math.abs(f.x-(ls2.cx+LOG.halfLen)))? ls2.cx-LOG.halfLen-56 : ls2.cx+LOG.halfLen+56;
+        wz=ls2.cz+(P.z>=ls2.cz? 1 : -1)*(LOG.r+BODY_R+34);
+        side=f._detSide||1;
+      } else if(anchor){
         const ax=f.x-anchor.x, az=f.z-anchor.z, al=Math.hypot(ax,az)||1;
         const cand=s=>{ const ca=Math.cos(1.25*s), sa=Math.sin(1.25*s); const rx=(ax/al)*ca-(az/al)*sa, rz=(ax/al)*sa+(az/al)*ca; return {x:anchor.x+rx*(anchorR+BODY_R+46), z:anchor.z+rz*(anchorR+BODY_R+46)}; };
         if(!side){ const c1=cand(1), c2=cand(-1); side=Math.hypot(c1.x-P.x, c1.z-P.z)<=Math.hypot(c2.x-P.x, c2.z-P.z)? 1 : -1; }
         const c=cand(side); wx=c.x; wz=c.z;
       } else {
         const ls=logState();
-        if(Math.abs(f.z-ls.cz)<190 && Math.abs(f.x-ls.cx)<LOG.halfLen+150){
+        if(LOG.active && Math.abs(f.z-ls.cz)<190 && Math.abs(f.x-ls.cx)<LOG.halfLen+150){
           wx=f.x<ls.cx? ls.cx-LOG.halfLen-56 : ls.cx+LOG.halfLen+56;
           wz=ls.cz+(P.z>=ls.cz? 1 : -1)*(LOG.r+BODY_R+34);
           side=f._detSide||1;
@@ -4128,7 +4320,7 @@
          across more of each pass — the spiked log rests less and
          threatens more than the old timber did. */
       const ls=logState();
-      if(Math.abs(ls.w)>0.14){
+      if(LOG.active && Math.abs(ls.w)>0.14){
         const sgn=(ls.w*Math.cos(ls.th))>=0? 1 : -1;
         for(const f of all){
           if(!f || f.dead || f.logCd>0) continue;
@@ -5145,6 +5337,33 @@
       for(let i=0;i<130;i++){ g.fillStyle='rgba(110,88,58,'+rnd(0.15,0.35).toFixed(2)+')'; g.beginPath(); g.ellipse(rnd(0,512),rnd(0,512),rnd(1.5,3.4),rnd(1.2,2.4),rnd(0,3),0,6.29); g.fill(); }
       const t=new THREE.CanvasTexture(c); t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(9,9); return t;
     }
+    /* Per-map ground (1.2): each new arena's floor painted in its own
+       palette — pale temple dust, oasis sand, forest mud, harbor grit,
+       Pompeii ash — with the same raked, speckled hand as the Colosseum
+       sand, and its OWN texture repeat (10–14) so the Ultra Pack can
+       swap in that map's high-res ground and nothing else's. The
+       Colosseum keeps the original sand painter above. */
+    function makeMapGroundTexture(mapId){
+      const M=MAP_BY_ID[mapId]||MAPS[0]; const gt=M.ground;
+      if(!gt) return makeSandTexture();
+      const c=document.createElement('canvas'); c.width=c.height=512; const g=c.getContext('2d');
+      g.fillStyle=gt.base; g.fillRect(0,0,512,512);
+      for(let i=0;i<60;i++){ const t1=pick(gt.tones); g.fillStyle='rgba('+t1+','+rnd(0.10,0.22).toFixed(2)+')'; g.beginPath(); g.ellipse(rnd(0,512),rnd(0,512),rnd(20,90),rnd(12,50),rnd(0,3),0,6.29); g.fill(); }
+      g.lineWidth=2;
+      for(let i=0;i<40;i++){ const y0=rnd(0,512), amp=rnd(3,9), per=rnd(60,130); const t2=pick(gt.tones); g.strokeStyle='rgba('+t2+',0.16)'; g.beginPath(); for(let x=0;x<=512;x+=16){ const y=y0+Math.sin(x/per*6.28)*amp; if(x===0)g.moveTo(x,y); else g.lineTo(x,y); } g.stroke(); }
+      for(let i=0;i<8000;i++){ const t3=pick(gt.tones); g.fillStyle='rgba('+t3+','+rnd(0.10,0.24).toFixed(2)+')'; g.fillRect(rnd(0,512),rnd(0,512),rnd(1,2.6),rnd(1,2.2)); }
+      for(let i=0;i<120;i++){ g.fillStyle=gt.pebble; g.globalAlpha=rnd(0.2,0.4); g.beginPath(); g.ellipse(rnd(0,512),rnd(0,512),rnd(1.5,3.4),rnd(1.2,2.4),rnd(0,3),0,6.29); g.fill(); }
+      g.globalAlpha=1;
+      const t=new THREE.CanvasTexture(c); t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(gt.repeat,gt.repeat); return t;
+    }
+    /* Shipped (non-pack) high-detail grounds for every new map, keyed
+       by texture repeat — packSyncScene's fallback set when the pack
+       is off, so a map swap never strands a pack texture. */
+    function shippedGrounds(){
+      const out={};
+      for(const m of MAPS){ if(m.ground) out[m.ground.repeat]=makeMapGroundTexture(m.id); }
+      return out;
+    }
     function makeBrickTexture(){
       /* The podium wall in real brickwork (0.7.2): courses of warm
          Roman brick — long, thin, fired clay in uneven terracotta and
@@ -5213,6 +5432,13 @@
       if(ud.penn){ for(let i=0;i<ud.penn.length;i++){ const pn=ud.penn[i]; pn.rotation.y=Math.sin(t*2.6+pn.userData.ph)*0.38; pn.rotation.x=Math.sin(t*1.9+pn.userData.ph*1.7)*0.10; } }
     }
     function buildArena(scene){
+      /* 1.2: the arena is built for the scene's picked map (default
+         Colosseum) and everything goes into one group, so the fight
+         scene can be re-dressed for another map by dropping the group
+         and building again — lights, torches and fighters live outside
+         it and are never touched. */
+      const map=MAP_BY_ID[scene.userData.mapId||'colosseum']||MAPS[0];
+      const arenaG=new THREE.Group(); scene.add(arenaG); scene.userData.arenaGroup=arenaG; scene.userData.mapId=map.id;
       /* 0.4.4: a noticeably bigger arena — the sand floor, podium wall, rim,
          crowd tiers, colonnade and arch all grew together (sand radius
          508 → 648), and clampPos/spawns/camera grew with them, so the
@@ -5222,74 +5448,92 @@
          breathe — and dressed properly: the podium wall in real
          brickwork, and the rooftops of Rome beyond the colonnade under
          a sunny sky. */
-      const stone=tMat(0x9a8563,0.95), stoneD=tMat(0x7d6a4c,0.95);
+      const stone=tMat(map.stone,0.95), stoneD=tMat(map.stoneD,0.95);
       stone.side=THREE.DoubleSide; stoneD.side=THREE.DoubleSide;
-      const ground=tMesh(new THREE.CircleGeometry(3400,40), tMat(0x77603a,1));
-      ground.rotation.x=-Math.PI/2; ground.position.y=-3; ground.castShadow=false; ground.receiveShadow=true; scene.add(ground);
-      const sand=tMesh(new THREE.CircleGeometry(812,56), new THREE.MeshStandardMaterial({map:makeSandTexture(), roughness:1}));
-      sand.rotation.x=-Math.PI/2; sand.position.set(0,0,385); sand.scale.set(1,1.16,1); sand.castShadow=false; sand.receiveShadow=true; scene.add(sand);
-      const brickMat=new THREE.MeshStandardMaterial({map:makeBrickTexture(), roughness:0.95});
+      const ground=tMesh(new THREE.CircleGeometry(3400,40), tMat(map.outer,1));
+      ground.rotation.x=-Math.PI/2; ground.position.y=-3; ground.castShadow=false; ground.receiveShadow=true; arenaG.add(ground);
+      const sand=tMesh(new THREE.CircleGeometry(812,56), new THREE.MeshStandardMaterial({map:makeMapGroundTexture(map.id), roughness:1}));
+      sand.rotation.x=-Math.PI/2; sand.position.set(0,0,385); sand.scale.set(1,1.16,1); sand.castShadow=false; sand.receiveShadow=true; arenaG.add(sand);
+      const brickMat=new THREE.MeshStandardMaterial({map:makeBrickTexture(), roughness:0.95, color:map.wallTint});
       brickMat.side=THREE.DoubleSide;
       const wall=tMesh(tCyl(816,830,58,56,true), brickMat);
-      wall.position.set(0,29,385); wall.scale.set(1,1,1.16); wall.receiveShadow=true; scene.add(wall);
+      wall.position.set(0,29,385); wall.scale.set(1,1,1.16); wall.receiveShadow=true; arenaG.add(wall);
       const rim=tMesh(new THREE.TorusGeometry(816,7,10,64), stoneD);
-      rim.rotation.x=Math.PI/2; rim.position.set(0,60,385); rim.scale.set(1,1.16,1); scene.add(rim);
+      rim.rotation.x=Math.PI/2; rim.position.set(0,60,385); rim.scale.set(1,1.16,1); arenaG.add(rim);
       const crowdTex=makeCrowdTexture();
       const crowdTiers=[];
       for(let i=0;i<3;i++){
         const r=846+i*58, y=66+i*37;
-        const tier=tMesh(tCyl(r,r+18,36,56,true), new THREE.MeshStandardMaterial({map:crowdTex, roughness:1, side:THREE.DoubleSide}));
-        tier.position.set(0,y,385); tier.scale.set(1,1,1.16); tier.castShadow=false; tier.userData.baseY=y; scene.add(tier); crowdTiers.push(tier);
+        const tier=tMesh(tCyl(r,r+18,36,56,true), new THREE.MeshStandardMaterial({map:crowdTex, roughness:1, side:THREE.DoubleSide, color:map.crowdTint}));
+        tier.position.set(0,y,385); tier.scale.set(1,1,1.16); tier.castShadow=false; tier.userData.baseY=y; arenaG.add(tier); crowdTiers.push(tier);
         const step=tMesh(new THREE.TorusGeometry(r+18,5,8,64), stoneD);
-        step.rotation.x=Math.PI/2; step.position.set(0,y+18,385); step.scale.set(1,1.16,1); step.castShadow=false; scene.add(step);
+        step.rotation.x=Math.PI/2; step.position.set(0,y+18,385); step.scale.set(1,1.16,1); step.castShadow=false; arenaG.add(step);
       }
       /* Living crowd (0.9): the tiers are stashed so animArena() can stir
          them — a slow bob and shimmer, hotter as crowd fervor climbs. */
       scene.userData.crowd={tex:crowdTex, tiers:crowdTiers};
-      const colGeo=tCyl(7,8.5,96,10), capGeo=tBox(20,8,20);
-      for(let i=0;i<30;i++){
-        const a=i/30*Math.PI*2, x=Math.cos(a)*1075, z=385+Math.sin(a)*1075*1.16;
-        const col=tMesh(colGeo, stone); col.position.set(x,196,z); scene.add(col);
-        const cap=tMesh(capGeo, stoneD); cap.position.set(x,248,z); scene.add(cap);
-      }
-      const arch=tMesh(tCyl(1081,1081,20,56,true), stoneD);
-      arch.position.set(0,258,385); arch.scale.set(1,1,1.16); scene.add(arch);
-      /* Rome beyond the walls (0.7.2): rooftops and temples of the city
-         ring the arena in the haze — plaster houses with terracotta
-         tile roofs, a taller temple or basilica here and there — so
-         the arena sits in a living city, not on an empty plain. */
-      const plaster=[0xd8c49c,0xcbb086,0xe0cda6,0xc4a87e,0xd2b992];
-      const roofMat=tMat(0xa85f36,0.95), roofMat2=tMat(0x96522f,0.95), templeMat=tMat(0xe6dbc2,0.9);
-      for(let i=0;i<26;i++){
-        const a=i/26*Math.PI*2+rnd(-0.06,0.06), rr=rnd(1230,1420);
-        const bx=Math.cos(a)*rr, bz=385+Math.sin(a)*rr*1.16;
-        const tall=(i%7===3);
-        const bw=rnd(90,150)*(tall?1.25:1), bh=tall? rnd(130,175) : rnd(55,115), bd=rnd(80,130);
-        const bMat=tall? templeMat : tMat(plaster[irnd(0,plaster.length-1)],0.95);
-        const house=tMesh(tBox(bw,bh,bd), bMat);
-        house.position.set(bx, bh/2-4, bz); house.rotation.y=-a; house.castShadow=false; scene.add(house);
-        const roof=tMesh(tBox(bw*1.14, 12, bd*1.14), i%2?roofMat:roofMat2);
-        roof.position.set(bx, bh+2, bz); roof.rotation.y=-a; roof.castShadow=false; scene.add(roof);
-        if(tall){ const ped=tMesh(tBox(bw*0.9, 16, bd*0.5), templeMat); ped.position.set(bx, bh+18, bz); ped.rotation.y=-a; ped.castShadow=false; scene.add(ped); }
+      if(map.surround==='forest'){
+        const trunkM=tMat(0x5a4026,1), leafM=tMat(0x44582e,1), leafM2=tMat(0x55683a,1);
+        for(let i=0;i<34;i++){ const a=i/34*Math.PI*2+rnd(-0.05,0.05), rr=rnd(1010,1180); const x=Math.cos(a)*rr, z=385+Math.sin(a)*rr*1.16; const th=rnd(120,190);
+          const tr=tMesh(tCyl(7,10,th,7), trunkM); tr.position.set(x,th/2-4,z); tr.castShadow=false; arenaG.add(tr);
+          for(let j=0;j<3;j++){ const lf=tMesh(tSph(rnd(38,62),8,6), j%2?leafM:leafM2); lf.position.set(x+rnd(-24,24), th+rnd(-6,26), z+rnd(-24,24)); lf.castShadow=false; arenaG.add(lf); } }
+      } else if(map.surround==='harbor'){
+        const postG=tCyl(8,10,250,8), postM=tMat(0x6e4c2a,0.95);
+        for(let i=0;i<30;i++){ const a=i/30*Math.PI*2, x=Math.cos(a)*1075, z=385+Math.sin(a)*1075*1.16; const pp=tMesh(postG, postM); pp.position.set(x,110,z); pp.castShadow=false; arenaG.add(pp); }
+        const hullM=tMat(0x54381e,1), sailM=tMat(0xd8cdb2,1); sailM.side=THREE.DoubleSide;
+        for(let i=0;i<5;i++){ const a=i/5*Math.PI*2+0.5, rr=1330; const bx=Math.cos(a)*rr, bz=385+Math.sin(a)*rr*1.16;
+          const hull=tMesh(tBox(190,42,54), hullM); hull.position.set(bx,16,bz); hull.rotation.y=-a; hull.castShadow=false; arenaG.add(hull);
+          const mast=tMesh(tCyl(4,5,170,7), hullM); mast.position.set(bx,120,bz); mast.castShadow=false; arenaG.add(mast);
+          const sail=tMesh(new THREE.PlaneGeometry(96,104), sailM); sail.position.set(bx,128,bz); sail.rotation.y=-a; sail.castShadow=false; arenaG.add(sail); }
+      } else if(map.surround==='dunes'){
+        const duneM=tMat(0xc9a15e,1);
+        for(let i=0;i<16;i++){ const a=i/16*Math.PI*2+rnd(-0.08,0.08), rr=rnd(1180,1420); const d=tMesh(tSph(rnd(150,260),10,7), duneM); d.position.set(Math.cos(a)*rr,-30,385+Math.sin(a)*rr*1.16); d.scale.y=0.32; d.castShadow=false; arenaG.add(d); }
+        const trunkM2=tMat(0x7a5c36,1), leafM3=tMat(0x5d7038,1);
+        for(let i=0;i<9;i++){ const a=i/9*Math.PI*2+0.3, rr=1120; const x=Math.cos(a)*rr, z=385+Math.sin(a)*rr*1.16;
+          const tr=tMesh(tCyl(5,7,120,7), trunkM2); tr.position.set(x,56,z); tr.rotation.z=0.08; tr.castShadow=false; arenaG.add(tr);
+          for(let j=0;j<5;j++){ const lf=tMesh(tBox(86,5,16), leafM3); lf.position.set(x,122,z); lf.rotation.y=j/5*Math.PI; lf.rotation.z=0.35; lf.castShadow=false; arenaG.add(lf); } }
+      } else {
+        const colGeo=tCyl(7,8.5,96,10), capGeo=tBox(20,8,20);
+        for(let i=0;i<30;i++){
+          const a=i/30*Math.PI*2, x=Math.cos(a)*1075, z=385+Math.sin(a)*1075*1.16;
+          const col=tMesh(colGeo, stone); col.position.set(x,196,z); arenaG.add(col);
+          const cap=tMesh(capGeo, stoneD); cap.position.set(x,248,z); arenaG.add(cap);
+        }
+        const arch=tMesh(tCyl(1081,1081,20,56,true), stoneD);
+        arch.position.set(0,258,385); arch.scale.set(1,1,1.16); arenaG.add(arch);
+        const plaster=map.cityDark? [0xa89880,0x998a70,0xb0a08a,0x8f8074,0xa2947e] : [0xd8c49c,0xcbb086,0xe0cda6,0xc4a87e,0xd2b992];
+        const roofMat=tMat(map.cityDark? 0x4a382c : 0xa85f36,0.95), roofMat2=tMat(map.cityDark? 0x3e2f24 : 0x96522f,0.95), templeMat=tMat(0xe6dbc2,0.9);
+        for(let i=0;i<26;i++){
+          const a=i/26*Math.PI*2+rnd(-0.06,0.06), rr=rnd(1230,1420);
+          const bx=Math.cos(a)*rr, bz=385+Math.sin(a)*rr*1.16;
+          const tall=(i%7===3);
+          const bw=rnd(90,150)*(tall?1.25:1), bh=tall? rnd(130,175) : rnd(55,115), bd=rnd(80,130);
+          const bMat=tall? templeMat : tMat(plaster[irnd(0,plaster.length-1)],0.95);
+          const house=tMesh(tBox(bw,bh,bd), bMat);
+          house.position.set(bx, bh/2-4, bz); house.rotation.y=-a; house.castShadow=false; arenaG.add(house);
+          const roof=tMesh(tBox(bw*1.14, 12, bd*1.14), i%2?roofMat:roofMat2);
+          roof.position.set(bx, bh+2, bz); roof.rotation.y=-a; roof.castShadow=false; arenaG.add(roof);
+          if(tall){ const ped=tMesh(tBox(bw*0.9, 16, bd*0.5), templeMat); ped.position.set(bx, bh+18, bz); ped.rotation.y=-a; ped.castShadow=false; arenaG.add(ped); }
+        }
       }
       const penns=[];
       const pennMats=[tMat(0xa8231c,0.95), tMat(0xd9a527,0.95)];
       pennMats.forEach(m=>{ m.side=THREE.DoubleSide; });
       for(const s of [-1,1]){
-        const gate=tMesh(tBox(100,64,10), tMat(0x2e2013,1)); gate.position.set(0,32,385+s*940); scene.add(gate);
-        const lintel=tMesh(tBox(124,15,16), stoneD); lintel.position.set(0,71,385+s*940); scene.add(lintel);
+        const gate=tMesh(tBox(100,64,10), tMat(0x2e2013,1)); gate.position.set(0,32,385+s*940); arenaG.add(gate);
+        const lintel=tMesh(tBox(124,15,16), stoneD); lintel.position.set(0,71,385+s*940); arenaG.add(lintel);
         /* Gate pennants (0.9): crimson-and-gold cloth hung from each
            gate's lintel, waving in animArena(). Pure dressing on the
            gates that were already there — nothing new to hit, dodge
            or pick up. */
         for(const px of [-38,0,38]){
-          const piv=new THREE.Group(); piv.position.set(px, 77, 385+s*940+(s>0? -11 : 11)); piv.userData.ph=px*0.05+s*2.1; scene.add(piv);
+          const piv=new THREE.Group(); piv.position.set(px, 77, 385+s*940+(s>0? -11 : 11)); piv.userData.ph=px*0.05+s*2.1; arenaG.add(piv);
           const cloth=tMesh(new THREE.PlaneGeometry(17,26), pennMats[((px+38)/38)%2]); cloth.position.y=-13; cloth.castShadow=false; piv.add(cloth); penns.push(piv);
         }
       }
       scene.userData.penn=penns;
-      buildObstacles(scene, stone, stoneD);
-      buildHazards(scene);
+      buildObstacles(arenaG, stone, stoneD);
+      buildHazards(arenaG); scene.userData.haz=arenaG.userData.haz; /* hazards animate via the scene handle (draw reads scene.userData.haz) */
     }
     /* Arena obstacles (0.7): the meshes for the OBSTACLES layout — drawn
        from the same positions and sizes the collision uses, so what you
@@ -5301,6 +5545,10 @@
        match the podium wall. */
     function buildObstacles(scene, stone, stoneD){
       const wood=tMat(0x6e4c2a,0.92), woodD=tMat(0x54381e,0.95);
+      /* 1.2 kinds: each new map's obstacles drawn in its own materials,
+         all sitting inside the same circular collision footprint (r)
+         the layout promises — what you see is what blocks you. */
+      const dark=tMat(0x2e2622,1), leaf=tMat(0x4d6334,1), leafD=tMat(0x3e5229,1), lavaGlow=new THREE.MeshBasicMaterial({color:0xff6a22});
       for(const ob of OBSTACLES){
         const g=new THREE.Group(); g.position.set(ob.x,0,ob.z); scene.add(g);
         if(ob.kind==='column'){
@@ -5327,6 +5575,58 @@
             const legB=tMesh(tBox(5, 30, 5), woodD); legB.position.set(sx*(ob.w/2-8), 9, -11); legB.rotation.x=-0.65; g.add(legB);
           }
           const brace=tMesh(tBox(ob.w*0.92, 5, 3.4), woodD); brace.position.set(0, 25, -3.4); brace.rotation.z=0.10; g.add(brace);
+        } else if(ob.kind==='statue'){
+          const base=tMesh(tBox(ob.r*1.8, 10, ob.r*1.4), stoneD); base.position.y=5; g.add(base);
+          const torso=tMesh(tSph(ob.r*0.62,10,8), stone); torso.position.set(2, ob.r*0.55, 0); torso.scale.set(1,1.35,0.8); torso.rotation.z=0.5; g.add(torso);
+          const head=tMesh(tSph(ob.r*0.34,9,7), stone); head.position.set(ob.r*0.75, ob.r*0.30, ob.r*0.45); g.add(head);
+          const arm=tMesh(tCyl(4.5,5.5,ob.r*1.15,8), stone); arm.rotation.z=1.25; arm.position.set(-ob.r*0.4, 7, ob.r*0.5); g.add(arm);
+        } else if(ob.kind==='steps'){
+          for(let i=0;i<3;i++){ const st=tMesh(tBox(ob.r*2*(1-i*0.22), 9, ob.r*1.15*(1-i*0.18)), i%2?stone:stoneD); st.position.set(0, 4.5+i*8.5, (i-1)*ob.r*0.16); g.add(st); }
+          const chip=tMesh(tBox(rnd(8,13), rnd(4,7), rnd(7,12)), stoneD); chip.position.set(ob.r*0.6, 3, -ob.r*0.5); chip.rotation.y=0.7; g.add(chip);
+        } else if(ob.kind==='palm'){
+          const tr1=tMesh(tCyl(ob.r*0.20, ob.r*0.30, 52, 8), wood); tr1.position.set(0,26,0); tr1.rotation.z=0.10; g.add(tr1);
+          const tr2=tMesh(tCyl(ob.r*0.14, ob.r*0.20, 34, 8), wood); tr2.position.set(6,68,0); tr2.rotation.z=0.30; g.add(tr2);
+          for(let i=0;i<6;i++){ const fr=tMesh(tBox(52,4,13), leaf); fr.position.set(11,86,0); const piv=new THREE.Group(); piv.position.set(9,84,0); piv.rotation.y=i/6*Math.PI*2; piv.rotation.z=0.30; fr.position.set(28,4,0); piv.add(fr); g.add(piv); }
+          for(let i=0;i<3;i++){ const nut=tMesh(tSph(5.5,7,6), woodD); nut.position.set(9+rnd(-5,5), 78, rnd(-5,5)); g.add(nut); }
+        } else if(ob.kind==='well'){
+          const ring=tMesh(tCyl(ob.r*0.85, ob.r*0.95, 24, 14, true), stone); ring.position.y=12; ring.material=stone; g.add(ring);
+          const rim2=tMesh(new THREE.TorusGeometry(ob.r*0.88,4,8,20), stoneD); rim2.rotation.x=Math.PI/2; rim2.position.y=25; g.add(rim2);
+          for(const sx of [-1,1]){ const post=tMesh(tBox(6,52,6), woodD); post.position.set(sx*ob.r*0.8, 26, 0); g.add(post); }
+          const roof=tMesh(tBox(ob.r*2.0, 5, ob.r*1.2), wood); roof.position.y=56; roof.rotation.z=0.05; g.add(roof);
+        } else if(ob.kind==='block'){
+          const b1=tMesh(tBox(ob.r*1.7, ob.r*0.95, ob.r*1.3), stone); b1.position.y=ob.r*0.47; b1.rotation.y=0.3; g.add(b1);
+          const b2=tMesh(tBox(ob.r*1.0, ob.r*0.6, ob.r*0.85), stoneD); b2.position.set(ob.r*0.15, ob.r*1.2, -ob.r*0.1); b2.rotation.y=-0.2; g.add(b2);
+        } else if(ob.kind==='tree'){
+          const tr=tMesh(tCyl(ob.r*0.28, ob.r*0.42, 74, 8), woodD); tr.position.y=37; g.add(tr);
+          for(let i=0;i<4;i++){ const lf=tMesh(tSph(rnd(24,36),8,6), i%2?leaf:leafD); lf.position.set(rnd(-16,16), 82+rnd(-8,18), rnd(-16,16)); g.add(lf); }
+          const root=tMesh(tCyl(ob.r*0.6, ob.r*0.85, 8, 8), woodD); root.position.y=4; g.add(root);
+        } else if(ob.kind==='logpile'){
+          for(let i=0;i<3;i++){ const lg=tMesh(tCyl(9,9,ob.r*1.7,9), i%2?wood:woodD); lg.rotation.z=Math.PI/2; lg.position.set(0, 9+i*2, (i-1)*13); g.add(lg); }
+          for(let i=0;i<2;i++){ const lg=tMesh(tCyl(9,9,ob.r*1.5,9), wood); lg.rotation.z=Math.PI/2; lg.position.set(0, 26, (i-0.5)*13); g.add(lg); }
+        } else if(ob.kind==='crate'){
+          const c1=tMesh(tBox(ob.r*1.5, ob.r*1.1, ob.r*1.5), wood); c1.position.y=ob.r*0.55; g.add(c1);
+          const c2=tMesh(tBox(ob.r*1.05, ob.r*0.85, ob.r*1.05), woodD); c2.position.set(ob.r*0.12, ob.r*1.5, -ob.r*0.08); c2.rotation.y=0.4; g.add(c2);
+          const brace2=tMesh(tBox(ob.r*1.52, 5, 3.4), woodD); brace2.position.set(0, ob.r*0.55, ob.r*0.76); brace2.rotation.z=0.6; g.add(brace2);
+        } else if(ob.kind==='dockpost'){
+          const post=tMesh(tCyl(ob.r*0.42, ob.r*0.5, 78, 10), woodD); post.position.y=39; g.add(post);
+          const cap=tMesh(tCyl(ob.r*0.55, ob.r*0.55, 7, 10), wood); cap.position.y=80; g.add(cap);
+          const rope=tMesh(new THREE.TorusGeometry(ob.r*0.52,3,6,14), tMat(0x8a6f42,1)); rope.rotation.x=Math.PI/2; rope.position.y=58; g.add(rope);
+        } else if(ob.kind==='barrel'){
+          for(const off of [[0,0],[ob.r*0.85,ob.r*0.3],[-ob.r*0.5,ob.r*0.75]]){
+            const b=tMesh(tCyl(ob.r*0.42, ob.r*0.42, 34, 10), wood); b.position.set(off[0], 17, off[1]); g.add(b);
+            const band=tMesh(new THREE.TorusGeometry(ob.r*0.43,2,6,14), dark); band.rotation.x=Math.PI/2; band.position.set(off[0], 24, off[1]); g.add(band);
+          }
+        } else if(ob.kind==='wallfrag'){
+          const w1=tMesh(tBox(ob.r*1.8, ob.r*1.05, ob.r*0.55), stone); w1.position.y=ob.r*0.52; w1.rotation.y=0.25; g.add(w1);
+          const w2=tMesh(tBox(ob.r*1.0, ob.r*0.7, ob.r*0.5), stoneD); w2.position.set(-ob.r*0.3, ob.r*1.35, 0); w2.rotation.y=0.1; g.add(w2);
+          const slab=tMesh(tBox(ob.r*0.9, 6, ob.r*0.6), stoneD); slab.position.set(ob.r*0.5, 3, ob.r*0.6); slab.rotation.set(0.14,0.6,0.08); g.add(slab);
+        } else if(ob.kind==='burnt'){
+          for(const sx of [-1,1]){ const post=tMesh(tBox(7,58,7), dark); post.position.set(sx*ob.r*0.55, 27, 0); post.rotation.z=sx*-0.16; g.add(post); }
+          const beam=tMesh(tBox(ob.r*1.7, 7, 7), dark); beam.position.y=54; beam.rotation.z=0.07; g.add(beam);
+          const fallen=tMesh(tBox(7, ob.r*1.5, 7), dark); fallen.rotation.z=Math.PI/2.2; fallen.position.set(0, 6, ob.r*0.55); g.add(fallen);
+        } else if(ob.kind==='lava'){
+          for(let i=0;i<6;i++){ const a=i/6*Math.PI*2+rnd(-0.3,0.3), rr=i===0?0:ob.r*rnd(0.35,0.6), sz=rnd(11,20)*(i===0?1.3:1); const rock=tMesh(tSph(sz,8,6), dark); rock.position.set(Math.cos(a)*rr, sz*0.28, Math.sin(a)*rr); rock.scale.y=0.6; rock.rotation.y=rnd(0,3); g.add(rock); }
+          for(let i=0;i<3;i++){ const seam=tMesh(tBox(rnd(10,18), 2.5, 3.5), lavaGlow); seam.position.set(rnd(-ob.r*0.4,ob.r*0.4), ob.r*0.30, rnd(-ob.r*0.4,ob.r*0.4)); seam.rotation.y=rnd(0,3); seam.castShadow=false; g.add(seam); }
         }
       }
     }
@@ -5372,6 +5672,7 @@
       /* The swinging log: A-frame posts, a fixed axle, and a group that
          pivots ON the axle — log and ropes hung below it — so rotating
          the group is the pendulum itself. */
+      if(LOG.active){
       const wood=tMat(0x6e4c2a,0.92), woodD=tMat(0x54381e,0.95), ropeM=tMat(0x8a6f42,1);
       for(const sx of [-1,1]){
         const post=new THREE.Group(); post.position.set(sx*(LOG.halfLen+26), 0, LOG.z); scene.add(post);
@@ -5404,7 +5705,27 @@
       }
       for(const rx of [-LOG.halfLen*0.8, LOG.halfLen*0.8]){ const rp=tMesh(tCyl(1.6,1.6,LOG.drop,5), ropeM); rp.position.set(rx, -LOG.drop/2, 0); lg.add(rp); }
       haz.logGroup=lg;
+      }
       scene.userData.haz=haz;
+    }
+    /* Re-dress the fight scene for a picked map (1.2): swap the live
+       layout, drop the old arena group, build the new map's arena in
+       its place, then re-apply the picked graphics tier and the Ultra
+       Pack so textures, anisotropy, shadows and pack detail all land
+       on the new ground exactly as they did on the old. Fighters,
+       lights, torches and dust live outside the arena group. */
+    function setSceneMap(obj, mapId){
+      if(!obj || !obj.scene) return;
+      const m=MAP_BY_ID[mapId]||MAPS[0];
+      applyMapLayout(m.id);
+      const sc=obj.scene;
+      if(sc.userData.mapId===m.id && sc.userData.arenaGroup) { if(sc.fog) sc.fog.color.set(m.fog); return; }
+      if(sc.userData.arenaGroup){ try{ sc.remove(sc.userData.arenaGroup); disposeGroup(sc.userData.arenaGroup); }catch(e){} sc.userData.arenaGroup=null; }
+      sc.userData.mapId=m.id;
+      buildArena(sc);
+      if(sc.fog) sc.fog.color.set(m.fog);
+      obj._packApplied=false; obj._packKids=-1; /* force a full pack/texture pass on the new arena */
+      try{ applyGfxTo(obj, 'fight'); }catch(e){}
     }
     function initGL(){
       if(GL) return true;
@@ -5447,7 +5768,7 @@
     function applyEvening(on){
       if(!GL) return;
       GL.scene.background = on? new THREE.Color(0x141c33) : ((typeof packActive==='function' && packActive() && PACK.tex)? PACK.tex.sky : makeSkyTexture());
-      if(GL.scene.fog) GL.scene.fog.color.set(on? 0x1c1626 : 0xe6c491);
+      if(GL.scene.fog) GL.scene.fog.color.set(on? 0x1c1626 : curMap().fog);
       if(GL.hemi){ GL.hemi.intensity=on? 0.38 : 1.02; GL.hemi.color.set(on? 0x8fa3cc : 0xffe9c4); }
       if(GL.sun) GL.sun.color.set(on? 0xffb36b : 0xfff1d6);
       if(GL.torches) GL.torches.forEach(function(pl){ pl.intensity=on? 1.15 : 0; });
@@ -6763,6 +7084,7 @@
     function startFight(mode){
       if(mode!=='survival' && mode!=='trial' && mode!=='tournament' && mode!=='daily') mode='career';
       if(!initGL()){ openModal('<h2 class="cz">The Arena Gate Is Stuck</h2><p class="muted">This device could not start 3D graphics (WebGL) for the arena. The rest of the ludus still works — try a browser with WebGL enabled, or close other heavy tabs and try the bout again.</p><button class="btn red" onclick="document.getElementById(\'modal-root\').classList.remove(\'open\')">Back to the Ludus</button>'); return; }
+      setSceneMap(GL, (G&&G.map)||'colosseum'); /* 1.2: this fight's arena, with its layout live before any spawn */
       if(P&&P.model){ GL.scene.remove(P.model); disposeGroup(P.model); P.model=null; }
       for(const f of FOES){ if(f.model){ GL.scene.remove(f.model); disposeGroup(f.model); f.model=null; } }
       const bd=curBoutDef();
@@ -6823,6 +7145,7 @@
         F.trial? '👑 Champion’s Trial · one wave · '+F.total+' killers · '+DIFFS[G.diff||'normal'].label :
         F.survival? '🏟 Survival · endless waves · '+DIFFS[G.diff||'normal'].label :
         (bd.exhibition?'Exhibition — ':'Bout '+(bd.idx+1)+' of '+BOUTS.length+' — ')+BOUTS[bd.idx].name+' · '+DIFFS[G.diff||'normal'].label+' · '+F.waveTotal+' waves';
+      $('#f-boutname').textContent+=' · '+curMap().name;
       $('#p-name').textContent=G.name;
       closeSheets(); showScreen('scr-fight');
       fitFight();
@@ -7255,6 +7578,10 @@
        its own entry to UPDATE_LOG below — never ship a version bump
        without its log entry. */
     const UPDATE_LOG=[
+      {v:'1.2.1', t:'Map fixes: foes now round the swinging log instead of grinding on it, and the Ruined Temple floor reads as stone dust, not white.'},
+      {v:'1.2', t:'Five new arenas — Ruined Temple, Desert Oasis, Forest Fort, Coastal Harbor, Pompeii — themed obstacles, a map row in Next Bout, and Ultra Pack art for every arena.'},
+      {v:'1.1.2', t:'Ultra Pack rebuilt to look real — natural sand, weathered stone, a true crowd, shining steel and bronze, warm sunlight.'},
+      {v:'1.1.1', t:'Ultra Pack no longer cut off in Graphics — the whole panel fits — and its download now loads full-screen with progress and Cancel.'},
       {v:'1.1', t:'Ultra Graphics Pack download in Settings, epic arena music with a Settings toggle, and foes that route around ruins and never stay stuck.'},
       {v:'1.0', t:'Full release: League XI past Olympus, net-dancer and shield-wall foes, daily bout, daily reward calendar, prestige, torch-lit evening bouts, livelier crowd.'},
       {v:'0.9.5', t:'Welcome message above PLAY removed. PLAY now sits clean and centred with tidy spacing, and the home screen still fits whole.'},
@@ -7440,7 +7767,10 @@
        in slices, with honest progress: high-resolution arena textures
        (sand, brick, crowd, sky at 4x the shipped size) plus a fine
        detail grain that is bump-mapped over stone, steel, leather and
-       skin. While the pack is ON it also lifts the render tier (see
+       skin. Since 1.1.2 the pack paints those canvases realistically
+       (natural sand, weathered brick, a figured crowd, soft-lit sky)
+       and lights the scene with a filmic tone curve plus sky
+       environment reflections, so its metals shine like metal. While the pack is ON it also lifts the render tier (see
        packTierOverride in applyGfxTo), grows the fight's particle
        buffer for denser dust, and hangs extra motes in the air.
        Turning it off, or deleting it, swaps every scene straight back
@@ -7452,7 +7782,7 @@
        is downloaded or stored, and the textures themselves are
        rebuilt from the pack steps whenever they are needed again.
        While the pack is ON, the full high-res set is held for the
-       whole session in PACK.tex / PACK.canvases, so the ~56 MB
+       whole session in PACK.tex / PACK.canvases, so the ~76 MB
        texture-memory footprint below is real, not a file size.
        The 0.8.9 performance
        watchdog is untouched: it still eases the fight's draw down on
@@ -7464,9 +7794,9 @@
        2048×1024, detail 2048²) at 4 bytes a pixel (RGBA, base
        level). While on, that full set is held in graphics memory;
        off / delete disposes it and frees the memory. */
-    const PACK_SIZE_MB=Math.round((2048*2048 + 2048*1024 + 2048*1024 + 2048*1024 + 2048*2048)*4/1048576);
+    const PACK_SIZE_MB=Math.round((2048*2048 + 2048*1024 + 2048*1024 + 2048*1024 + 2048*2048 + 5*1024*1024)*4/1048576); /* 1.2: + five 1024² per-map grounds (Temple, Oasis, Forest, Harbor, Pompeii) = 76 MB */
     const PACK_TIER={pr:4, shadow:true, fightMap:4096, stageMap:4096, aniso:16};
-    let PACK={installed:false, on:false, downloading:false, step:0, steps:null, tex:null, canvases:null};
+    let PACK={installed:false, on:false, downloading:false, step:0, steps:null, tex:null, canvases:null, envTex:null, envRT:null};
     try{ const pv=JSON.parse(localStorage.getItem(PACK_KEY)||'null'); if(pv){ PACK.installed=!!pv.installed; PACK.on=PACK.installed && pv.on!==false; } }catch(e){}
     function packActive(){ return !!(PACK.installed && PACK.on && !PACK.downloading); }
     function packTierOverride(){ return packActive()? PACK_TIER : null; }
@@ -7478,73 +7808,182 @@
        denser to match. */
     function buildPackSteps(){
       const S={}, steps=[];
-      /* — sand, 2048² (shipped: 512²) — */
+      /* Realistic Ultra look (1.1.2): every pack canvas is still the
+         same size as 1.1, but the painting is rebuilt to read as the real
+         materials — natural sand with wind ripples and worn patches,
+         weathered Roman brick with cracked, chipped, stained courses,
+         a crowd of actual small figures in muted Roman dress on stone
+         benches, and a hazy sky with soft, lit clouds. A shared soft-
+         blob helper paints with wrap-around copies near the edges so
+         the tiling textures stay seamless. */
+      function wraps(x,y,m,W,H){ const xs=[0], ys=[0]; if(x<m)xs.push(W); if(x>W-m)xs.push(-W); if(y<m)ys.push(H); if(y>H-m)ys.push(-H); const out=[]; for(let i=0;i<xs.length;i++) for(let j=0;j<ys.length;j++) out.push([xs[i],ys[j]]); return out; }
+      function softW(g,W,H,x,y,rx,ry,style){
+        const offs=wraps(x,y,Math.max(rx,ry),W,H);
+        for(let k=0;k<offs.length;k++){
+          const cx=x+offs[k][0], cy=y+offs[k][1];
+          g.save(); g.translate(cx,cy); g.scale(1,Math.max(0.06,ry/Math.max(1,rx)));
+          const gr=g.createRadialGradient(0,0,0,0,0,rx);
+          gr.addColorStop(0,style); gr.addColorStop(1,style.replace(/,[\d.]+\)$/,',0)'));
+          g.fillStyle=gr; g.fillRect(-rx,-rx,rx*2,rx*2); g.restore();
+        }
+      }
+      function ellW(g,W,H,x,y,rx,ry,rot){
+        const offs=wraps(x,y,Math.max(rx,ry)+2,W,H);
+        for(let k=0;k<offs.length;k++){ g.beginPath(); g.ellipse(x+offs[k][0],y+offs[k][1],rx,ry,rot||0,0,6.29); g.fill(); }
+      }
+      /* — sand, 2048² (shipped: 512²): raked arena sand — broad
+         natural mottling, wind-ripple bands lit from one side,
+         thousands of grains in real size classes, worn trampled
+         patches and scattered pebbles with a lit face. — */
       const sand=packCanvas(2048,2048); S.sand=sand; const sg=sand.getContext('2d');
-      steps.push(()=>{ sg.fillStyle='#dcb26e'; sg.fillRect(0,0,2048,2048);
-        for(let i=0;i<240;i++){ sg.fillStyle='rgba('+(140+irnd(0,60))+','+(105+irnd(0,40))+',60,'+rnd(0.04,0.1).toFixed(2)+')'; sg.beginPath(); sg.ellipse(rnd(0,2048),rnd(0,2048),rnd(80,360),rnd(48,200),rnd(0,3),0,6.29); sg.fill(); }
-        sg.lineWidth=3;
-        for(let i=0;i<120;i++){ const y0=rnd(0,2048), amp=rnd(6,20), per=rnd(120,300); sg.strokeStyle=Math.random()<0.5?'rgba(120,88,40,0.10)':'rgba(250,230,180,0.12)'; sg.beginPath(); for(let x=0;x<=2048;x+=32){ const y=y0+Math.sin(x/per*6.28)*amp; if(x===0)sg.moveTo(x,y); else sg.lineTo(x,y); } sg.stroke(); } });
-      for(let gp=0; gp<7; gp++) steps.push(()=>{ for(let i=0;i<16000;i++){ const r=Math.random(); sg.fillStyle=r<0.42?'rgba(90,64,30,0.20)':(r<0.9?'rgba(246,224,170,0.20)':'rgba(255,248,220,0.5)'); sg.fillRect(rnd(0,2048),rnd(0,2048),rnd(1,3),rnd(1,2.6)); } });
-      steps.push(()=>{ for(let i=0;i<520;i++){ sg.fillStyle='rgba(110,88,58,'+rnd(0.15,0.35).toFixed(2)+')'; sg.beginPath(); sg.ellipse(rnd(0,2048),rnd(0,2048),rnd(2,7),rnd(1.6,5),rnd(0,3),0,6.29); sg.fill(); } });
-      /* — podium brick, 2048×1024 (shipped: 512×256) — */
+      steps.push(()=>{ sg.fillStyle='#c7a05e'; sg.fillRect(0,0,2048,2048);
+        const tones=['228,194,122','186,143,80','170,129,71','193,176,143','216,178,108','160,120,68'];
+        for(let i=0;i<120;i++){ const t=pick(tones); softW(sg,2048,2048,rnd(0,2048),rnd(0,2048),rnd(150,440),rnd(95,300),'rgba('+t+','+rnd(0.05,0.13).toFixed(2)+')'); }
+      });
+      steps.push(()=>{ sg.lineWidth=3;
+        for(let i=0;i<130;i++){ const y0=rnd(0,2048), amp=rnd(5,16), per=rnd(140,340), ph=rnd(0,6.28);
+          const draw=(dy,style,lw)=>{ sg.strokeStyle=style; sg.lineWidth=lw; sg.beginPath(); for(let x=0;x<=2048;x+=32){ const y=y0+dy+Math.sin(x/per*6.28+ph)*amp; if(x===0)sg.moveTo(x,y); else sg.lineTo(x,y); } sg.stroke(); };
+          draw(3,'rgba(122,86,42,0.13)',3.4); draw(0,'rgba(255,241,203,0.12)',2.2); }
+      });
+      for(let gp=0; gp<6; gp++) steps.push(()=>{ for(let i=0;i<14000;i++){ const r=Math.random();
+          const x=rnd(0,2048), y=rnd(0,2048);
+          if(r<0.06){ sg.fillStyle='rgba(96,70,36,0.35)'; sg.fillRect(x+1,y+1,rnd(1.4,2.6),rnd(1.2,2.2)); sg.fillStyle='rgba(255,246,214,0.55)'; sg.fillRect(x,y,rnd(1.4,2.6),rnd(1.2,2.2)); }
+          else { sg.fillStyle=r<0.44?'rgba(96,70,36,0.20)':(r<0.9?'rgba(244,222,168,0.20)':'rgba(255,248,220,0.45)'); sg.fillRect(x,y,rnd(1,2.8),rnd(1,2.4)); } } });
+      steps.push(()=>{ for(let i=0;i<30;i++) softW(sg,2048,2048,rnd(0,2048),rnd(0,2048),rnd(90,260),rnd(60,180),'rgba(146,110,62,'+rnd(0.06,0.12).toFixed(2)+')');
+        const pTones=['#a08b6a','#8a7355','#bfae8f','#7d6a4e'];
+        for(let i=0;i<430;i++){ const x=rnd(0,2048), y=rnd(0,2048), rx=rnd(2,7.5), ry=rx*rnd(0.55,0.8), rot=rnd(0,3);
+          sg.fillStyle='rgba(90,70,44,0.35)'; ellW(sg,2048,2048,x,y+ry*0.5,rx,ry,rot);
+          sg.fillStyle=pick(pTones); ellW(sg,2048,2048,x,y,rx,ry,rot);
+          sg.fillStyle='rgba(255,244,210,0.35)'; ellW(sg,2048,2048,x-rx*0.25,y-ry*0.35,rx*0.5,ry*0.4,rot); }
+        sg.lineWidth=1.6;
+        for(let i=0;i<70;i++){ const x=rnd(0,2048), y=rnd(0,2048), r=rnd(24,90); sg.strokeStyle=Math.random()<0.5?'rgba(120,88,44,0.10)':'rgba(252,238,196,0.10)'; sg.beginPath(); sg.arc(x,y,r,rnd(0,6.28),rnd(0,6.28)+rnd(0.5,1.6)); sg.stroke(); }
+      });
+      /* — podium brick, 2048×1024 (shipped: 512×256): long thin
+         Roman bricks in sandy mortar, every one shaded, pitted and
+         worn differently — chipped corners, hairline cracks, burnt
+         courses, water stains running down the wall. — */
       const brick=packCanvas(2048,1024); S.brick=brick; const bg2=brick.getContext('2d');
-      const bTones=['#a97e56','#b28a5e','#9d744c','#bb9166','#a37a50','#c09a6c'];
+      const bTones=['#a97e56','#b28a5e','#9d744c','#bb9166','#a37a50','#c09a6c','#96684a','#8a5f3d'];
       const bh=120, bw=328, bm=20, rows=[];
       for(let row=0; row*bh<1024+bh; row++) rows.push(row);
-      steps.push(()=>{ bg2.fillStyle='#c3ab84'; bg2.fillRect(0,0,2048,1024); });
+      steps.push(()=>{ bg2.fillStyle='#b3a184'; bg2.fillRect(0,0,2048,1024);
+        for(let i=0;i<9000;i++){ bg2.fillStyle=Math.random()<0.5?'rgba(80,60,34,0.16)':'rgba(255,244,214,0.13)'; bg2.fillRect(rnd(0,2048),rnd(0,1024),rnd(1.5,4),rnd(1.5,3.4)); }
+        for(let i=0;i<26;i++) softW(bg2,2048,1024,rnd(0,2048),rnd(0,1024),rnd(160,420),rnd(90,240),'rgba(112,88,54,'+rnd(0.04,0.09).toFixed(2)+')');
+      });
       for(let rb=0; rb<4; rb++){
         const band=rows.slice(rb*2, rb*2+2);
         steps.push(()=>{ for(const row of band){
-          const off=(row%2)? -bw/2 : 0, y=row*(bh+bm);
+          const off=(row%2)? -bw/2 : 0, yBase=row*(bh+bm);
           for(let bx=-1; bx*bw<2048+bw; bx++){
-            const x=off+bx*(bw+bm);
-            bg2.fillStyle=bTones[irnd(0,bTones.length-1)]; bg2.fillRect(x, y, bw, bh);
-            bg2.fillStyle='rgba(255,235,200,0.13)'; bg2.fillRect(x, y, bw, 16);
-            bg2.fillStyle='rgba(60,35,15,0.16)'; bg2.fillRect(x, y+bh-20, bw, 20);
-            for(let s=0;s<90;s++){ bg2.fillStyle=Math.random()<0.5?'rgba(70,45,20,0.13)':'rgba(255,240,210,0.11)'; bg2.fillRect(x+rnd(8,bw-12), y+rnd(8,bh-12), rnd(2,7), rnd(2,6)); }
+            const x=off+bx*(bw+bm)+rnd(-3,3), y=yBase+rnd(-2,2), w=bw+rnd(-12,6), h=bh+rnd(-5,4);
+            bg2.fillStyle=bTones[irnd(0,bTones.length-1)]; bg2.fillRect(x, y, w, h);
+            const sh=Math.random(); bg2.fillStyle=sh<0.4?'rgba(0,0,0,'+rnd(0.02,0.09).toFixed(2)+')':(sh<0.75?'rgba(255,255,255,'+rnd(0.02,0.06).toFixed(2)+')':'rgba(70,30,10,'+rnd(0.03,0.08).toFixed(2)+')'); bg2.fillRect(x, y, w, h);
+            bg2.fillStyle='rgba(255,238,205,0.12)'; bg2.fillRect(x, y, w, 10);
+            bg2.fillStyle='rgba(46,28,12,0.20)'; bg2.fillRect(x, y+h-14, w, 14);
+            bg2.fillStyle='rgba(46,28,12,0.10)'; bg2.fillRect(x+w-7, y, 7, h);
+            for(let s=0;s<85;s++){ bg2.fillStyle=Math.random()<0.55?'rgba(70,45,20,0.14)':'rgba(255,240,210,0.11)'; bg2.fillRect(x+rnd(4,w-6), y+rnd(4,h-6), rnd(1.5,5), rnd(1.5,4)); }
+            if(Math.random()<0.13){ bg2.strokeStyle='rgba(52,32,14,0.4)'; bg2.lineWidth=1.6; bg2.beginPath(); let cxp=x+rnd(10,w*0.4), cyp=y+2; bg2.moveTo(cxp,cyp); for(let cs=0;cs<4;cs++){ cxp+=rnd(-8,22); cyp+=h/4; bg2.lineTo(cxp,cyp); } bg2.stroke(); }
+            if(Math.random()<0.2){ bg2.fillStyle='#b3a184'; const cnr=irnd(0,3), cxx=(cnr%2)? x+w-rnd(4,16) : x+rnd(-2,4), cyy=(cnr<2)? y+rnd(-2,4) : y+h-rnd(4,14); bg2.beginPath(); bg2.ellipse(cxx,cyy,rnd(6,15),rnd(4,9),rnd(0,3),0,6.29); bg2.fill(); }
           } } });
       }
-      /* — crowd, 2048×1024 (shipped: 512×128, ~16x the figures) — */
+      steps.push(()=>{ for(let i=0;i<26;i++){ const x=rnd(0,2048), y=rnd(0,300); softW(bg2,2048,1024,x,y+rnd(90,190),rnd(13,30),rnd(90,190),'rgba(74,52,26,'+rnd(0.05,0.11).toFixed(2)+')'); }
+        for(let i=0;i<9;i++) softW(bg2,2048,1024,rnd(0,2048),rnd(0,1024),rnd(120,300),rnd(70,160),'rgba(238,230,210,'+rnd(0.04,0.07).toFixed(2)+')');
+        const grm=bg2.createLinearGradient(0,824,0,1024); grm.addColorStop(0,'rgba(60,40,20,0)'); grm.addColorStop(1,'rgba(60,40,20,0.18)'); bg2.fillStyle=grm; bg2.fillRect(0,824,2048,200);
+      });
+      /* — crowd, 2048×1024 (shipped: 512×128): rows of real little
+         figures on stone benches — skin-tone heads, hair, tunics in
+         muted undyed wool, madder red and grey-blue, back rows
+         smaller and cooler in the haze. — */
       const crowd=packCanvas(2048,1024); S.crowd=crowd; const cg=crowd.getContext('2d');
-      const cCols=['#a8563c','#c8b28a','#7a4a52','#5d6e8a','#b98a4a','#8a7a9a','#946b4f','#c2c2b0','#6e5844','#a03a30','#d94f3d','#3f8ac0','#e8b62a','#4da35a'];
-      steps.push(()=>{ cg.fillStyle='#4d3a26'; cg.fillRect(0,0,2048,1024); });
+      const cTunic=['#b3a284','#9c8a6d','#a34a3a','#7d3b2e','#5d6e7a','#47586b','#8a6d4a','#6e5844','#c0b49a','#8f8578','#74553a','#937050','#86452f','#71685c'];
+      const cSkin=['#c68863','#a96b44','#8a5433','#d9a075','#77502f','#bd7f52','#96603a'];
+      const cHair=['#2e2019','#453224','#17130f','#5d4630','#6e6e66'];
+      steps.push(()=>{ cg.fillStyle='#655036'; cg.fillRect(0,0,2048,1024);
+        for(let b=0;b<8;b++){ const y=b*128; cg.fillStyle='rgba(255,230,180,0.08)'; cg.fillRect(0,y,2048,10); cg.fillStyle='rgba(0,0,0,0.20)'; cg.fillRect(0,y+88,2048,40); }
+        for(let i=0;i<6000;i++){ cg.fillStyle=Math.random()<0.5?'rgba(30,20,10,0.15)':'rgba(255,235,190,0.10)'; cg.fillRect(rnd(0,2048),rnd(0,1024),rnd(2,5),rnd(2,4)); }
+      });
+      function crowdFig(x,y,s,dark){
+        const tw=rnd(23,30)*s;
+        cg.fillStyle=pick(cTunic);
+        cg.beginPath(); cg.ellipse(x,y+17*s,tw*0.52,14*s,0,0,6.29); cg.fill();
+        cg.fillStyle='rgba(0,0,0,0.18)'; cg.beginPath(); cg.ellipse(x,y+24*s,tw*0.5,8*s,0,0,3.14); cg.fill();
+        if(Math.random()<0.05){ cg.strokeStyle=pick(cSkin); cg.lineWidth=3.4*s; cg.beginPath(); cg.moveTo(x+tw*0.4,y+12*s); cg.lineTo(x+tw*0.62,y-8*s); cg.stroke(); }
+        cg.fillStyle=pick(cSkin); cg.beginPath(); cg.arc(x+rnd(-1.5,1.5),y,6.8*s,0,6.29); cg.fill();
+        if(Math.random()<0.72){ cg.fillStyle=pick(cHair); cg.beginPath(); cg.arc(x,y-0.8*s,6.6*s,3.35,6.08); cg.fill(); }
+        if(dark>0){ cg.fillStyle='rgba(24,20,34,'+dark.toFixed(2)+')'; cg.beginPath(); cg.ellipse(x,y+11*s,tw*0.55,19*s,0,0,6.29); cg.fill(); }
+      }
       for(let cb=0; cb<8; cb++){
         const y0=cb*128;
-        steps.push(()=>{ for(let i=0;i<3400;i++){ cg.fillStyle=pick(cCols); cg.globalAlpha=rnd(0.5,1); cg.fillRect(rnd(0,2048), y0+rnd(0,128), rnd(3,6), rnd(5,10)); } cg.globalAlpha=1; });
+        steps.push(()=>{ for(let x=6; x<2048; x+=30){ if(Math.random()<0.06) continue; const fx=x+rnd(-3,3); crowdFig(fx, y0+42, 0.82, 0.16); if(fx<30||fx>2018) crowdFig(fx+(fx<30?2048:-2048), y0+42, 0.82, 0.16); }
+          for(let x=20; x<2048; x+=30){ if(Math.random()<0.05) continue; const fx=x+rnd(-3,3); crowdFig(fx, y0+104, 1, 0.03); if(fx<30||fx>2018) crowdFig(fx+(fx<30?2048:-2048), y0+104, 1, 0.03); }
+        });
       }
-      /* — sky, 2048×1024 (shipped: 1024×512) — */
+      /* — sky, 2048×1024 (shipped: 1024×512): a warm Roman morning —
+         deep zenith melting through haze to a golden horizon, the
+         sun in layered glow, clouds built from soft lit masses with
+         shaded bellies and warm undersides, thin cirrus above. — */
       const sky=packCanvas(2048,1024); S.sky=sky; const kg=sky.getContext('2d');
       steps.push(()=>{ const gr=kg.createLinearGradient(0,0,0,1024);
-        gr.addColorStop(0,'#4f8fd2'); gr.addColorStop(0.45,'#8ab8e4'); gr.addColorStop(0.72,'#cfe0d8'); gr.addColorStop(0.88,'#ffe3ae'); gr.addColorStop(1,'#f7c684');
+        gr.addColorStop(0,'#3a6db2'); gr.addColorStop(0.34,'#6395cf'); gr.addColorStop(0.58,'#9dc0dd'); gr.addColorStop(0.76,'#cfd8cf'); gr.addColorStop(0.88,'#f4dca6'); gr.addColorStop(1,'#f0c184');
         kg.fillStyle=gr; kg.fillRect(0,0,2048,1024);
-        const sx=1480, sy=236, halo=kg.createRadialGradient(sx,sy,16,sx,sy,380);
-        halo.addColorStop(0,'rgba(255,246,205,0.95)'); halo.addColorStop(0.25,'rgba(255,232,160,0.55)'); halo.addColorStop(1,'rgba(255,232,160,0)');
-        kg.fillStyle=halo; kg.fillRect(sx-400,sy-400,800,800);
-        kg.fillStyle='#fff7da'; kg.beginPath(); kg.arc(sx,sy,68,0,6.29); kg.fill(); });
-      steps.push(()=>{ kg.fillStyle='rgba(255,252,240,0.85)';
-        for(let i=0;i<12;i++){ const cx0=rnd(80,1960), cy0=rnd(80,380), w0=rnd(180,440);
-          for(let j=0;j<6;j++){ kg.beginPath(); kg.ellipse(cx0+rnd(-w0/2,w0/2), cy0+rnd(-18,18), rnd(w0*0.22,w0*0.42), rnd(14,28), 0, 0, 6.29); kg.fill(); } } });
-      /* — detail grain, 2048²: bump-mapped over every untextured
-         surface (stone, steel, bronze, leather, skin) while on — */
+        softW(kg,2048,1024,1480,236,560,420,'rgba(255,214,140,0.32)');
+        softW(kg,2048,1024,1480,236,240,240,'rgba(255,238,190,0.5)');
+        const disc=kg.createRadialGradient(1480,236,10,1480,236,76);
+        disc.addColorStop(0,'rgba(255,252,238,1)'); disc.addColorStop(0.75,'rgba(255,246,214,0.95)'); disc.addColorStop(1,'rgba(255,246,214,0)');
+        kg.fillStyle=disc; kg.fillRect(1404,160,152,152);
+      });
+      steps.push(()=>{ for(let i=0;i<11;i++){ const cx0=rnd(60,1990), cy0=rnd(50,430), sc=rnd(0.7,1.5);
+          for(let j=0;j<7;j++) softW(kg,2048,1024,cx0+rnd(-40,40)*sc,cy0+rnd(14,30)*sc,rnd(50,120)*sc,rnd(16,26)*sc,'rgba(148,164,190,0.10)');
+          for(let j=0;j<6;j++) softW(kg,2048,1024,cx0+rnd(-40,40)*sc,cy0+rnd(20,34)*sc,rnd(46,100)*sc,rnd(13,20)*sc,'rgba(255,226,170,0.09)');
+          for(let j=0;j<11;j++) softW(kg,2048,1024,cx0+rnd(-70,70)*sc,cy0+rnd(-14,10)*sc,rnd(42,120)*sc,rnd(15,30)*sc,'rgba(255,255,255,'+rnd(0.10,0.20).toFixed(2)+')'); }
+        for(let i=0;i<6;i++) softW(kg,2048,1024,rnd(100,1950),rnd(30,200),rnd(220,420),rnd(9,16),'rgba(255,255,255,0.07)');
+      });
+      steps.push(()=>{ for(let i=0;i<2600;i++){ kg.fillStyle=Math.random()<0.5?'rgba(255,255,255,0.03)':'rgba(20,40,80,0.03)'; kg.fillRect(rnd(0,2048),rnd(0,1024),rnd(1,2.4),rnd(1,2.4)); }
+        const hz=kg.createLinearGradient(0,880,0,1024); hz.addColorStop(0,'rgba(255,190,110,0)'); hz.addColorStop(1,'rgba(255,190,110,0.12)'); kg.fillStyle=hz; kg.fillRect(0,880,2048,144);
+      });
+      /* — detail grain, 2048²: an organic micro-surface bump-mapped
+         lightly over stone, steel, bronze, leather and skin while
+         on — broad uneven blotches under fine grain and pores, not
+         uniform sandpaper noise. — */
       const det=packCanvas(2048,2048); S.detail=det; const dg=det.getContext('2d');
-      steps.push(()=>{ dg.fillStyle='#8a8a8a'; dg.fillRect(0,0,2048,2048); });
-      for(let dp=0; dp<2; dp++) steps.push(()=>{ for(let i=0;i<24000;i++){ const v=irnd(96,168); dg.fillStyle='rgb('+v+','+v+','+v+')'; dg.fillRect(rnd(0,2048),rnd(0,2048),rnd(1,3),rnd(1,3)); }
-        dg.strokeStyle='rgba(70,70,70,0.35)'; dg.lineWidth=1;
-        for(let i=0;i<260;i++){ const x=rnd(0,2048), y=rnd(0,2048); dg.beginPath(); dg.moveTo(x,y); dg.lineTo(x+rnd(-46,46), y+rnd(-8,8)); dg.stroke(); } });
+      steps.push(()=>{ dg.fillStyle='#7f7f7f'; dg.fillRect(0,0,2048,2048);
+        for(let i=0;i<430;i++){ const v=irnd(104,152); softW(dg,2048,2048,rnd(0,2048),rnd(0,2048),rnd(60,260),rnd(50,220),'rgba('+v+','+v+','+v+','+rnd(0.05,0.10).toFixed(2)+')'); }
+      });
+      for(let dp=0; dp<2; dp++) steps.push(()=>{ for(let i=0;i<21000;i++){ const v=irnd(94,170); dg.fillStyle='rgb('+v+','+v+','+v+')'; dg.fillRect(rnd(0,2048),rnd(0,2048),rnd(1,2.4),rnd(1,2.4)); }
+        for(let i=0;i<1500;i++){ dg.fillStyle='rgba(52,52,52,0.22)'; dg.fillRect(rnd(0,2048),rnd(0,2048),rnd(1,2),rnd(1,2)); }
+        dg.lineWidth=1;
+        for(let i=0;i<50;i++){ const x=rnd(0,2048), y=rnd(0,2048); dg.strokeStyle=Math.random()<0.5?'rgba(58,58,58,0.13)':'rgba(196,196,196,0.11)'; dg.beginPath(); dg.moveTo(x,y); dg.lineTo(x+rnd(-40,40), y+rnd(-7,7)); dg.stroke(); } });
+      /* — per-map grounds, 1024² each (1.2): the five new arenas get
+         the same realistic treatment as the Colosseum sand — natural
+         mottling in the map's own palette, dense grain, lit pebbles —
+         keyed by the map's texture repeat so packSyncScene swaps in
+         exactly the ground of the arena being fought on. — */
+      for(const gm of MAPS.slice(1)){
+        if(!gm.ground) continue;
+        const gt=gm.ground, gc2=packCanvas(1024,1024); S['g'+gt.repeat]=gc2; const gg=gc2.getContext('2d');
+        steps.push(()=>{ gg.fillStyle=gt.base; gg.fillRect(0,0,1024,1024);
+          for(let i=0;i<70;i++){ const t=pick(gt.tones); softW(gg,1024,1024,rnd(0,1024),rnd(0,1024),rnd(80,240),rnd(55,170),'rgba('+t+','+rnd(0.06,0.14).toFixed(2)+')'); } });
+        steps.push(()=>{ for(let i=0;i<26000;i++){ const t=pick(gt.tones); gg.fillStyle='rgba('+t+','+rnd(0.10,0.26).toFixed(2)+')'; gg.fillRect(rnd(0,1024),rnd(0,1024),rnd(1,2.6),rnd(1,2.4)); }
+          for(let i=0;i<220;i++){ gg.fillStyle=gt.pebble; ellW(gg,1024,1024,rnd(0,1024),rnd(0,1024),rnd(2,6),rnd(1.4,4),rnd(0,3)); } });
+      }
       return {canvases:S, steps:steps};
     }
     function packMakeTextures(){
       const S=PACK.canvases; if(!S || !window.THREE) return null;
       const mk=(c,rx,ry)=>{ const tx=new THREE.CanvasTexture(c); if(rx){ tx.wrapS=tx.wrapT=THREE.RepeatWrapping; tx.repeat.set(rx,ry); } tx.needsUpdate=true; return tx; };
       const detail=mk(S.detail,6,6);
-      return {sand:mk(S.sand,9,9), brick:mk(S.brick,26,2), crowd:mk(S.crowd,16,1), sky:mk(S.sky,0,0), detail:detail};
+      const grounds={};
+      for(const gm of MAPS.slice(1)){ if(gm.ground && S['g'+gm.ground.repeat]) grounds[gm.ground.repeat]=mk(S['g'+gm.ground.repeat], gm.ground.repeat, gm.ground.repeat); }
+      return {sand:mk(S.sand,9,9), brick:mk(S.brick,26,2), crowd:mk(S.crowd,16,1), sky:mk(S.sky,0,0), detail:detail, grounds:grounds};
     }
     /* Dispose the held GPU textures and drop their source canvases,
-       freeing the pack's ~56 MB of texture memory. Callers swap the
+       freeing the pack's ~76 MB of texture memory. Callers swap the
        scenes back to the shipped textures (applyGfx) BEFORE calling
        this, so nothing on screen still references what is freed. */
     function packReleaseTextures(){
-      if(PACK.tex){ try{ Object.keys(PACK.tex).forEach(k=>{ if(PACK.tex[k] && PACK.tex[k].dispose) PACK.tex[k].dispose(); }); }catch(e){} PACK.tex=null; }
+      if(PACK.tex){ try{ Object.keys(PACK.tex).forEach(k=>{ if(PACK.tex[k] && PACK.tex[k].dispose) PACK.tex[k].dispose(); }); if(PACK.tex.grounds) Object.keys(PACK.tex.grounds).forEach(k=>{ if(PACK.tex.grounds[k] && PACK.tex.grounds[k].dispose) PACK.tex.grounds[k].dispose(); }); }catch(e){} PACK.tex=null; }
+      if(PACK.envRT){ try{ PACK.envRT.dispose(); }catch(e){} PACK.envRT=null; PACK.envTex=null; }
+      else if(PACK.envTex){ try{ PACK.envTex.dispose(); }catch(e){} PACK.envTex=null; }
       PACK.canvases=null;
     }
     function packEnsureTex(){
@@ -7552,7 +7991,7 @@
       if(!PACK.canvases){ const b=buildPackSteps(); b.steps.forEach(fn=>{ try{ fn(); }catch(e){} }); PACK.canvases=b.canvases; }
       try{ PACK.tex=packMakeTextures(); }catch(e){ PACK.tex=null; }
     }
-    function packIsPackTex(tx){ return !!(PACK.tex && tx && (tx===PACK.tex.sand||tx===PACK.tex.brick||tx===PACK.tex.crowd||tx===PACK.tex.sky||tx===PACK.tex.detail)); }
+    function packIsPackTex(tx){ if(!PACK.tex || !tx) return false; if(tx===PACK.tex.sand||tx===PACK.tex.brick||tx===PACK.tex.crowd||tx===PACK.tex.sky||tx===PACK.tex.detail) return true; if(PACK.tex.grounds){ for(const k in PACK.tex.grounds){ if(PACK.tex.grounds[k]===tx) return true; } } return false; }
     function packSetDust(G){
       if(!G || !G.points || !window.THREE) return;
       const cap=packActive()? 900 : 240;
@@ -7570,6 +8009,26 @@
        children change, so fighters built after the toggle still get
        the detail grain. Any failure leaves the shipped look in
        place — the pack can never break a scene it touches. */
+    /* Realistic light (1.1.2): the pack sky, run through a PMREM
+       environment pass once per activation, so steel, bronze and
+       gold pick up true sky reflections and skin and cloth get a
+       soft natural sheen — the shipped game has no environment map
+       at all, which is why its bare metals read flat. Held with the
+       pack textures and disposed with them, so turning the pack off
+       frees it too. */
+    function packEnvTexture(renderer){
+      if(PACK.envTex) return PACK.envTex;
+      if(!PACK.canvases || !PACK.canvases.sky || !renderer || !window.THREE) return null;
+      try{
+        const eq=new THREE.CanvasTexture(PACK.canvases.sky);
+        eq.mapping=THREE.EquirectangularReflectionMapping; eq.encoding=THREE.sRGBEncoding;
+        const pm=new THREE.PMREMGenerator(renderer); pm.compileEquirectangularShader();
+        const rt=pm.fromEquirectangular(eq);
+        PACK.envRT=rt; PACK.envTex=rt.texture;
+        eq.dispose(); pm.dispose();
+      }catch(e){ PACK.envTex=null; PACK.envRT=null; }
+      return PACK.envTex;
+    }
     function packSyncScene(G){
       if(!G || !G.scene || !window.THREE) return;
       const want=packActive();
@@ -7582,9 +8041,20 @@
       let set=null;
       if(full){
         G._packApplied=want;
-        set= want? PACK.tex : {sand:makeSandTexture(), brick:makeBrickTexture(), crowd:makeCrowdTexture(), sky:makeSkyTexture()};
+        set= want? PACK.tex : {sand:makeSandTexture(), brick:makeBrickTexture(), crowd:makeCrowdTexture(), sky:makeSkyTexture(), grounds:shippedGrounds()};
+        /* Filmic tone + sky environment while the pack is on; the
+           shipped neutral render returns untouched when it is off. */
+        try{
+          const env=want? packEnvTexture(G.renderer) : null;
+          if(G.scene.environment!==env) G.scene.environment=env;
+          if(G.renderer){
+            const tm=want? THREE.ACESFilmicToneMapping : THREE.NoToneMapping;
+            if(G.renderer.toneMapping!==tm){ G.renderer.toneMapping=tm; G.renderer.toneMappingExposure=1; G.scene.traverse(o=>{ if(o.material){ (Array.isArray(o.material)? o.material : [o.material]).forEach(mm=>{ mm.needsUpdate=true; }); } }); }
+          }
+        }catch(e){}
       }
       const detail=want? PACK.tex.detail : null;
+      const evening=!!(G.scene.background && G.scene.background.isColor);
       G.scene.traverse(o=>{
         if(!o.material) return;
         (Array.isArray(o.material)? o.material : [o.material]).forEach(m=>{
@@ -7594,9 +8064,15 @@
             if(rp && rp.x===9 && rp.y===9) nt=set.sand;
             else if(rp && rp.x===26 && rp.y===2) nt=set.brick;
             else if(rp && rp.x===16 && rp.y===1) nt=set.crowd;
+            else if(set.grounds && rp && rp.y===rp.x && set.grounds[rp.x]) nt=set.grounds[rp.x]; /* 1.2: this map's own ground, pack or shipped */
             if(nt && m.map!==nt){ const old=m.map; m.map=nt; if(!packIsPackTex(old)) old.dispose(); m.needsUpdate=true; }
           }
-          if(m.bumpMap!==detail){ m.bumpMap=detail; m.bumpScale=0.6; m.needsUpdate=true; }
+          if(m.bumpMap!==detail){ m.bumpMap=detail; m.bumpScale=0.15; m.needsUpdate=true; }
+          /* Sky reflections scaled by how metallic the surface is:
+             bare steel and bronze shine, skin and cloth only sheen;
+             by torchlight (evening) the sky's gift dims right down. */
+          const envI=want? (evening? 0.06 : 0.12+(m.metalness||0)*0.85) : 1;
+          if(m.envMapIntensity!==envI) m.envMapIntensity=envI;
         });
       });
       if(full && set){
@@ -7631,6 +8107,23 @@
         if(bd) bd.textContent='~'+PACK_SIZE_MB+' MB';
         show(barW,false);
         show(bDl,true); show(bTg,false); show(bDel,false); show(bCx,false);
+      }
+      /* Loading screen (1.1.1): while the build runs, the same
+         numbers also drive the full-screen #pack-load card, so the
+         download is visibly loading on screen; it clears itself as
+         soon as the build finishes or is cancelled. */
+      const ov=$('#pack-load');
+      if(ov){
+        if(PACK.downloading){
+          const total2=PACK.steps? PACK.steps.length : 1;
+          const pct2=Math.min(100, Math.floor(PACK.step/Math.max(1,total2)*100));
+          ov.classList.remove('hidden');
+          const pf=$('#pack-load-fill'); if(pf) pf.style.width=pct2+'%';
+          const pp=$('#pack-load-pct'); if(pp) pp.textContent=pct2+'%';
+          const pm=$('#pack-load-mb'); if(pm) pm.textContent='~'+Math.round(PACK_SIZE_MB*pct2/100)+' / ~'+PACK_SIZE_MB+' MB of texture memory';
+        } else {
+          ov.classList.add('hidden');
+        }
       }
       try{ updateGfxUI(); }catch(e){}
     }
@@ -7685,6 +8178,7 @@
     }
     $('#pack-btn-download').addEventListener('click', packStartDownload);
     $('#pack-btn-cancel').addEventListener('click', packCancelDownload);
+    const packLoadCancel=$('#pack-load-cancel'); if(packLoadCancel) packLoadCancel.addEventListener('click', packCancelDownload);
     $('#pack-btn-toggle').addEventListener('click', packToggle);
     $('#pack-btn-delete').addEventListener('click', packDelete);
     updatePackUI();
