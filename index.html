@@ -1102,7 +1102,7 @@
          clipped out of reach. Sheets whose content already fits the screen
          don't scroll at all, and the sheet head (title + close) stays pinned
          above the scrolling body. */
-      .sheet-body{overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; scrollbar-width:thin}
+      .sheet-body{overflow:hidden; overscroll-behavior:contain}
       .sheet-body::-webkit-scrollbar{width:6px}
       .sheet-body::-webkit-scrollbar-thumb{background:color-mix(in srgb, var(--bronze) 55%, transparent); border-radius:3px}
 
@@ -1310,7 +1310,7 @@
          Bout details paragraphs) now show in full. Every other sheet
          is untouched. */
       #tab-fight{max-height:100%}
-      #tab-fight .sheet-body{overflow-y:auto; overflow-x:hidden}
+      #tab-fight .sheet-body{overflow:hidden}
       #tab-fight .foe-chip.open .foe-more{display:block; -webkit-line-clamp:none; overflow:visible}
       #tab-fight .bout-more p{display:block; -webkit-line-clamp:none; overflow:visible}
       @media (max-height:700px){
@@ -1713,6 +1713,165 @@
         .app-tabs .tabbtn.on{transform:none}
       }
 
+      /* ---------- 0.9.1: no scrolling anywhere — every tab sheet fits whole ----------
+         The 0.5.2 / 0.7.6 sheet scrolling is retired for good: no sheet
+         body scrolls, on any tab, at any size. Content that used to need
+         the scroll is compacted instead — tighter cards and gaps,
+         shorter intro lines, height-aware page sizes in the Arsenal and
+         Market, a paged Chests sheet, and a paged Update Log — so every
+         word, button and pager stays on the one screen it belongs to. */
+      .sheet{max-height:100%}
+      #sheets .sheet-body{overflow:hidden}
+      #sheets .sheet-head{padding:11px 14px 9px}
+      #sheets .sheet-head h3{font-size:18px}
+      #sheets .sheet-x{width:38px; height:38px}
+      #sheets .sheet-body{padding:10px 12px calc(10px + env(safe-area-inset-bottom))}
+      .sheet .btn.small{min-height:36px; padding:6px 11px; font-size:12.5px}
+      .sheet .pager{margin-top:8px}
+      .sheet .pager .btn{min-width:96px}
+      /* Stats: denser tiles, tighter league road */
+      #tab-glad .statgrid{margin-top:0; gap:5px}
+      #tab-glad .statgrid .st{padding:5px 4px}
+      #tab-glad .statgrid .st b{font-size:15px}
+      #tab-glad .statgrid .st span{font-size:10.5px}
+      #tab-glad .league-rail{margin-top:6px; gap:5px}
+      #tab-glad .league-rail .lg{min-width:94px; padding:5px 4px; font-size:11px; line-height:1.3}
+      /* Train: full drill text, tighter cards */
+      #tab-train .train-intro{font-size:13px; line-height:1.35}
+      .sheet .drills{gap:8px}
+      .sheet .drill{padding:9px 10px}
+      .sheet .drill h3{font-size:14px}
+      .sheet .drill p.small{display:block; -webkit-line-clamp:none; overflow:visible; font-size:12px; line-height:1.32}
+      .sheet .pips{margin:5px 0}
+      .sheet .pips i{width:18px; height:8px}
+      #tab-train #train-game{padding:10px 12px; margin-top:10px}
+      /* Arsenal & Market: compact cards, no clamped text */
+      .sheet .grid-cards{gap:8px}
+      .sheet .wcard{padding:9px 10px}
+      .sheet .wcard h4{font-size:14.5px; margin-top:4px}
+      .sheet .wcard .wicon{width:38px; height:38px}
+      .sheet .wcard .wicon svg{width:24px; height:24px}
+      .sheet .armor-swatch{width:36px; height:36px}
+      .sheet .wcard p.small{display:block; -webkit-line-clamp:none; overflow:visible; font-size:12px; line-height:1.32}
+      .sheet .intro-line{padding:8px 10px; margin-bottom:8px; font-size:13px; line-height:1.35}
+      .sheet .intro-line .muted{display:block; -webkit-line-clamp:none; overflow:visible}
+      .sheet .subtabs{margin-bottom:8px}
+      .sheet .subtab{min-height:42px}
+      /* Chests: slim cards — art, odds and button on one screen */
+      #tab-chest .chest-grid{gap:8px}
+      #tab-chest .chest{padding:7px 8px}
+      #tab-chest .chest .cart{margin:0 0 2px}
+      #tab-chest .chest .cart svg{width:40px; height:30px}
+      #tab-chest .chest h3{font-size:14.5px; line-height:1.2}
+      #tab-chest .chest p.small{font-size:11.5px; line-height:1.3}
+      #tab-chest .odds{font-size:11px; margin:4px 0}
+      #tab-chest .odds td{padding:1px 2px}
+      #tab-chest .odds .ob{min-width:30px; height:6px}
+      /* Next Bout: one page outright, details fold included */
+      #tab-fight .sheet-body{overflow:hidden}
+      #tab-fight .bout-card{padding:9px 10px}
+      #tab-fight .bout-banner{padding:8px 10px; gap:6px; margin-bottom:2px}
+      #tab-fight .bout-banner h2{font-size:19px; line-height:1.15}
+      #tab-fight .reward{padding:4px 8px 3px}
+      #tab-fight .foe-list{margin:6px 0; gap:6px}
+      #tab-fight .foe-chip{padding:6px 7px; font-size:12px; line-height:1.3}
+      #tab-fight .foe-chip .foe-more{font-size:11.5px; line-height:1.3}
+      #tab-fight .diff-row{margin:6px 0 2px; gap:6px}
+      #tab-fight .diffbtn{padding:6px 6px; min-height:44px}
+      #tab-fight .mode-row{margin:8px 0 0}
+      #tab-fight .modebtn{padding:7px 9px; min-height:44px}
+      #tab-fight #btn-fight{margin-top:8px; padding:12px 14px; font-size:17px; min-height:52px}
+      #tab-fight .chal-row{margin-top:8px; gap:7px}
+      #tab-fight .chal-btn{padding:7px 9px; min-height:48px}
+      #tab-fight .bout-more{margin-top:6px; padding-top:5px}
+      /* Settings & Update Log: slimmer rows, paged log */
+      #tab-settings .settings-list{gap:7px}
+      #tab-settings .set-row{padding:10px 12px; min-height:50px}
+      #tab-settings .set-txt small{font-size:12px; line-height:1.3}
+      #tab-settings .ulog{gap:6px}
+      #tab-settings .ulog-row{padding:6px 9px}
+      #tab-settings .ulog-row .ut{font-size:12.5px; line-height:1.35}
+      #tab-settings .ulog-row .uv{font-size:12px; padding:1px 8px}
+      /* Short screens: every sheet gives up a little more air */
+      @media (max-height:700px){
+        #sheets .sheet-head{padding:8px 12px 6px}
+        #sheets .sheet-head h3{font-size:17px}
+        #sheets .sheet-x{width:34px; height:34px}
+        #sheets .sheet-body{padding:8px 10px calc(8px + env(safe-area-inset-bottom))}
+        .sheet .btn.small{min-height:33px}
+        #tab-fight .chal-row{flex-direction:row}
+        #tab-fight .chal-btn{padding:5px 8px; min-height:44px}
+        #tab-fight .chal-btn .chal-ico{font-size:19px}
+        #tab-fight .chal-btn .chal-txt b{font-size:12.5px}
+        #tab-fight .chal-btn .chal-txt small{font-size:10.5px; line-height:1.25}
+        #tab-fight #btn-fight{padding:10px 12px; min-height:48px; font-size:16px}
+        #tab-fight .diffbtn{min-height:40px}
+        #tab-fight .modebtn{min-height:40px}
+        #tab-settings .set-row{min-height:46px; padding:8px 11px}
+        #tab-chest .chest .cart svg{width:34px; height:25px}
+      }
+      @media (max-height:580px){
+        #tab-glad .statgrid .st{padding:3px 4px}
+        #tab-glad .league-rail .lg{padding:3px 4px}
+        .sheet .drill{padding:7px 9px}
+        #tab-fight .bout-banner{padding:6px 9px}
+        #tab-fight .foe-chip{padding:5px 6px}
+      }
+      /* 0.9.1 short phones: the Next Bout sheet squeezes hardest —
+         measured within ~25px of the edge at 667px-tall phones, so
+         below 700px its cards, chips and difficulty buttons all give
+         up a little more air, and below 640px they give up a little
+         more again. Nothing is hidden; everything just sits tighter. */
+      @media (max-height:700px){
+        #tab-fight .bout-card{padding:7px 9px}
+        #tab-fight .bout-banner{padding:6px 9px}
+        #tab-fight .foe-chip{padding:5px 6px}
+        #tab-fight .diffbtn b{font-size:11.5px}
+        #tab-fight .diffbtn span{font-size:10px; line-height:1.25}
+        #tab-fight .modebtn span{font-size:11px; line-height:1.25}
+        #tab-fight .ichip{font-size:10.5px; padding:1px 6px}
+        #tab-fight .chal-btn{min-height:40px}
+      }
+      @media (max-height:640px){
+        #tab-fight .diffbtn{padding:4px 5px; min-height:36px}
+        #tab-fight .modebtn{padding:5px 8px; min-height:36px}
+        #tab-fight .mode-row{margin-top:6px}
+        #tab-fight #btn-fight{min-height:44px; padding:8px 10px; margin-top:6px}
+        #tab-fight .chal-row{margin-top:6px}
+        #tab-fight .foe-list{margin:4px 0}
+        #tab-fight .diff-row{margin:4px 0 1px}
+        #tab-fight .reward{padding:2px 6px}
+      }
+
+      /* ---------- 0.9.1 fix: create-screen hero tagline never sliced ----------
+         At phone widths the hero banner's fixed img height was shorter
+         than its own title block in the bands where the tagline shows:
+         at 781–860px tall the veil's content (title ~38px + tagline
+         ~18px + its margin + 20px of veil padding ≈ 80px) overflowed
+         the 72px banner, and at 701–780px it overflowed the 44px
+         banner — the hero's overflow:hidden sliced the tagline
+         "Train. Fight. Win gold. Become a legend." across its lower
+         half. Fix, phone widths only: the title block is scaled down
+         a step (title ≤30px, tagline 12.5px/1.32, tighter veil
+         padding — ≈64px of content in total) and the banner is given
+         enough height in both bands (80px / 70px). The extra banner
+         height comes out of the flexible pick stage below, so the
+         create screen still fits whole with no scrolling. Bands at
+         ≤700px tall are untouched: there the tagline stays folded
+         away by the existing short-screen squeeze, exactly as
+         before, and desktop widths keep their roomy banner. */
+      @media (max-width:640px){
+        #scr-create .hero .veil{padding:8px 12px}
+        #scr-create .hero h1{font-size:clamp(24px,6.8vw,30px); line-height:1.06}
+        #scr-create .hero p{font-size:12.5px; line-height:1.32; margin-top:3px}
+      }
+      @media (max-width:640px) and (max-height:860px) and (min-height:781px){
+        #scr-create .hero img{height:80px}
+      }
+      @media (max-width:640px) and (max-height:780px) and (min-height:701px){
+        #scr-create .hero img{height:70px}
+      }
+
 </style>
   </head>
   <body>
@@ -1900,9 +2059,9 @@
               <div class="st"><b id="h-armor" style="font-size:14px; line-height:24px">Leather</b><span>🛡 Armour Worn</span></div>
               <div class="st"><b id="h-tp">3</b><span>🏋 Training Pts</span></div>
             </div>
-            <h3 class="cz" style="font-size:15px; margin:16px 0 4px">🛣 The road to Legend — ten leagues, forty bouts</h3>
+            <h3 class="cz" style="font-size:14px; margin:10px 0 2px">🛣 The road to Legend — ten leagues, forty bouts</h3>
             <div class="league-rail" id="league-rail"></div>
-            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:16px">
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px">
               <button class="btn ghost small" id="btn-howto" type="button">How Fighting Works</button>
               <button class="btn ghost small" id="btn-sound" type="button">Sound: On</button>
               <button class="btn ghost small" id="btn-reset" type="button">New Gladiator</button>
@@ -1929,13 +2088,13 @@
               <p class="muted small" style="margin:0 0 10px">How you see the fight. Your choice is remembered between visits — 3rd Person is the classic view, 1st Person puts you behind your gladiator’s own eyes.</p>
               <div class="settings-list">
                 <button class="set-row" id="cam-opt-3p" type="button"><span class="set-ico" aria-hidden="true">🧍</span><span class="set-txt"><b>3rd Person</b><small>The camera rides behind your gladiator, the way it always has.</small></span><span class="set-check" id="cam-check-3p" aria-hidden="true">✓</span></button>
-                <button class="set-row" id="cam-opt-fp" type="button"><span class="set-ico" aria-hidden="true">👁</span><span class="set-txt"><b>1st Person</b><small>At your gladiator’s head height, looking wherever he faces — weapon and hands in view, body out of sight.</small></span><span class="set-check" id="cam-check-fp" aria-hidden="true"></span></button>
+                <button class="set-row" id="cam-opt-fp" type="button"><span class="set-ico" aria-hidden="true">👁</span><span class="set-txt"><b>1st Person</b><small>At head height, looking where he faces — weapon and hands in view, body out of sight.</small></span><span class="set-check" id="cam-check-fp" aria-hidden="true"></span></button>
               </div>
             </div>
             <div id="settings-fps" class="hidden">
               <button class="btn ghost small" id="set-fps-back" type="button">‹ Back to Settings</button>
               <h3 class="cz" style="font-size:16px; margin:12px 0 6px">🎞 Frame Rate</h3>
-              <p class="muted small" style="margin:0 0 10px">How many frames the game draws each second — everywhere: the fight, the training yard and the home stage all run at the rate you pick, from the moment you pick it. Lower rates are kinder to batteries and older phones; higher rates are smoother where the screen supports them.</p>
+              <p class="muted small" style="margin:0 0 10px">How many frames the game draws each second — in the fight, the training yard and on the home stage, from the moment you pick. Lower rates are kinder to batteries and older phones; higher rates are smoother where the screen supports them.</p>
               <div class="settings-list">
                 <button class="set-row" id="fps-opt-30" type="button"><span class="set-ico" aria-hidden="true">🐢</span><span class="set-txt"><b>30 FPS</b><small>Calm and steady — the kindest rate for battery and older phones.</small></span><span class="set-check" id="fps-check-30" aria-hidden="true"></span></button>
                 <button class="set-row" id="fps-opt-60" type="button"><span class="set-ico" aria-hidden="true">🏃</span><span class="set-txt"><b>60 FPS</b><small>The classic smooth rate most screens are built for.</small></span><span class="set-check" id="fps-check-60" aria-hidden="true">✓</span></button>
@@ -1945,12 +2104,12 @@
             <div id="settings-gfx" class="hidden">
               <button class="btn ghost small" id="set-gfx-back" type="button">‹ Back to Settings</button>
               <h3 class="cz" style="font-size:16px; margin:12px 0 6px">🎨 Graphics Quality</h3>
-              <p class="muted small" style="margin:0 0 10px">How rich the game looks — the drawing resolution, the shadows and the sharpness of the sand, brick and cloth — in the arena and on the home stage alike, from the moment you pick. Medium is the game's classic look, exactly as it has always been drawn. Low is the kindest to older phones; High and Ultra High are for strong ones.</p>
+              <p class="muted small" style="margin:0 0 10px">How rich the game looks — drawing resolution, shadows and the sharpness of sand, brick and cloth, in the arena and on the home stage. Medium is the classic look. Low is kindest to older phones; High and Ultra High are for strong ones.</p>
               <div class="settings-list">
-                <button class="set-row" id="gfx-opt-low" type="button"><span class="set-ico" aria-hidden="true">🔅</span><span class="set-txt"><b>Low</b><small>The lightest draw — plainer resolution, shadows off. For older phones and long sessions.</small></span><span class="set-check" id="gfx-check-low" aria-hidden="true"></span></button>
+                <button class="set-row" id="gfx-opt-low" type="button"><span class="set-ico" aria-hidden="true">🔅</span><span class="set-txt"><b>Low</b><small>The lightest draw — plainer resolution, shadows off. For older phones.</small></span><span class="set-check" id="gfx-check-low" aria-hidden="true"></span></button>
                 <button class="set-row" id="gfx-opt-med" type="button"><span class="set-ico" aria-hidden="true">🔆</span><span class="set-txt"><b>Medium</b><small>The classic look — the graphics the game has always shipped with.</small></span><span class="set-check" id="gfx-check-med" aria-hidden="true">✓</span></button>
                 <button class="set-row" id="gfx-opt-high" type="button"><span class="set-ico" aria-hidden="true">✨</span><span class="set-txt"><b>High</b><small>Sharper drawing, crisper textures and deeper, finer shadows.</small></span><span class="set-check" id="gfx-check-high" aria-hidden="true"></span></button>
-                <button class="set-row" id="gfx-opt-ultra" type="button"><span class="set-ico" aria-hidden="true">💎</span><span class="set-txt"><b>Ultra High</b><small>Everything maxed — full screen resolution, the sharpest textures and the finest shadows your phone can draw.</small></span><span class="set-check" id="gfx-check-ultra" aria-hidden="true"></span></button>
+                <button class="set-row" id="gfx-opt-ultra" type="button"><span class="set-ico" aria-hidden="true">💎</span><span class="set-txt"><b>Ultra High</b><small>Everything maxed — full resolution, the sharpest textures and finest shadows.</small></span><span class="set-check" id="gfx-check-ultra" aria-hidden="true"></span></button>
               </div>
             </div>
             <div id="settings-log" class="hidden">
@@ -2009,8 +2168,8 @@
         <section id="tab-train" class="sheet hidden">
           <div class="sheet-head"><h3 class="cz">🏋 Training Yard</h3><button class="sheet-x" type="button" data-close-sheet aria-label="Close">✕</button></div>
           <div class="sheet-body">
-            <div class="panel train-intro" style="padding:10px 12px; margin-bottom:9px">
-              <b class="cz">The Doctore's Yard</b> — <span class="muted">Training points: <b id="tp-count">3</b> (every bout restores 3) · 🎯 stop the marker in the <b style="color:var(--good)">green</b> for a perfect session · fill a drill's bar (6) to raise that stat +1 for good.</span>
+            <div class="panel train-intro" style="padding:8px 10px; margin-bottom:8px">
+              <b class="cz">The Doctore's Yard</b> — <span class="muted">Training points: <b id="tp-count">3</b> (each bout restores 3) · 🎯 stop the marker in the <b style="color:var(--good)">green</b> for a perfect session · fill a drill's bar (6) to raise that stat +1.</span>
             </div>
             <div class="drills" id="drills"></div>
             <div class="panel hidden" id="train-game">
@@ -2031,7 +2190,7 @@
           <div class="sheet-head"><h3 class="cz">🗡 Arsenal</h3><button class="sheet-x" type="button" data-close-sheet aria-label="Close">✕</button></div>
           <div class="sheet-body">
             <div class="panel intro-line">
-              <b class="cz">Your Arsenal</b> — <span class="muted">Tap to equip · sell spares for 🪙. Rarity: <span class="r-common rarity">Common</span> → <span class="r-uncommon rarity">Uncommon</span> → <span class="r-rare rarity">Rare</span> → <span class="r-epic rarity">Epic</span> → <span class="r-legendary rarity">Legendary</span>. 🛡 Armour shows in its real colours and blunts every blow.</span>
+              <b class="cz">Your Arsenal</b> — <span class="muted">Tap to equip · sell spares for 🪙. Rarity runs <span class="r-common rarity">Common</span> → <span class="r-legendary rarity">Legendary</span>. 🛡 Armour shows its real colours and blunts every blow.</span>
             </div>
             <div class="subtabs">
               <button class="subtab" id="ars-tab-weapons" type="button">🗡 Weapons <span class="cnt" id="ars-cnt-weapons"></span></button>
@@ -2047,9 +2206,10 @@
           <div class="sheet-head"><h3 class="cz">🎁 Chests — Weapons &amp; Armour</h3><button class="sheet-x" type="button" data-close-sheet aria-label="Close">✕</button></div>
           <div class="sheet-body">
             <div class="panel intro-line">
-              <b class="cz">The Armorer's Chests</b> — <span class="muted">Every chest drops ONE prize — a 🗡 weapon or a 🛡 armour piece. Odds are carved on each chest. Your purse: <span class="coin" id="chest-purse">—</span></span>
+              <b class="cz">The Armorer's Chests</b> — <span class="muted">Every chest drops ONE prize — a 🗡 weapon or 🛡 armour. Odds are carved on each chest. Your purse: <span class="coin" id="chest-purse">—</span></span>
             </div>
             <div class="chest-grid" id="chest-grid"></div>
+            <div class="pager" id="chest-pager"></div>
           </div>
         </section>
 
@@ -2057,8 +2217,8 @@
         <section id="tab-store" class="sheet hidden">
           <div class="sheet-head"><h3 class="cz">☿ Mercury's Market</h3><button class="sheet-x" type="button" data-close-sheet aria-label="Close">✕</button></div>
           <div class="sheet-body">
-            <div class="panel" style="padding:12px 14px; margin-bottom:12px">
-              <b class="cz">☿ Mercury's Market</b> — <span class="muted">Fresh stock every dawn 🌅 — <span id="store-date">today's</span> stock is gone by dawn. Armour bought here is worn at once, in its real colours. Your purse: <span class="coin" id="store-purse">—</span></span>
+            <div class="panel" style="padding:9px 11px; margin-bottom:9px">
+              <b class="cz">☿ Mercury's Market</b> — <span class="muted">Fresh stock every dawn 🌅 — <span id="store-date">today's</span> stock is gone by dawn. Armour bought here is worn at once. Your purse: <span class="coin" id="store-purse">—</span></span>
             </div>
             <div class="grid-cards" id="store-grid"></div>
             <div class="pager" id="store-pager"></div>
@@ -2128,7 +2288,7 @@
     <div id="modal-root"><div class="modal" id="modal-box"></div></div>
     <div class="toast" id="toast"></div>
 
-    <div class="ver-badge" id="ver-badge">v0.9</div>
+    <div class="ver-badge" id="ver-badge">v0.9.1</div>
     <div id="boot-note" role="status">⏳ Raising the arena…<br/>If this note stays, this copy can’t run the game here — open the file in a real browser tab (Chrome, Safari, Firefox or Edge), not a preview pane.</div>
 
     <script>
@@ -2328,10 +2488,10 @@
     })();
 
     const CHESTS=[
-      {id:'tiro',   name:"Tiro's Wooden Chest",   price:60,  unit:'d', art:'#8a5a2b', trim:'#5d3c1a', desc:'Drops one weapon or armour piece. Mostly Common — with a small chance at Rare or better.', odds:{common:62, uncommon:26, rare:9, epic:2.5, legendary:0.5}},
-      {id:'bronze', name:'Bronze Legion Chest',  price:220, unit:'d', art:'#b07f3c', trim:'#6e4d1e', desc:'Drops one weapon or armour piece. Common and Uncommon are most likely; Rare comes up about 1 time in 5.', odds:{common:36, uncommon:34, rare:20, epic:7.5, legendary:2.5}},
-      {id:'silver', name:'Argentum Chest',       price:600, unit:'d', art:'#b9c0c7', trim:'#7d858d', desc:'Drops one weapon or armour piece. Rare is the single most likely pull, and Epic or Legendary land about 1 time in 4.', odds:{common:14, uncommon:29, rare:33, epic:17, legendary:7}},
-      {id:'aureus', name:'Aureus Imperial Chest',price:30,  unit:'a', art:'#d9a92e', trim:'#8a6410', desc:'Drops one weapon or armour piece — never Common. Rare or better most of the time, and the best Legendary odds of any chest.', odds:{common:0, uncommon:16, rare:34, epic:32, legendary:18}}
+      {id:'tiro',   name:"Tiro's Wooden Chest",   price:60,  unit:'d', art:'#8a5a2b', trim:'#5d3c1a', desc:'One weapon or armour piece. Mostly Common — a small chance at Rare or better.', odds:{common:62, uncommon:26, rare:9, epic:2.5, legendary:0.5}},
+      {id:'bronze', name:'Bronze Legion Chest',  price:220, unit:'d', art:'#b07f3c', trim:'#6e4d1e', desc:'One weapon or armour piece. Rare comes up about 1 time in 5.', odds:{common:36, uncommon:34, rare:20, epic:7.5, legendary:2.5}},
+      {id:'silver', name:'Argentum Chest',       price:600, unit:'d', art:'#b9c0c7', trim:'#7d858d', desc:'One weapon or armour piece. Rare is most likely; Epic or Legendary about 1 time in 4.', odds:{common:14, uncommon:29, rare:33, epic:17, legendary:7}},
+      {id:'aureus', name:'Aureus Imperial Chest',price:30,  unit:'a', art:'#d9a92e', trim:'#8a6410', desc:'One weapon or armour piece — never Common. The best Legendary odds of any chest.', odds:{common:0, uncommon:16, rare:34, epic:32, legendary:18}}
     ];
     function chestCost(ch){ return ch.unit==='a' ? ch.price*25 : ch.price; }
     function chestPriceLabel(ch){ return ch.unit==='a' ? (ch.price+' aurei ('+fmtN(ch.price*25)+' denarii)') : fmtDen(ch.price); }
@@ -2841,6 +3001,11 @@
     }
     document.querySelectorAll('.tabbtn').forEach(b=>b.addEventListener('click', ()=>switchTab(b.dataset.tab)));
     $('#sheet-backdrop').addEventListener('click', closeSheets);
+    /* 0.9.1: if the window is resized while a sheet is open, re-page
+       its lists for the new height, so the no-scroll fit survives
+       rotation and desktop window drags too. */
+    let rszT=0;
+    window.addEventListener('resize', ()=>{ clearTimeout(rszT); rszT=setTimeout(()=>{ if(!G || $('#sheets').classList.contains('hidden')) return; renderArsenal(); renderStore(); renderChests(); if(!$('#settings-log').classList.contains('hidden')) renderUpdateLog(); }, 180); });
     document.querySelectorAll('[data-close-sheet]').forEach(b=>b.addEventListener('click', closeSheets));
     $('#btn-play').addEventListener('click', ()=>{ sCoin(); switchTab('fight'); });
     $('#foe-list').addEventListener('click', e=>{ const chip=e.target.closest('.foe-chip'); if(chip) chip.classList.toggle('open'); });
@@ -2909,7 +3074,7 @@
        instead of expanding a card and pushing the sheet out of shape. */
     const ARS={tab:'weapons', page:0};
     let STORE_PAGE=0;
-    function pageSize(){ return window.innerWidth>=640 ? 8 : 4; }
+    function pageSize(){ /* 0.9.1: page size follows the screen HEIGHT first, so a paged sheet always fits whole — short screens simply turn pages sooner. */ const h=window.innerHeight; if(h<720) return 2; if(h<980) return 4; return window.innerWidth>=640 ? 8 : 4; }
     function pagerHTML(page, pages, attr){
       if(pages<=1) return '<span class="pg-info">Page 1 of 1</span>';
       return '<button class="btn ghost small" type="button" data-'+attr+'="-1" '+(page<=0?'disabled':'')+'>‹ Prev</button>'+
@@ -3076,20 +3241,31 @@
     }
 
     /* ---------- chests ---------- */
+    /* 0.9.1: the Chests sheet is paged like the Arsenal — two chests
+       to a page on shorter screens, all four on tall ones — so it
+       never needs to scroll. */
+    let CHEST_PAGE=0;
+    function chestPer(){ return window.innerHeight<780 ? 2 : 4; }
     function renderChests(){
       $('#chest-purse').textContent=fmtWallet(G.den);
-      $('#chest-grid').innerHTML=CHESTS.map(ch=>{
+      const cper=chestPer();
+      const cpages=Math.max(1, Math.ceil(CHESTS.length/cper));
+      if(CHEST_PAGE>cpages-1) CHEST_PAGE=cpages-1;
+      if(CHEST_PAGE<0) CHEST_PAGE=0;
+      $('#chest-grid').innerHTML=CHESTS.slice(CHEST_PAGE*cper, CHEST_PAGE*cper+cper).map(ch=>{
         const cost=chestCost(ch), afford=G.den>=cost;
         const rows=RORDER.map(rk=>{
           const p=ch.odds[rk];
           return '<tr><td><span class="rarity" style="color:'+RARITY[rk].color+'">'+RARITY[rk].label+'</span></td><td style="width:44%"><div class="ob"><i style="width:'+clamp(p,0,100)+'%; background:'+RARITY[rk].color+'"></i></div></td><td>'+(p===0?'—':p+'%')+'</td></tr>';
         }).join('');
-        return '<div class="panel chest" style="background:linear-gradient(180deg, '+ch.art+'40, transparent 48%), linear-gradient(180deg, var(--panel2), var(--panel))"><div class="cart">'+chestSVG(ch.art, ch.trim)+'</div><h3 style="font-size:18px">'+ch.name+'</h3>'+
+        return '<div class="panel chest" style="background:linear-gradient(180deg, '+ch.art+'40, transparent 48%), linear-gradient(180deg, var(--panel2), var(--panel))"><div class="cart">'+chestSVG(ch.art, ch.trim)+'</div><h3 style="font-size:15px">'+ch.name+'</h3>'+
           '<p class="muted small" style="margin:5px 0 0">'+ch.desc+'</p>'+
           '<table class="odds">'+rows+'</table>'+
-          '<div class="coin" style="font-size:17px">'+chestPriceLabel(ch)+'</div>'+
-          '<button class="btn big '+(afford?'red':'')+'" style="margin-top:10px; width:100%" data-chest="'+ch.id+'" '+(afford?'':'disabled')+'>'+(afford?'Open This Chest':'Not Enough Denarii')+'</button></div>';
+          '<div class="coin" style="font-size:14px">'+chestPriceLabel(ch)+'</div>'+
+          '<button class="btn '+(afford?'red':'')+'" style="margin-top:6px; width:100%" data-chest="'+ch.id+'" '+(afford?'':'disabled')+'>'+(afford?'Open This Chest':'Not Enough Denarii')+'</button></div>';
       }).join('');
+      const cpg=$('#chest-pager');
+      if(cpg){ cpg.className='pager'+(cpages<=1?' single':''); cpg.innerHTML=pagerHTML(CHEST_PAGE, cpages, 'chest-page'); cpg.querySelectorAll('[data-chest-page]').forEach(b=>b.addEventListener('click', ()=>{ CHEST_PAGE+=+b.dataset.chestPage; renderChests(); })); }
       document.querySelectorAll('[data-chest]').forEach(b=>b.addEventListener('click', ()=>openChest(b.dataset.chest)));
     }
     function rollRarity(odds){ let roll=Math.random()*100; for(const rk of RORDER){ if(roll<odds[rk]) return rk; roll-=odds[rk]; } return 'common'; }
@@ -6628,6 +6804,7 @@
        its own entry to UPDATE_LOG below — never ship a version bump
        without its log entry. */
     const UPDATE_LOG=[
+      {v:'0.9.1', t:'No scrolling anywhere: every tab screen — Stats, Train, Arsenal, Chests, Market, Settings and the Update Log — fits whole on its screen, on short phones and desktop alike.'},
       {v:'0.9', t:'Brand-new full-screen look — one polished page, bigger buttons, everything fits its screen. Fighters run with real weight, and the arena lives: stirring crowd, waving banners, dust on every stride.'},
       {v:'0.8.9', t:'Responsiveness fixed: the fight now runs at full speed on any device — no more slow-motion or dead-feeling taps, keys and sticks — graphics ease themselves if a device struggles, and the first steps (oath, PLAY, Enter the Arena) can no longer jam silently.'},
       {v:'0.8.8', t:'Desktop controls, auto-detected: WASD/arrows move, I heavy, J/L swings, hold K blocks, mouse fights too — touch unchanged.'},
@@ -6687,8 +6864,17 @@
       {v:'0.2', t:'3D arena combat with joystick movement and attack, block, and heavy buttons.'},
       {v:'0.1', t:'First version: pick a fighter build, fight 20 bouts across 5 leagues, train, open weapon chests, climb ranks from Tiro to Legend.'}
     ];
+    let LOG_PAGE=0;
+    function logPer(){ return window.innerHeight<700 ? 4 : 5; }
     function renderUpdateLog(){
-      $('#update-log-list').innerHTML='<div class="ulog">'+UPDATE_LOG.map(e=>'<div class="ulog-row"><span class="uv">v'+e.v+'</span><span class="ut">'+e.t+'</span></div>').join('')+'</div>';
+      const per=logPer();
+      const pages=Math.max(1, Math.ceil(UPDATE_LOG.length/per));
+      if(LOG_PAGE>pages-1) LOG_PAGE=pages-1;
+      if(LOG_PAGE<0) LOG_PAGE=0;
+      const slice=UPDATE_LOG.slice(LOG_PAGE*per, LOG_PAGE*per+per);
+      $('#update-log-list').innerHTML='<div class="ulog">'+slice.map(e=>'<div class="ulog-row"><span class="uv">v'+e.v+'</span><span class="ut">'+e.t+'</span></div>').join('')+'</div>'+
+        '<div class="pager'+(pages<=1?' single':'')+'">'+pagerHTML(LOG_PAGE, pages, 'log-page')+'</div>';
+      $('#update-log-list').querySelectorAll('[data-log-page]').forEach(b=>b.addEventListener('click', ()=>{ LOG_PAGE+=+b.dataset.logPage; renderUpdateLog(); }));
     }
     function showSettingsMain(){
       $('#settings-main').classList.remove('hidden');
@@ -6870,6 +7056,7 @@
     updateGfxUI();
     $('#btn-settings').addEventListener('click', ()=>{ showSettingsMain(); switchTab('settings'); });
     $('#set-row-log').addEventListener('click', ()=>{
+      LOG_PAGE=0;
       renderUpdateLog();
       $('#settings-main').classList.add('hidden');
       $('#settings-camera').classList.add('hidden');
