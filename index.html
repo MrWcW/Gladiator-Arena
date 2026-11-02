@@ -1872,6 +1872,23 @@
         #scr-create .hero img{height:70px}
       }
 
+      /* ---------- 0.9.2: fight bottom clear of the edge; descriptions
+         short, simple and shown in full — no scrolling, no clipping --
+         Fight: on real phones the visible area can be a few pixels
+         shorter than 100dvh (host chrome over the webview), and the
+         fight screen's bottom padding was only 6px — so the stick
+         bases and the action stick's "Block" rim label sat close
+         enough to the edge to be sliced. The fight column now keeps
+         a clear 18px + safe-area below the stage, which lifts the
+         stage, both sticks and every rim label with it.
+         Descriptions: every fighter, foe and menu description was
+         rewritten short, plain and accurate to the real stats, and
+         the old line-clamps that cut the build-card text are retired
+         — the full text simply shows, on every screen, with nothing
+         to scroll and nothing cut off. */
+      #scr-fight{padding-bottom:calc(18px + env(safe-area-inset-bottom))}
+      #scr-create .body-card .more p.small{display:block; -webkit-line-clamp:none; overflow:visible}
+
 </style>
   </head>
   <body>
@@ -1907,13 +1924,13 @@
             <h3>The Heavyweight</h3>
             <div class="rarity" style="color:var(--acc)">“The Mountain” · Mass &amp; Power</div>
             <div class="trait-chips"><span class="tchip up">💪 Big hits</span><span class="tchip up">🛡 Iron block</span><span class="tchip down">🐢 Slow</span></div>
-            <div class="more"><p class="small" style="margin:8px 0 0">A barrel-chested brute fed on barley, beans and pork — the classic gladiator's bulk. His weight is a weapon in itself: every blow lands like a falling beam, and lesser men break against him like waves on rock.</p>
+            <div class="more"><p class="small" style="margin:8px 0 0">Built for power: the hardest hitter in the ludus, with a block that turns aside almost any blow. What he gives up is speed.</p>
             <ul class="procon">
-              <li class="pro"><b>+38% Health</b> — soaks punishment that would fell two lesser men.</li>
+              <li class="pro"><b>+38% Health</b> — stands up to punishment that ends other men.</li>
               <li class="pro"><b>+28% Damage</b> — the hardest hitter in the ludus, blow for blow.</li>
               <li class="pro"><b>Iron block</b> — stops 85% of damage, and barely staggers.</li>
-              <li class="con"><b>−24% Move speed</b> — the sand itself seems to hold his feet.</li>
-              <li class="con"><b>Slow stamina recovery</b> — a long, grinding fight tires him.</li>
+              <li class="con"><b>−24% Move speed</b> — slow to cross the sand.</li>
+              <li class="con"><b>Slow stamina recovery</b> — long fights wear him down.</li>
             </ul></div>
             <div class="statline"><span>Health</span><div class="bar"><i style="width:96%;background:#a02c22"></i></div></div>
             <div class="statline"><span>Power</span><div class="bar"><i style="width:92%;background:#b3372f"></i></div></div>
@@ -1928,12 +1945,12 @@
             <h3>The Balanced</h3>
             <div class="rarity" style="color:var(--acc)">“The Soldier” · No Weakness</div>
             <div class="trait-chips"><span class="tchip up">⚖ All-round</span><span class="tchip up">🔋 Steady</span><span class="tchip down">➖ No extremes</span></div>
-            <div class="more"><p class="small" style="margin:8px 0 0">Built like a legionary on campaign — strong enough to hurt, quick enough to escape, tough enough to last. He masters no single art, but he is beaten by none of them either.</p>
+            <div class="more"><p class="small" style="margin:8px 0 0">A legionary’s build: strong, quick and durable in equal measure. No great strength — and no weakness to exploit.</p>
             <ul class="procon">
               <li class="pro"><b>Even stats everywhere</b> — no exploitable weakness for any foe.</li>
               <li class="pro"><b>Versatile</b> — every weapon and drill improves him equally.</li>
               <li class="pro"><b>Steady stamina</b> — fights at full strength from horn to horn.</li>
-              <li class="con"><b>No extremes</b> — out-muscled by heavyweights, out-run by lightweights.</li>
+              <li class="con"><b>No extremes</b> — heavies out-hit him; lightweights out-run him.</li>
             </ul></div>
             <div class="statline"><span>Health</span><div class="bar"><i style="width:66%;background:#a02c22"></i></div></div>
             <div class="statline"><span>Power</span><div class="bar"><i style="width:62%;background:#b3372f"></i></div></div>
@@ -1948,13 +1965,13 @@
             <h3>The Lightweight</h3>
             <div class="rarity" style="color:var(--acc)">“The Wasp” · Speed &amp; Precision</div>
             <div class="trait-chips"><span class="tchip up">⚡ Fastest</span><span class="tchip up">🎯 Crits</span><span class="tchip down">💔 Fragile</span></div>
-            <div class="more"><p class="small" style="margin:8px 0 0">Wiry, scarred and quick as a striking snake. He cannot match a heavyweight's raw strength, but he strikes twice for every one of theirs — and a blade does not need to be swung hard to find a throat.</p>
+            <div class="more"><p class="small" style="margin:8px 0 0">The fastest man in the ludus — quickest feet, fastest hands, first to strike. He cannot trade blows; he wins by never being there.</p>
             <ul class="procon">
-              <li class="pro"><b>+32% Move speed</b> — circles heavies and chooses every engagement.</li>
-              <li class="pro"><b>+22% Attack speed</b> — builds combos the crowd goes wild for.</li>
-              <li class="pro"><b>+10% Critical chance</b> and the quickest feet in the ludus.</li>
-              <li class="con"><b>−12% Health</b> — a short fight is a safe fight; a long one is not.</li>
-              <li class="con"><b>Weak block</b> — only 65% stopped; he must keep moving, not absorb.</li>
+              <li class="pro"><b>+32% Move speed</b> — circles heavies and picks every fight.</li>
+              <li class="pro"><b>+22% Attack speed</b> — fast hands, fast combinations.</li>
+              <li class="pro"><b>+10% Critical chance</b> — strikes find the gaps in a guard.</li>
+              <li class="con"><b>−12% Health</b> — the smallest pool of the three.</li>
+              <li class="con"><b>Weak block</b> — stops only 65%. He survives by moving.</li>
             </ul></div>
             <div class="statline"><span>Health</span><div class="bar"><i style="width:48%;background:#a02c22"></i></div></div>
             <div class="statline"><span>Power</span><div class="bar"><i style="width:55%;background:#b3372f"></i></div></div>
@@ -2218,7 +2235,7 @@
           <div class="sheet-head"><h3 class="cz">☿ Mercury's Market</h3><button class="sheet-x" type="button" data-close-sheet aria-label="Close">✕</button></div>
           <div class="sheet-body">
             <div class="panel" style="padding:9px 11px; margin-bottom:9px">
-              <b class="cz">☿ Mercury's Market</b> — <span class="muted">Fresh stock every dawn 🌅 — <span id="store-date">today's</span> stock is gone by dawn. Armour bought here is worn at once. Your purse: <span class="coin" id="store-purse">—</span></span>
+              <b class="cz">☿ Mercury's Market</b> — <span class="muted">New stock every dawn — <span id="store-date">today's</span> stock is gone by dawn. Armour bought here is worn at once. Your purse: <span class="coin" id="store-purse">—</span></span>
             </div>
             <div class="grid-cards" id="store-grid"></div>
             <div class="pager" id="store-pager"></div>
@@ -2288,7 +2305,7 @@
     <div id="modal-root"><div class="modal" id="modal-box"></div></div>
     <div class="toast" id="toast"></div>
 
-    <div class="ver-badge" id="ver-badge">v0.9.1</div>
+    <div class="ver-badge" id="ver-badge">v0.9.2</div>
     <div id="boot-note" role="status">⏳ Raising the arena…<br/>If this note stays, this copy can’t run the game here — open the file in a real browser tab (Chrome, Safari, Firefox or Edge), not a preview pane.</div>
 
     <script>
@@ -2678,15 +2695,15 @@
     });
 
     const CLASSES={
-      novice:     {label:'Novice Tiro',      body:'balanced', wtype:'rudis',   shield:null,     helm:'none',     hp:55,  dmg:5,  spd:118, aspd:0.80, blockR:0.30, blockCh:0.15, ai:'basic',    desc:'A frightened new purchase, still learning which end of the sword to hold.'},
-      thraex:     {label:'Thraex',           body:'lean',     wtype:'sica',    shield:'parma',  helm:'thraex',   hp:82,  dmg:8,  spd:152, aspd:1.05, blockR:0.45, blockCh:0.25, ai:'basic',    desc:'A Thracian with a curved sica and a griffin-crested helm. Quick, and fond of hooking shields aside.'},
-      murmillo:   {label:'Murmillo',         body:'heavy',    wtype:'gladius', shield:'scutum', helm:'murmillo', hp:122, dmg:10, spd:96,  aspd:0.75, blockR:0.70, blockCh:0.45, ai:'basic',    desc:'The fish-crested heavy: a wall of scutum and muscle that advances like weather.'},
-      retiarius:  {label:'Retiarius',        body:'lean',     wtype:'trident', shield:'net',    helm:'none',     hp:78,  dmg:9,  spd:158, aspd:0.95, blockR:0.20, blockCh:0.10, ai:'retiarius',desc:'Net and trident, no helmet, no shield — all speed and guile. His thrown net pins your feet for his trident.'},
-      secutor:    {label:'Secutor',          body:'balanced', wtype:'gladius', shield:'scutum', helm:'secutor',  hp:102, dmg:10, spd:126, aspd:0.85, blockR:0.65, blockCh:0.40, ai:'basic',    desc:'The “chaser”, helmet smooth as an egg so no net can catch it. Patient, armoured, relentless.'},
-      hoplomachus:{label:'Hoplomachus',      body:'balanced', wtype:'spear',   shield:'parma',  helm:'thraex',   hp:94,  dmg:10, spd:132, aspd:0.85, blockR:0.50, blockCh:0.30, ai:'poker',    desc:'A spearman in the Greek style who lives at the end of his long hasta and hates to be crowded.'},
-      dimachaerus:{label:'Dimachaerus',      body:'lean',     wtype:'dual',    shield:null,     helm:'none',     hp:88,  dmg:8,  spd:162, aspd:1.35, blockR:0.25, blockCh:0.15, ai:'flurry',   desc:'Two swords, no shield, no pause. He attacks in flurries of three and dares you to answer.'},
-      brute:      {label:'Crupellarius Brute',body:'heavy',   wtype:'axe',     shield:null,     helm:'secutor',  hp:172, dmg:14, spd:88,  aspd:0.65, blockR:0.35, blockCh:0.20, ai:'brute',    desc:'A Gallic mountain in iron plate, swinging an axe like a falling tree. Slow — until he charges.'},
-      champion:   {label:'Champion',         body:'balanced', wtype:'spatha',  shield:'parma',  helm:'champion', hp:235, dmg:16, spd:136, aspd:1.00, blockR:0.60, blockCh:0.45, ai:'champion', desc:'A champion of the Colosseum. Below half health he flies into a fury — faster, harder, merciless.'}
+      novice:     {label:'Novice Tiro',      body:'balanced', wtype:'rudis',   shield:null,     helm:'none',     hp:55,  dmg:5,  spd:118, aspd:0.80, blockR:0.30, blockCh:0.15, ai:'basic',    desc:'A green tiro in his first bouts: wooden sword, no shield, little craft.'},
+      thraex:     {label:'Thraex',           body:'lean',     wtype:'sica',    shield:'parma',  helm:'thraex',   hp:82,  dmg:8,  spd:152, aspd:1.05, blockR:0.45, blockCh:0.25, ai:'basic',    desc:'Thracian sica-fighter. Quick feet, and a curved blade that hooks shields aside.'},
+      murmillo:   {label:'Murmillo',         body:'heavy',    wtype:'gladius', shield:'scutum', helm:'murmillo', hp:122, dmg:10, spd:96,  aspd:0.75, blockR:0.70, blockCh:0.45, ai:'basic',    desc:'Heavy infantry of the arena: big scutum, strong guard, steady advance.'},
+      retiarius:  {label:'Retiarius',        body:'lean',     wtype:'trident', shield:'net',    helm:'none',     hp:78,  dmg:9,  spd:158, aspd:0.95, blockR:0.20, blockCh:0.10, ai:'retiarius',desc:'Net and trident, no shield or helm. His thrown net pins your feet — keep moving and close fast.'},
+      secutor:    {label:'Secutor',          body:'balanced', wtype:'gladius', shield:'scutum', helm:'secutor',  hp:102, dmg:10, spd:126, aspd:0.85, blockR:0.65, blockCh:0.40, ai:'basic',    desc:'The chaser: smooth helm no net can catch, heavy armour, built to run men down.'},
+      hoplomachus:{label:'Hoplomachus',      body:'balanced', wtype:'spear',   shield:'parma',  helm:'thraex',   hp:94,  dmg:10, spd:132, aspd:0.85, blockR:0.50, blockCh:0.30, ai:'poker',    desc:'Greek spearman. Fights at long reach — crowd him to take the spear away.'},
+      dimachaerus:{label:'Dimachaerus',      body:'lean',     wtype:'dual',    shield:null,     helm:'none',     hp:88,  dmg:8,  spd:162, aspd:1.35, blockR:0.25, blockCh:0.15, ai:'flurry',   desc:'Two swords, no shield. Attacks in flurries of three — block the flurry, then answer.'},
+      brute:      {label:'Crupellarius Brute',body:'heavy',   wtype:'axe',     shield:null,     helm:'secutor',  hp:172, dmg:14, spd:88,  aspd:0.65, blockR:0.35, blockCh:0.20, ai:'brute',    desc:'Gallic heavy in full plate. Slow steps, a huge axe, and a charge that closes ground fast.'},
+      champion:   {label:'Champion',         body:'balanced', wtype:'spatha',  shield:'parma',  helm:'champion', hp:235, dmg:16, spd:136, aspd:1.00, blockR:0.60, blockCh:0.45, ai:'champion', desc:'Champion of the Colosseum. Below half health he turns furious — faster and harder. Finish him quickly.'}
     };
     const LEAGUES=[
       {name:'League I — Sand & Dust', from:0},{name:'League II — Blood of the Provinces', from:4},
@@ -2697,51 +2714,51 @@
     ];
     function leagueOf(i){ let L=LEAGUES[0]; for(const l of LEAGUES) if(i>=l.from)L=l; return L; }
     const BOUTS=[
-      {name:'First Blood',        desc:'Your debut. The crowd barely looks up from its figs — give them a reason.', foes:[{c:'novice', n:'Paetus the Trembling', s:1}], conc:1},
-      {name:'The Thracian',       desc:'A quick sica-fighter from the hills of Thrace. Watch the curve of that blade.', foes:[{c:'thraex', n:'Rez of Thrace', s:1}], conc:1},
-      {name:'The Shield Wall',    desc:'A murmillo: slow, armoured, and about as movable as a city gate.', foes:[{c:'murmillo', n:'Brutus the Gate', s:1}], conc:1},
-      {name:'Net and Trident',    desc:'The retiarius fights naked of armour and full of tricks. Do not let the net settle on you.', foes:[{c:'retiarius', n:'Nereus the Fisherman', s:1}], conc:1},
-      {name:'The Chaser',         desc:'A secutor, bred and helmeted for one purpose: running men like you down.', foes:[{c:'secutor', n:'Varro the Hound', s:1.05}], conc:1},
-      {name:'The Spearman',       desc:'Nine feet of hasta stand between you and the hoplomachus. Close the distance — carefully.', foes:[{c:'hoplomachus', n:'Leon of Sparta', s:1.05}], conc:1},
-      {name:'Two Blades',         desc:'The dimachaerus carries a sword in each hand and mercy in neither.', foes:[{c:'dimachaerus', n:'Felix Twin-Blade', s:1.05}], conc:1},
-      {name:'The Gaul',           desc:'A crupellarius brute, plated like a siege engine. He is slow. His axe is not your friend either way.', foes:[{c:'brute', n:'Brennus the Oak', s:0.85}], conc:1},
-      {name:'Old Rivals',         desc:'Thraex and retiarius — ancient enemies of each other, united today against you. Two at once, from here on.', foes:[{c:'thraex', n:'Rez of Thrace', s:1.1},{c:'retiarius', n:'Nereus the Fisherman', s:1.1}], conc:2},
-      {name:'Shield Brothers',    desc:'Murmillo and secutor, drilled to fight as one wall with two swords.', foes:[{c:'murmillo', n:'Brutus the Gate', s:1.1},{c:'secutor', n:'Varro the Hound', s:1.1}], conc:2},
-      {name:'The Hunt',           desc:'A net to hold you and a spear to finish you. Kill the fisherman first, if you can reach him.', foes:[{c:'retiarius', n:'Nereus the Fisherman', s:1.15},{c:'hoplomachus', n:'Leon of Sparta', s:1.15}], conc:2},
-      {name:'Twin Terrors',       desc:'Two dimachaeri. The sand will be full of blades; be somewhere else.', foes:[{c:'dimachaerus', n:'Felix Twin-Blade', s:1.15},{c:'dimachaerus', n:'Castor Twin-Blade', s:1.15}], conc:2},
-      {name:'The Anvil',          desc:'A brute to break you and a Thraex to carve what is left.', foes:[{c:'brute', n:'Brennus the Oak', s:1.0},{c:'thraex', n:'Rez of Thrace', s:1.2}], conc:2},
-      {name:'Spears of Mars',     desc:'Three spearmen and swordsmen in relay. They will keep coming two at a time.', foes:[{c:'hoplomachus', n:'Leon of Sparta', s:1.25},{c:'hoplomachus', n:'Diodor of Athens', s:1.25},{c:'secutor', n:'Varro the Hound', s:1.25}], conc:2},
-      {name:'The Net of Fate',    desc:'Two fishermen and a two-sword dancer. The crowd has already bet heavily — mostly not on you.', foes:[{c:'retiarius', n:'Nereus the Fisherman', s:1.3},{c:'retiarius', n:'Pontus the Eel', s:1.3},{c:'dimachaerus', n:'Felix Twin-Blade', s:1.3}], conc:2},
-      {name:'Mountains of Gaul',  desc:'Two crupellarius brutes at once. The arena stones will remember this one.', foes:[{c:'brute', n:'Brennus the Oak', s:1.15},{c:'brute', n:'Vercass the Younger', s:1.15}], conc:2},
-      {name:'The Editor’s Guard', desc:'The editor sends his household guard — three veterans, all at once. Survive them and Rome will know your name.', foes:[{c:'murmillo', n:'Brutus the Gate', s:1.35},{c:'secutor', n:'Varro the Hound', s:1.35},{c:'thraex', n:'Rez of Thrace', s:1.35}], conc:3},
-      {name:'Storm and Stone',    desc:'Brute, fisherman and spearman in one storm of a bout. Three at once.', foes:[{c:'brute', n:'Brennus the Oak', s:1.3},{c:'retiarius', n:'Nereus the Fisherman', s:1.4},{c:'hoplomachus', n:'Leon of Sparta', s:1.4}], conc:3},
-      {name:'The Editor’s Champion', desc:'Cassius, champion of the editor’s stable, with a twin-blade at his shoulder. Put the champion down.', foes:[{c:'champion', n:'Cassius, Editor’s Champion', s:0.85},{c:'dimachaerus', n:'Felix Twin-Blade', s:1.4}], conc:2},
-      {name:'Champion of Rome',   desc:'Aurelius Maximus, undefeated in forty bouts, champion of the Colosseum — and halfway through, his secutor joins him. End the legend, or become part of it.', foes:[{c:'champion', n:'Aurelius Maximus', s:1.3},{c:'secutor', n:'Varro the Hound', s:1.5}], conc:1},
-      {name:'The Emperor’s Eye',  desc:'Word of you has reached the imperial box. The Emperor watches today — and sends three veterans at once to see if the stories are true.', foes:[{c:'secutor', n:'Varro the Hound', s:1.45},{c:'hoplomachus', n:'Leon of Sparta', s:1.45},{c:'murmillo', n:'Brutus the Gate', s:1.45}], conc:3},
-      {name:'Twins of the Sand',  desc:'Two twin-blades and their fisherman, drilled since childhood to fight as one creature with five blades.', foes:[{c:'dimachaerus', n:'Felix Twin-Blade', s:1.45},{c:'dimachaerus', n:'Castor Twin-Blade', s:1.45},{c:'retiarius', n:'Nereus the Fisherman', s:1.45}], conc:3},
-      {name:'The Gallic Wall',    desc:'Brennus has a brother, and the brother brought a Thraex. Two mountains and a carver, all at once.', foes:[{c:'brute', n:'Brennus the Oak', s:1.3},{c:'brute', n:'Vercass the Younger', s:1.3},{c:'thraex', n:'Rez of Thrace', s:1.5}], conc:3},
-      {name:'The Fallen Star',    desc:'Cassius was champion before Aurelius — disgraced, hungry, and given one road back: through you. His twin-blade walks with him.', foes:[{c:'champion', n:'Cassius, the Fallen Star', s:1.05},{c:'dimachaerus', n:'Felix Twin-Blade', s:1.5}], conc:2},
-      {name:'Trial of Spears',    desc:'Three hoplomachi in the old Greek phalanx style, nine feet of spear each, advancing as one wall of points.', foes:[{c:'hoplomachus', n:'Leon of Sparta', s:1.5},{c:'hoplomachus', n:'Diodor of Athens', s:1.5},{c:'hoplomachus', n:'Nikanor of Corinth', s:1.5}], conc:3},
-      {name:'The Last Guard',     desc:'The Emperor’s own guard, retired to the arena for one afternoon: a wall, a hound, and a champion — together.', foes:[{c:'murmillo', n:'Brutus the Gate', s:1.55},{c:'secutor', n:'Varro the Hound', s:1.55},{c:'champion', n:'Cassius, the Fallen Star', s:1.1}], conc:3},
-      {name:'Storm of Champions', desc:'A champion, a mountain and a storm of blades in a single bout. The crowd has not sat down since the gates opened.', foes:[{c:'champion', n:'Aurelius Maximus', s:1.1},{c:'brute', n:'Brennus the Oak', s:1.45},{c:'dimachaerus', n:'Castor Twin-Blade', s:1.55}], conc:3},
-      {name:'God of the Arena',   desc:'Two champions. Aurelius Maximus and Cassius, the Fallen Star — the two greatest swords alive, standing together against you. Win this, and there is nothing left above you but the gods.', foes:[{c:'champion', n:'Aurelius Maximus', s:1.55},{c:'champion', n:'Cassius, the Fallen Star', s:1.25}], conc:2},
+      {name:'First Blood', desc:'Your debut bout. One novice stands between you and your first purse.', foes:[{c:'novice', n:'Paetus the Trembling', s:1}], conc:1},
+      {name:'The Thracian', desc:'A Thracian sica-fighter: fast feet, curved blade. Watch the hook of that sword.', foes:[{c:'thraex', n:'Rez of Thrace', s:1}], conc:1},
+      {name:'The Shield Wall', desc:'A murmillo: heavy armour, big shield — slow, and hard to move.', foes:[{c:'murmillo', n:'Brutus the Gate', s:1}], conc:1},
+      {name:'Net and Trident', desc:'A retiarius: net and trident, no armour. Do not let the net settle.', foes:[{c:'retiarius', n:'Nereus the Fisherman', s:1}], conc:1},
+      {name:'The Chaser', desc:'A secutor built to run men down. Armoured, patient, relentless.', foes:[{c:'secutor', n:'Varro the Hound', s:1.05}], conc:1},
+      {name:'The Spearman', desc:'A hoplomachus behind nine feet of spear. Close the distance to beat him.', foes:[{c:'hoplomachus', n:'Leon of Sparta', s:1.05}], conc:1},
+      {name:'Two Blades', desc:'A dimachaerus with a sword in each hand and no shield. Fast, constant pressure.', foes:[{c:'dimachaerus', n:'Felix Twin-Blade', s:1.05}], conc:1},
+      {name:'The Gaul', desc:'A crupellarius brute in full plate. Slow to move, slow to swing — and every blow lands heavy.', foes:[{c:'brute', n:'Brennus the Oak', s:0.85}], conc:1},
+      {name:'Old Rivals', desc:'Thraex and retiarius together. Two foes at once, from here on.', foes:[{c:'thraex', n:'Rez of Thrace', s:1.1},{c:'retiarius', n:'Nereus the Fisherman', s:1.1}], conc:2},
+      {name:'Shield Brothers', desc:'Murmillo and secutor, drilled to fight as one wall with two swords.', foes:[{c:'murmillo', n:'Brutus the Gate', s:1.1},{c:'secutor', n:'Varro the Hound', s:1.1}], conc:2},
+      {name:'The Hunt', desc:'A retiarius to hold you and a spearman to finish you. Reach the fisherman first.', foes:[{c:'retiarius', n:'Nereus the Fisherman', s:1.15},{c:'hoplomachus', n:'Leon of Sparta', s:1.15}], conc:2},
+      {name:'Twin Terrors', desc:'Two dimachaeri at once. Blades everywhere — keep moving.', foes:[{c:'dimachaerus', n:'Felix Twin-Blade', s:1.15},{c:'dimachaerus', n:'Castor Twin-Blade', s:1.15}], conc:2},
+      {name:'The Anvil', desc:'A brute to break your guard, and a Thraex to strike through it.', foes:[{c:'brute', n:'Brennus the Oak', s:1.0},{c:'thraex', n:'Rez of Thrace', s:1.2}], conc:2},
+      {name:'Spears of Mars', desc:'Three spearmen and swordsmen in relay, two at a time.', foes:[{c:'hoplomachus', n:'Leon of Sparta', s:1.25},{c:'hoplomachus', n:'Diodor of Athens', s:1.25},{c:'secutor', n:'Varro the Hound', s:1.25}], conc:2},
+      {name:'The Net of Fate', desc:'Two retiarii and a dimachaerus. Nets, tridents and twin blades together.', foes:[{c:'retiarius', n:'Nereus the Fisherman', s:1.3},{c:'retiarius', n:'Pontus the Eel', s:1.3},{c:'dimachaerus', n:'Felix Twin-Blade', s:1.3}], conc:2},
+      {name:'Mountains of Gaul', desc:'Two crupellarius brutes at once. Heavy plate, heavy axes.', foes:[{c:'brute', n:'Brennus the Oak', s:1.15},{c:'brute', n:'Vercass the Younger', s:1.15}], conc:2},
+      {name:'The Editor’s Guard', desc:'The editor’s household guard: three veterans, all at once.', foes:[{c:'murmillo', n:'Brutus the Gate', s:1.35},{c:'secutor', n:'Varro the Hound', s:1.35},{c:'thraex', n:'Rez of Thrace', s:1.35}], conc:3},
+      {name:'Storm and Stone', desc:'Brute, retiarius and spearman in one bout. Three at once.', foes:[{c:'brute', n:'Brennus the Oak', s:1.3},{c:'retiarius', n:'Nereus the Fisherman', s:1.4},{c:'hoplomachus', n:'Leon of Sparta', s:1.4}], conc:3},
+      {name:'The Editor’s Champion', desc:'Cassius, the editor’s champion, with a twin-blade at his side.', foes:[{c:'champion', n:'Cassius, Editor’s Champion', s:0.85},{c:'dimachaerus', n:'Felix Twin-Blade', s:1.4}], conc:2},
+      {name:'Champion of Rome', desc:'Aurelius Maximus, undefeated in forty bouts — and his secutor joins him mid-fight.', foes:[{c:'champion', n:'Aurelius Maximus', s:1.3},{c:'secutor', n:'Varro the Hound', s:1.5}], conc:1},
+      {name:'The Emperor’s Eye', desc:'The Emperor watches today. He sends three veterans to test the stories about you.', foes:[{c:'secutor', n:'Varro the Hound', s:1.45},{c:'hoplomachus', n:'Leon of Sparta', s:1.45},{c:'murmillo', n:'Brutus the Gate', s:1.45}], conc:3},
+      {name:'Twins of the Sand', desc:'Two dimachaeri and their retiarius, drilled to fight as one.', foes:[{c:'dimachaerus', n:'Felix Twin-Blade', s:1.45},{c:'dimachaerus', n:'Castor Twin-Blade', s:1.45},{c:'retiarius', n:'Nereus the Fisherman', s:1.45}], conc:3},
+      {name:'The Gallic Wall', desc:'Brennus and his brother, with a Thraex beside them. Two brutes and a carver, all at once.', foes:[{c:'brute', n:'Brennus the Oak', s:1.3},{c:'brute', n:'Vercass the Younger', s:1.3},{c:'thraex', n:'Rez of Thrace', s:1.5}], conc:3},
+      {name:'The Fallen Star', desc:'Cassius, champion before Aurelius, fighting his way back — through you. His twin-blade walks with him.', foes:[{c:'champion', n:'Cassius, the Fallen Star', s:1.05},{c:'dimachaerus', n:'Felix Twin-Blade', s:1.5}], conc:2},
+      {name:'Trial of Spears', desc:'Three hoplomachi in phalanx, nine feet of spear each, advancing as one wall.', foes:[{c:'hoplomachus', n:'Leon of Sparta', s:1.5},{c:'hoplomachus', n:'Diodor of Athens', s:1.5},{c:'hoplomachus', n:'Nikanor of Corinth', s:1.5}], conc:3},
+      {name:'The Last Guard', desc:'The Emperor’s own guard: a murmillo, a secutor and a champion, together.', foes:[{c:'murmillo', n:'Brutus the Gate', s:1.55},{c:'secutor', n:'Varro the Hound', s:1.55},{c:'champion', n:'Cassius, the Fallen Star', s:1.1}], conc:3},
+      {name:'Storm of Champions', desc:'A champion, a brute and a dimachaerus in a single bout.', foes:[{c:'champion', n:'Aurelius Maximus', s:1.1},{c:'brute', n:'Brennus the Oak', s:1.45},{c:'dimachaerus', n:'Castor Twin-Blade', s:1.55}], conc:3},
+      {name:'God of the Arena', desc:'Aurelius Maximus and Cassius together — the two greatest swords alive.', foes:[{c:'champion', n:'Aurelius Maximus', s:1.55},{c:'champion', n:'Cassius, the Fallen Star', s:1.25}], conc:2},
       /* ---- 0.7.4: the road runs on — Leagues VIII–X, bouts 29–40. The
          purses and XP keep climbing on the same formulas as ever
          (boutPurse / boutXP read the index), the foe scaling keeps its
          steady climb, and the career now ends on the Throne of Olympus:
          three champions, two at a time. ---- */
-      {name:'Herald of Olympus',  desc:'Word comes down from the mountain: the gods are watching now, and they have sent a herald — Cassius, reborn in gold, with the Hound at his heel.', foes:[{c:'champion', n:'Cassius, Herald of Olympus', s:1.05},{c:'secutor', n:'Varro the Hound', s:1.6}], conc:2},
-      {name:'The Twin Mountains', desc:'Brennus and Vercass together again, with Leon’s spear walking between them like a third mountain that stabs.', foes:[{c:'brute', n:'Brennus the Oak', s:1.45},{c:'brute', n:'Vercass the Younger', s:1.45},{c:'hoplomachus', n:'Leon of Sparta', s:1.6}], conc:3},
-      {name:'Blades of the Dawn', desc:'The twin-blades fight at dawn now, when the light is in your eyes — Felix, Castor, and Rez carving the glare into ribbons.', foes:[{c:'dimachaerus', n:'Felix Twin-Blade', s:1.6},{c:'dimachaerus', n:'Castor Twin-Blade', s:1.6},{c:'thraex', n:'Rez of Thrace', s:1.65}], conc:3},
-      {name:'The God’s Gauntlet', desc:'A champion, a mountain and a fisherman, thrown at you one after another with no breath between. The gods call it a gauntlet. The crowd calls it murder.', foes:[{c:'champion', n:'Aurelius Maximus', s:1.3},{c:'brute', n:'Brennus the Oak', s:1.5},{c:'retiarius', n:'Nereus the Fisherman', s:1.65}], conc:3},
-      {name:'Spears of the Immortals', desc:'The phalanx of the immortals: Leon, Diodor and Nikanor, three spears abreast, drilled by the gods themselves — or so the priests swear.', foes:[{c:'hoplomachus', n:'Leon of Sparta', s:1.65},{c:'hoplomachus', n:'Diodor of Athens', s:1.65},{c:'hoplomachus', n:'Nikanor of Corinth', s:1.65}], conc:3},
-      {name:'The Fallen Gods',     desc:'They were gods of this sand once. Aurelius and Cassius, older, angrier, and with nothing left to lose — which makes them more dangerous, not less.', foes:[{c:'champion', n:'Aurelius Maximus', s:1.45},{c:'champion', n:'Cassius, the Fallen Star', s:1.35}], conc:2},
-      {name:'Storm of the Nine',  desc:'The editor empties his barracks: a wall, a hound and a storm of blades, nine years of training spent in one afternoon — on you.', foes:[{c:'murmillo', n:'Brutus the Gate', s:1.7},{c:'secutor', n:'Varro the Hound', s:1.7},{c:'dimachaerus', n:'Felix Twin-Blade', s:1.7}], conc:3},
-      {name:'Wrath of Ares',       desc:'Two mountains at once, and behind them the Herald with a champion’s sword. Ares himself is said to lean forward for this one.', foes:[{c:'brute', n:'Brennus the Oak', s:1.6},{c:'brute', n:'Vercass the Younger', s:1.6},{c:'champion', n:'Cassius, Herald of Olympus', s:1.2}], conc:3},
-      {name:'The Emperor’s Doom', desc:'The Emperor, tired of omens, sends the three who have never failed him: his wall, his hound and his spear. All at once. All for you.', foes:[{c:'murmillo', n:'Brutus the Gate', s:1.8},{c:'secutor', n:'Varro the Hound', s:1.8},{c:'hoplomachus', n:'Leon of Sparta', s:1.8}], conc:3},
-      {name:'Two Suns',            desc:'Aurelius and Cassius at the very height of their powers — two suns in one sky, and the sand between them already burning. There is no shade in this bout.', foes:[{c:'champion', n:'Aurelius Maximus', s:1.5},{c:'champion', n:'Cassius, the Fallen Star', s:1.5}], conc:2},
-      {name:'The Last Immortal',   desc:'One name is whispered even in the imperial box: Imperator, the Undying, who has never fallen. He walks out with Felix at his shoulder — and the crowd goes quiet.', foes:[{c:'champion', n:'Imperator, the Undying', s:1.6},{c:'dimachaerus', n:'Felix Twin-Blade', s:1.75}], conc:2},
-      {name:'Throne of Olympus',   desc:'The last bout there is. Aurelius Maximus, Cassius the Fallen Star, and Imperator the Undying — the three greatest swords who ever lived, standing between you and a throne among the gods. Win this, and mortal men will pray to you.', foes:[{c:'champion', n:'Aurelius Maximus', s:1.5},{c:'champion', n:'Cassius, the Fallen Star', s:1.45},{c:'champion', n:'Imperator, the Undying', s:1.35}], conc:2}
+      {name:'Herald of Olympus', desc:'Cassius, reborn in gold, with Varro the Hound at his side.', foes:[{c:'champion', n:'Cassius, Herald of Olympus', s:1.05},{c:'secutor', n:'Varro the Hound', s:1.6}], conc:2},
+      {name:'The Twin Mountains', desc:'Brennus and Vercass together, with Leon’s spear between them.', foes:[{c:'brute', n:'Brennus the Oak', s:1.45},{c:'brute', n:'Vercass the Younger', s:1.45},{c:'hoplomachus', n:'Leon of Sparta', s:1.6}], conc:3},
+      {name:'Blades of the Dawn', desc:'Felix, Castor and Rez at dawn, with the light in your eyes.', foes:[{c:'dimachaerus', n:'Felix Twin-Blade', s:1.6},{c:'dimachaerus', n:'Castor Twin-Blade', s:1.6},{c:'thraex', n:'Rez of Thrace', s:1.65}], conc:3},
+      {name:'The God’s Gauntlet', desc:'A champion, a brute and a retiarius, one after another with no rest between.', foes:[{c:'champion', n:'Aurelius Maximus', s:1.3},{c:'brute', n:'Brennus the Oak', s:1.5},{c:'retiarius', n:'Nereus the Fisherman', s:1.65}], conc:3},
+      {name:'Spears of the Immortals', desc:'Leon, Diodor and Nikanor: three spears abreast in the immortal phalanx.', foes:[{c:'hoplomachus', n:'Leon of Sparta', s:1.65},{c:'hoplomachus', n:'Diodor of Athens', s:1.65},{c:'hoplomachus', n:'Nikanor of Corinth', s:1.65}], conc:3},
+      {name:'The Fallen Gods', desc:'Aurelius and Cassius again — older, and with nothing left to lose.', foes:[{c:'champion', n:'Aurelius Maximus', s:1.45},{c:'champion', n:'Cassius, the Fallen Star', s:1.35}], conc:2},
+      {name:'Storm of the Nine', desc:'The editor empties his barracks: a wall, a hound and a storm of blades.', foes:[{c:'murmillo', n:'Brutus the Gate', s:1.7},{c:'secutor', n:'Varro the Hound', s:1.7},{c:'dimachaerus', n:'Felix Twin-Blade', s:1.7}], conc:3},
+      {name:'Wrath of Ares', desc:'Two brutes at once, and behind them a champion with a champion’s sword.', foes:[{c:'brute', n:'Brennus the Oak', s:1.6},{c:'brute', n:'Vercass the Younger', s:1.6},{c:'champion', n:'Cassius, Herald of Olympus', s:1.2}], conc:3},
+      {name:'The Emperor’s Doom', desc:'The Emperor sends the three who have never failed him: his wall, his hound and his spear. All at once.', foes:[{c:'murmillo', n:'Brutus the Gate', s:1.8},{c:'secutor', n:'Varro the Hound', s:1.8},{c:'hoplomachus', n:'Leon of Sparta', s:1.8}], conc:3},
+      {name:'Two Suns', desc:'Aurelius and Cassius at the height of their powers. The hardest two-man bout in Rome.', foes:[{c:'champion', n:'Aurelius Maximus', s:1.5},{c:'champion', n:'Cassius, the Fallen Star', s:1.5}], conc:2},
+      {name:'The Last Immortal', desc:'Imperator, the Undying, who has never fallen — with Felix Twin-Blade at his shoulder.', foes:[{c:'champion', n:'Imperator, the Undying', s:1.6},{c:'dimachaerus', n:'Felix Twin-Blade', s:1.75}], conc:2},
+      {name:'Throne of Olympus', desc:'Aurelius, Cassius and Imperator: the three greatest swords who ever lived. Win this, and the ladder ends at a throne.', foes:[{c:'champion', n:'Aurelius Maximus', s:1.5},{c:'champion', n:'Cassius, the Fallen Star', s:1.45},{c:'champion', n:'Imperator, the Undying', s:1.35}], conc:2}
     ];
     function boutPurse(i){ return Math.round(55 + i*26 + (BOUTS[i].foes.length-1)*35); }
     function boutXP(i){ return 30 + i*11; }
@@ -6804,6 +6821,7 @@
        its own entry to UPDATE_LOG below — never ship a version bump
        without its log entry. */
     const UPDATE_LOG=[
+      {v:'0.9.2', t:'Bottom of the fight screen sits clear of the edge. Descriptions rewritten short, simple and plain — every one shows in full, with no scrolling and nothing cut off.'},
       {v:'0.9.1', t:'No scrolling anywhere: every tab screen — Stats, Train, Arsenal, Chests, Market, Settings and the Update Log — fits whole on its screen, on short phones and desktop alike.'},
       {v:'0.9', t:'Brand-new full-screen look — one polished page, bigger buttons, everything fits its screen. Fighters run with real weight, and the arena lives: stirring crowd, waving banners, dust on every stride.'},
       {v:'0.8.9', t:'Responsiveness fixed: the fight now runs at full speed on any device — no more slow-motion or dead-feeling taps, keys and sticks — graphics ease themselves if a device struggles, and the first steps (oath, PLAY, Enter the Arena) can no longer jam silently.'},
