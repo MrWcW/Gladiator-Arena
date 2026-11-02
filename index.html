@@ -1889,6 +1889,67 @@
       #scr-fight{padding-bottom:calc(18px + env(safe-area-inset-bottom))}
       #scr-create .body-card .more p.small{display:block; -webkit-line-clamp:none; overflow:visible}
 
+      /* ---------- 0.9.3: Next Bout — one tidy page, nothing scattered ----------
+         The sheet is regrouped into labelled, single-row bands that
+         always fit the one screen: banner (league, bout, purse, XP),
+         one row of foe chips, one row of four difficulty picks, one
+         slim wave-chip strip, one slim Progression strip, Enter the
+         Arena, then Survival and Champion's Trial side by side, and
+         Bout details folded shut at the foot. Copy in the generated
+         rows was shortened to match, so no band needs a second line
+         of sprawl and nothing scrolls, clips or overlaps — on short
+         phones each band simply gives up a little more air. */
+      #tab-fight .bout-card{padding:8px 10px}
+      #tab-fight .bout-lab{font-family:"Cinzel",serif; font-size:10.5px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--bronze); margin:7px 0 3px}
+      #tab-fight .bout-banner{padding:7px 10px; gap:8px; margin-bottom:0}
+      #tab-fight #bout-league{font-size:11px}
+      #tab-fight .bout-banner h2{font-size:17px; line-height:1.12; margin-top:1px}
+      #tab-fight .reward{min-width:54px; padding:3px 8px 2px}
+      #tab-fight .reward .rw-ico{font-size:13px}
+      #tab-fight .reward .rw-val{font-size:13.5px}
+      #tab-fight .reward .rw-lab{font-size:9px}
+      #tab-fight .foe-list{flex-wrap:nowrap; gap:6px; margin:0 0 2px}
+      #tab-fight .foe-chip{flex:1 1 0; min-width:0; padding:5px 6px; font-size:12px; line-height:1.28}
+      #tab-fight .foe-chip .foe-more{font-size:11px; line-height:1.3}
+      #tab-fight .diff-row{flex-wrap:nowrap; gap:6px; margin:0 0 2px}
+      #tab-fight .diffbtn{flex:1 1 0; min-width:0; min-height:46px; padding:5px 4px}
+      #tab-fight .diffbtn b{display:block; font-size:12px; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+      #tab-fight .diffbtn span{font-size:10px; line-height:1.25; margin-top:2px}
+      #tab-fight #bout-waves{gap:4px; margin:5px 0 1px}
+      #tab-fight .ichip{font-size:11px; padding:2px 8px; line-height:1.3}
+      #tab-fight .mode-row{margin:6px 0 0}
+      #tab-fight .modebtn{display:flex; align-items:center; gap:8px; min-height:38px; padding:6px 10px}
+      #tab-fight .modebtn b{flex:none; font-size:13.5px; line-height:1.2}
+      #tab-fight .modebtn span{flex:1 1 auto; min-width:0; font-size:11.5px; line-height:1.3}
+      #tab-fight #btn-fight{margin-top:7px; min-height:48px; padding:10px 14px; font-size:16.5px}
+      #tab-fight .chal-row{flex-direction:row; margin-top:7px; gap:7px}
+      #tab-fight .chal-btn{flex:1 1 0; width:auto; min-height:46px; padding:6px 8px; gap:7px}
+      #tab-fight .chal-btn .chal-ico{font-size:19px}
+      #tab-fight .chal-btn .chal-txt b{font-size:13px}
+      #tab-fight .chal-btn .chal-txt small{font-size:10.5px; line-height:1.25}
+      #tab-fight .bout-more{margin-top:6px; padding-top:5px}
+      #tab-fight .bout-more summary{font-size:13px}
+      @media (max-height:700px){
+        #tab-fight .bout-banner{padding:6px 9px}
+        #tab-fight .bout-banner h2{font-size:16px}
+        #tab-fight .bout-lab{margin:5px 0 2px}
+        #tab-fight .diffbtn{min-height:42px}
+        #tab-fight .modebtn{min-height:36px}
+        #tab-fight #btn-fight{min-height:45px; margin-top:6px; padding:9px 12px}
+        #tab-fight .chal-row{margin-top:6px}
+        #tab-fight .chal-btn{min-height:42px}
+      }
+      @media (max-height:640px){
+        #tab-fight .bout-card{padding:6px 9px}
+        #tab-fight .foe-chip{padding:4px 5px; font-size:11.5px}
+        #tab-fight .diffbtn{min-height:38px; padding:4px 4px}
+        #tab-fight #bout-waves{margin-top:4px}
+        #tab-fight .ichip{font-size:10.5px; padding:1px 7px}
+        #tab-fight .modebtn{min-height:34px; padding:5px 9px}
+        #tab-fight #btn-fight{min-height:43px}
+        #tab-fight .chal-btn{min-height:40px; padding:5px 7px}
+      }
+
 </style>
   </head>
   <body>
@@ -2161,16 +2222,18 @@
                   <div class="reward"><span class="rw-ico" aria-hidden="true">⭐</span><span class="rw-val" id="bout-xp">—</span><span class="rw-lab">XP</span></div>
                 </div>
               </div>
+              <div class="bout-lab">Your foes</div>
               <div class="foe-list" id="foe-list"></div>
+              <div class="bout-lab">Difficulty</div>
               <div class="diff-row" id="diff-row"></div>
               <div class="small" id="bout-waves" style="margin:2px 0 4px"></div>
               <div class="mode-row">
-                <div class="modebtn on" id="btn-mode-prog"><b>🏆 Progression</b><span id="mode-prog-sub">Career bouts — climb the ladder of rank</span></div>
+                <div class="modebtn on" id="btn-mode-prog"><b>🏆 Progression</b><span id="mode-prog-sub">Career bouts — climb the ranks</span></div>
               </div>
               <button class="btn red big" id="btn-fight" type="button">⚔ Enter the Arena</button>
               <div class="chal-row">
-                <button class="chal-btn" id="btn-survival" type="button"><span class="chal-ico" aria-hidden="true">🏟</span><span class="chal-txt"><b>Survival</b><small id="chal-surv-sub">Endless waves — how deep can you go?</small></span></button>
-                <button class="chal-btn" id="btn-trial" type="button"><span class="chal-ico" aria-hidden="true">👑</span><span class="chal-txt"><b>Champion's Trial</b><small id="chal-trial-sub">One wave · killers scale with difficulty · big purse</small></span></button>
+                <button class="chal-btn" id="btn-survival" type="button"><span class="chal-ico" aria-hidden="true">🏟</span><span class="chal-txt"><b>Survival</b><small id="chal-surv-sub">Endless waves</small></span></button>
+                <button class="chal-btn" id="btn-trial" type="button"><span class="chal-ico" aria-hidden="true">👑</span><span class="chal-txt"><b>Champion's Trial</b><small id="chal-trial-sub">One wave · big purse</small></span></button>
               </div>
               <details class="bout-more">
                 <summary>Bout details</summary>
@@ -2305,7 +2368,7 @@
     <div id="modal-root"><div class="modal" id="modal-box"></div></div>
     <div class="toast" id="toast"></div>
 
-    <div class="ver-badge" id="ver-badge">v0.9.2</div>
+    <div class="ver-badge" id="ver-badge">v0.9.3</div>
     <div id="boot-note" role="status">⏳ Raising the arena…<br/>If this note stays, this copy can’t run the game here — open the file in a real browser tab (Chrome, Safari, Firefox or Edge), not a preview pane.</div>
 
     <script>
@@ -2960,7 +3023,7 @@
       const purse=boutPurse(bd.idx)*diff.purseMul*(bd.exhibition?(1+G.legendWins*0.35):1);
       $('#bout-purse').textContent=fmtDen(Math.round(purse));
       $('#play-sub').textContent=(bd.exhibition?'Exhibition — ':'Bout '+(bd.idx+1)+' · ')+b.name+' · '+diff.label+' · purse '+fmtDen(Math.round(purse));
-      $('#diff-row').innerHTML=Object.keys(DIFFS).map(k=>{ const d=DIFFS[k]; return '<button type="button" class="diffbtn'+(k===(G.diff||'normal')?' on':'')+'" data-diff="'+k+'" style="--dc:'+d.color+'"><b style="color:'+d.color+'">'+(d.ico||'')+' '+d.label+' — '+d.sub+'</b><span>🌊 '+d.waves+' waves · 💪 ×'+d.foeMul.toFixed(2)+' · 🪙 ×'+d.purseMul.toFixed(1)+'</span></button>'; }).join('');
+      $('#diff-row').innerHTML=Object.keys(DIFFS).map(k=>{ const d=DIFFS[k]; return '<button type="button" class="diffbtn'+(k===(G.diff||'normal')?' on':'')+'" data-diff="'+k+'" style="--dc:'+d.color+'"><b style="color:'+d.color+'">'+(d.ico||'')+' '+d.label+'</b><span>🌊'+d.waves+' · 💪×'+d.foeMul.toFixed(2)+' · 🪙×'+d.purseMul.toFixed(1)+'</span></button>'; }).join('');
       document.querySelectorAll('[data-diff]').forEach(b=>b.addEventListener('click', ()=>{ G.diff=b.dataset.diff; sCoin(); renderBout(); saveGame(); }));
       const wr=[1,2,3].map(w=>fmtN(waveRewardCalc(bd.idx,w))).join(' → ');
       /* Icon chips instead of the old paragraph (0.7.2): the wave rules at
@@ -2970,14 +3033,13 @@
          Works, so no information is lost. */
       $('#bout-waves').innerHTML=
         '<span class="ichip">🌊 '+diff.waves+' waves</span>'+
-        '<span class="ichip">🪙 Pay climbs: '+wr+' …</span>'+
+        '<span class="ichip">🪙 Pay: '+wr+'</span>'+
         '<span class="ichip">🏛 Wave '+diff.waves+' banks all</span>'+
-        '<span class="ichip">🎲 Risk it = double</span>'+
-        '<span class="ichip">♾️ Endless after the win</span>'+
-        '<span class="ichip warn">🔥🌵🪵 Arena hazards hurt everyone</span>';
-      const bc=$('#bout-crowd'); if(bc) bc.textContent='Every wave pays denarii, and later waves pay more. Completing a set — Wave '+diff.waves+' on '+diff.label+', and every '+diff.waves+' waves after — banks your winnings safe, or risk them to double. A roaring crowd adds up to +50% on the purse.';
+        '<span class="ichip">🎲 Risk = double</span>'+
+        '<span class="ichip">♾️ Endless after the win</span>';
+      const bc=$('#bout-crowd'); if(bc) bc.textContent='Every wave pays denarii, and later waves pay more. Completing a set — Wave '+diff.waves+' on '+diff.label+', and every '+diff.waves+' waves after — banks your winnings safe, or risk them to double. A roaring crowd adds up to +50% on the purse. Arena hazards — fire, spikes and the swinging log — hurt everyone on the sand.';
       const sv=$('#chal-surv-sub'); if(sv) sv.textContent='Endless waves · 🏆 Best: Wave '+(G.survBest||0);
-      const tv=$('#chal-trial-sub'); if(tv) tv.textContent='One wave · '+trialFoeCount()+' killers on '+diff.label+' · 🏆 Won ×'+(G.trialWins||0);
+      const tv=$('#chal-trial-sub'); if(tv) tv.textContent='One wave · '+trialFoeCount()+' killers · 🏆 Won ×'+(G.trialWins||0);
       renderModes();
       $('#bout-xp').textContent=boutXP(bd.idx);
       $('#league-rail').innerHTML=LEAGUES.map((l,li)=>{
@@ -2995,7 +3057,7 @@
       const ps=$('#mode-prog-sub');
       if(ps) ps.textContent= tournamentReady()
         ? '🏆 TOURNAMENT READY — win it to rise above '+ladderTitle()
-        : 'Rank: '+ladderTitle()+' · '+(G.progWins||0)+'/'+TOURN_WINS+' net wins to the tournament — every wave cleared counts · 🏆 '+(G.renown||0)+' renown ('+leagueStanding()+')';
+        : 'Rank: '+ladderTitle()+' · '+(G.progWins||0)+'/'+TOURN_WINS+' wins to tournament · 🏆 '+(G.renown||0)+' renown';
       const fb=$('#btn-fight');
       if(fb) fb.textContent= tournamentReady()? '🏆 Enter the Tournament' : '⚔ Enter the Arena';
     }
@@ -6821,6 +6883,7 @@
        its own entry to UPDATE_LOG below — never ship a version bump
        without its log entry. */
     const UPDATE_LOG=[
+      {v:'0.9.3', t:'Next Bout rebuilt as one tidy page — foes, difficulty and modes in neat rows, details folded shut. Fits whole: no scrolling, nothing cut off.'},
       {v:'0.9.2', t:'Bottom of the fight screen sits clear of the edge. Descriptions rewritten short, simple and plain — every one shows in full, with no scrolling and nothing cut off.'},
       {v:'0.9.1', t:'No scrolling anywhere: every tab screen — Stats, Train, Arsenal, Chests, Market, Settings and the Update Log — fits whole on its screen, on short phones and desktop alike.'},
       {v:'0.9', t:'Brand-new full-screen look — one polished page, bigger buttons, everything fits its screen. Fighters run with real weight, and the arena lives: stirring crowd, waving banners, dust on every stride.'},
